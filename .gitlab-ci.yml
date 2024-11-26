@@ -1,9 +1,8 @@
 pages:
   image: docker
   script:
-    - echo "$CI_REGISTRY_PASSWORD" | docker login $CI_REGISTRY -u $CI_REGISTRY_USER --password-stdin
-    - docker pull $CI_REGISTRY/headease/ozo-refererence-impl/headease-ig-builder/main:latest
-    - docker run -v .:/workspace $CI_REGISTRY/headease/ozo-refererence-impl/headease-ig-builder/main
+    - docker build . -t scp
+    - docker run --rm -v ./input:/app/input -v ./output:/app/output  scp
   artifacts:
     paths:
     - output
