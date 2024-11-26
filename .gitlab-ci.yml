@@ -1,6 +1,7 @@
 pages:
   image: docker
   script:
+    - unset DOCKER_HOST
     - docker build . -t scp
     - docker run --rm -v ./input:/app/input -v ./output:/app/output  scp
   artifacts:
