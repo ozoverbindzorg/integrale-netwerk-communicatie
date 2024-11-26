@@ -1,0 +1,51 @@
+@startuml
+!define RECTANGLE class
+
+RECTANGLE Patient {
+  +identifier: Identifier
+  ...
+}
+
+RECTANGLE CareTeam {
+  +participant: Reference(Practitioner | RelatedPerson | CareTeam)
+  ...
+}
+
+RECTANGLE CommunicationRequest {
+  +status: code
+  +subject: Reference(Patient)
+  +sender: Reference(CareTeam member)
+  +recipient: Reference(CareTeam member)
+  +payload.contentString: string : "The message"
+  +payload.contentAttachment: Attachment
+  ...
+}
+
+RECTANGLE Communication {
+  +basedOn: Reference(CommunicationRequest)
+  +payload.contentString: string : "The message"
+  +payload.contentAttachment: Attachment
+  ...
+}
+
+RECTANGLE Task {
+  +status: code
+  +focus: Reference(Communication)
+  +basedOn: Reference(CommunicationRequest)
+  ...
+}
+
+RECTANGLE Attachment {
+  +contentType: code
+  +data: base64Binary
+  ...
+}
+
+Patient "1" <-- "1..*" CareTeam : has >
+CareTeam "1..*" -right-> CommunicationRequest : requests communication >
+CommunicationRequest <-- "0..*" Communication : based on
+Communication <-- "0..*" Task : is focus of >
+CommunicationRequest "0..*" -- Attachment : includes >
+Communication "0..*" -- Attachment : includes >
+Task "0..*" -right-> CommunicationRequest : based on >
+@enduml
