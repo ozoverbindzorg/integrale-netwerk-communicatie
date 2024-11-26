@@ -1,5 +1,5 @@
 pages:
-  image: $CI_REGISTRY/ozo-refererence-impl/headease-ig-builder/main:latest
+  image: $CI_REGISTRY/headease/ozo-refererence-impl/headease-ig-builder/main:latest
   script:
     - /bin/_entrypoint.sh
   artifacts:
