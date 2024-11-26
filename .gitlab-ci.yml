@@ -1,6 +1,8 @@
 image: headease/ozo-refererence-impl/headease-ig-builder/main:latest
 
 pages:
+  script:
+    - /bin/_entrypoint.sh
   artifacts:
     paths:
     - output
