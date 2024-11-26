@@ -1,0 +1,8 @@
+image: headease/ozo-refererence-impl/headease-ig-builder/main:latest
+
+pages:
+  artifacts:
+    paths:
+    - output
+  only:
+  - main
