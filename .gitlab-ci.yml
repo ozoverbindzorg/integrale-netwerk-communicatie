@@ -1,4 +1,5 @@
 pages:
+  image: docker
   script:
     - docker pull $CI_REGISTRY/headease/ozo-refererence-impl/headease-ig-builder/main:latest
     - docker run -v .:/workspace $CI_REGISTRY/headease/ozo-refererence-impl/headease-ig-builder/main
