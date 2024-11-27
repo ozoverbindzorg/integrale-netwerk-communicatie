@@ -1,0 +1,33 @@
+@startuml
+participant "OZO Client" as RPA
+participant "FHIR API" as FHIR
+participant "OZO Platform" as CTA
+
+== CommunicationRequest Process ==
+RPA -> FHIR : Create CommunicationRequest\n(status: 'draft')\n[As RelatedPerson]
+FHIR -> CTA : Notify of new CommunicationRequest\n[Via Subscription]
+CTA -> FHIR : Request Delivery of CommunicationRequest\n[To process and approve]
+FHIR -> CTA : Deliver CommunicationRequest\n[To CareTeam]
+CTA -> FHIR : Update CommunicationRequest\n(status: 'active')\n[After approval]
+FHIR -> RPA : Notify of approved CommunicationRequest\n[Via Subscription]
+RPA -> FHIR : Request Delivery of CommunicationRequest\n[To verify status]
+FHIR -> RPA : Deliver CommunicationRequest\n[To RelatedPerson]
+
+== Communication Process ==
+loop Multiple Responses from CareTeam
+    CTA -> FHIR : Create Communication\n[CareTeam -> RelatedPerson]\n[Send a response message]
+    FHIR -> RPA : Notify of Response Communication\n[Via Subscription]
+    RPA -> FHIR : Request Delivery of Response Communication\n[To process response]
+    FHIR -> RPA : Deliver Response Communication\n[To RelatedPerson]
+end
+
+loop Multiple Messages from RelatedPerson
+    RPA -> FHIR : Create Communication\n[RelatedPerson -> CareTeam]\n[Send a message]
+    FHIR -> CTA : Notify of new Communication\n[Via Subscription]
+    CTA -> FHIR : Request Delivery of Communication\n[To process message]
+    FHIR -> CTA : Deliver Communication\n[To CareTeam]
+end
+
+== Completion of CommunicationRequest ==
+RPA -> FHIR : Update CommunicationRequest\n(status: 'completed')
+@enduml

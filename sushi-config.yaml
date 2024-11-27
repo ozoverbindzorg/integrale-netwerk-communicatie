@@ -65,11 +65,11 @@ pages:
   overview.md:
     title: Overview
 
-  usecase-network.md:
-    title: Use Case - Creating the network
+  interaction-network.md:
+    title: Interaction - Creating the network
 
-  usecase-messaging.md:
-    title: Use Case - Reading and Messages
+  interaction-messaging.md:
+    title: Interaction - Reading and Messages
 
   security-system-access.md:
     title: Security - System Access
@@ -135,9 +135,9 @@ menu:
 #    Creating and responding to a Task: transaction-task-negotiation.html
 #    Updating CarePlan and CareTeam: transaction-careplan-careteam-mngt.html
 #    Getting data from CareTeam members: transaction-discovery.html
-  Use cases:
-    Creating the network: usecase-network.html
-    Reading and updating messages: usecase-messages-client.html
+  Interactions:
+    Creating the network: interaction-network.html
+    Reading and updating messages: interaction-messages.html
 #    Get data for home care: usecase-view-all-data.html
 #    Referral/Nursing handoff: usecase-nursing-handoff.html
 #
