@@ -8,7 +8,7 @@ borders of healthcare and open up to the social context of the patents.
 
 TODO: give a functional overview.
 
-## The OZO messaging FHIR API Data Model
+## The OZO care network datamodel
 
 The FHIR API is based on FHIR R4 and makes use of the following FHIR resources:
 
@@ -67,11 +67,23 @@ cases require this.
 | patients    | 1           | reference to the patient                 |
 | participant | 1..*        | a reference to a Patient or Practitioner |
 
-### Messaging
+
+## Diagram
+
+{% include fhir-network-datamodel.svg %}
+<br clear="all"/>
+
+
+## Interaction with the OZO FHIR Api
+The different interactions are described in the following guides:
+* [use case network](usecase-network.html)
+
+
+## The OZO messaging datamodel
 
 Messaging can be used within the OZO FHIR API. To achieve this, the following 2 FHIR Resources are used:
 
-#### CommunicationRequest
+### CommunicationRequest
 The `CommunicationRequest` Resource is used to:
 
 * Initially request a thread
@@ -80,31 +92,32 @@ The `CommunicationRequest` Resource is used to:
 * Manage the participants of a thread in a clear place
 * Display a list of threads for a Patient
 
-#### Communication
+### Communication
 The `Communication` resource is used to:
 
 * Place a message in a thread.
 
-#### Task
+### Task
 The `Task` resource is used to:
 * Notify the recipient about a new message.
 * Check the status of the thread
 
-#### AuditEvent
+### AuditEvent
 The `AuditEvent` is used to:
 * Update the `Task` status field as client of the OZO FHIR Api 
 
-### Subscriptions
+## Subscriptions
 
 The `Subscription` resource is used for clients of the OZO FHIR Api to receive updates about events in the changes in the FHIR Api:
 * When Tasks are created for the users in the OZO platform
 * When Tasks get updated in the OZO platform
 
-### Datamodel
+## Diagram
 
-![FHIR Datamodel](fhir-datamodel.svg "FHIR Datamodel")
+{% include fhir-messages-datamodel.svg %}
+<br clear="all"/>
 
-## The FHIR API Interaction
+## Interaction with the OZO FHIR Api
 The different interactions are described in the following guides:
-* [use case network](usecase-network.html)
 * [use case messaging](usecase-messages.html)
+
