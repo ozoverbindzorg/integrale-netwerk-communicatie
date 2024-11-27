@@ -1,15 +1,15 @@
 {
   "resourceType": "Task",
-  "id": "12",
+  "id": "11",
   "meta": {
-    "versionId": "2",
-    "lastUpdated": "2024-11-27T22:04:46.172+00:00",
-    "source": "#gPGBodrgSUNFM8QM"
+    "versionId": "3",
+    "lastUpdated": "2024-11-27T22:04:47.322+00:00",
+    "source": "#5x5KXQKv8040FhRh"
   },
   "basedOn": [ {
     "reference": "CommunicationRequest/10"
   } ],
-  "status": "completed",
+  "status": "requested",
   "intent": "order",
   "for": {
     "reference": "Patient/4",
@@ -17,6 +17,6 @@
     "display": "H. de Boer"
   },
   "owner": {
-    "reference": "Practitioner/6"
+    "reference": "RelatedPerson/5"
   }
 }

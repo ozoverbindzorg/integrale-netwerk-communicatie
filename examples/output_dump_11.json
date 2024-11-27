@@ -1,25 +1,22 @@
 {
-  "resourceType": "Communication",
-  "id": "15",
+  "resourceType": "Task",
+  "id": "12",
   "meta": {
     "versionId": "1",
-    "lastUpdated": "2024-11-27T21:45:11.156+00:00",
-    "source": "#W3W4sD8T1jEVuptW"
+    "lastUpdated": "2024-11-27T22:04:43.963+00:00",
+    "source": "#ASewisFYehIdFwrB"
   },
-  "partOf": [ {
-    "reference": "CommunicationRequest/10",
-    "type": "CommunicationRequest"
+  "basedOn": [ {
+    "reference": "CommunicationRequest/10"
   } ],
-  "status": "in-progress",
-  "recipient": [ {
-    "reference": "CareTeam/9",
-    "type": "CareTeam"
-  } ],
-  "sender": {
-    "reference": "RelatedPerson/5",
-    "type": "RelatedPerson"
+  "status": "requested",
+  "intent": "order",
+  "for": {
+    "reference": "Patient/4",
+    "type": "Patient",
+    "display": "H. de Boer"
   },
-  "payload": [ {
-    "contentString": "Message from RelatedPerson to CareTeam"
-  } ]
+  "owner": {
+    "reference": "Practitioner/6"
+  }
 }
