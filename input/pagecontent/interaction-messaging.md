@@ -107,7 +107,8 @@ A caregiver in the OZO platform responds to a message from a practitioner by the
 * The OZO client remains uninformed about the status of the message (CHECK IF CORRECT)
 
 
-![FHIR messaging inteaction](fhir-messaging-interaction.svg "FHIR messaging interaction")
+{% include fhir-messaging-interaction.svg %}
+<br clear="all"/>
 
 # EXAMPLES
 ### Subscriptions

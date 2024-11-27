@@ -137,7 +137,7 @@ menu:
 #    Getting data from CareTeam members: transaction-discovery.html
   Interactions:
     Creating the network: interaction-network.html
-    Reading and updating messages: interaction-messages.html
+    Reading and updating messages: interaction-messaging.html
 #    Get data for home care: usecase-view-all-data.html
 #    Referral/Nursing handoff: usecase-nursing-handoff.html
 #
