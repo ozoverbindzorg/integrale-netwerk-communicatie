@@ -6,7 +6,7 @@ pages:
   script:
     - echo "$CI_REGISTRY_PASSWORD" | docker login $CI_REGISTRY -u $CI_REGISTRY_USER --password-stdin
     - docker build -t $CI_REGISTRY/group/project/image:latest .
-    - docker run --rm -v ./input:/app/input -v ./output:/app/output $CI_REGISTRY/group/project/image:latest
+    - docker run --rm -v "${PWD}/input:/app/input" -v "${PWD}/output:/app/output" $CI_REGISTRY/group/project/image:latest
   artifacts:
     paths:
     - output
