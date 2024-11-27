@@ -3,7 +3,7 @@ LABEL maintainer="roland@headease.nl"
 
 # Install native compilation dependencies.
 RUN apt-get update -y && apt-get upgrade -y
-RUN apt-get install -y gcc g++ make apt-utils
+RUN apt-get install -y gcc g++ make apt-utils iputils-ping curl
 
 # Install Node from NodeSource.
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
@@ -20,9 +20,7 @@ WORKDIR /app
 RUN npm i -g fsh-sushi
 
 # Download the IG publisher.
-COPY ./_updatePublisher.sh .
-RUN bash ./_updatePublisher.sh -y
-RUN chmod +x *.sh *.bat
+RUN wget "https://raw.githubusercontent.com/FHIR/ig-guidance/refs/heads/master/_updatePublisher.sh"  -O _updatePublisher.sh && chmod +x _updatePublisher.sh && bash ./_updatePublisher.sh -y && chmod +x *.sh *.bat
 
 ADD ig.ini .
 ADD sushi-config.yaml .
