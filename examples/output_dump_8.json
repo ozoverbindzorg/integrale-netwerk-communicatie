@@ -1,0 +1,15 @@
+{
+  "resourceType": "Practitioner",
+  "id": "8",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2024-11-27T17:39:47.363+00:00",
+    "source": "#6mwtOvPSLTjzHeJ5"
+  },
+  "active": true,
+  "name": [ {
+    "text": "A.P. Otheeker",
+    "family": "Otheeker",
+    "given": [ "Adrie", "Pieter" ]
+  } ]
+}

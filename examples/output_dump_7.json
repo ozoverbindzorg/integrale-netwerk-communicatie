@@ -1,0 +1,15 @@
+{
+  "resourceType": "Practitioner",
+  "id": "7",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2024-11-27T17:39:46.806+00:00",
+    "source": "#a2rxJ7LzivETKXS6"
+  },
+  "active": true,
+  "name": [ {
+    "text": "Mark Benson",
+    "family": "Mark",
+    "given": [ "Mark", "Andrew" ]
+  } ]
+}

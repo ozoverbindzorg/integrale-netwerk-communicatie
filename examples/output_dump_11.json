@@ -1,0 +1,24 @@
+{
+  "resourceType": "Communication",
+  "id": "15",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2024-11-27T17:39:49.788+00:00",
+    "source": "#TqPZUeJwQASOyXKy"
+  },
+  "partOf": [ {
+    "reference": "CommunicationRequest/10",
+    "type": "CommunicationRequest"
+  } ],
+  "recipient": [ {
+    "reference": "CareTeam/9",
+    "type": "CareTeam"
+  } ],
+  "sender": {
+    "reference": "RelatedPerson/5",
+    "type": "RelatedPerson"
+  },
+  "payload": [ {
+    "contentString": "Message from RelatedPerson to CareTeam"
+  } ]
+}

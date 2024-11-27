@@ -1,0 +1,26 @@
+{
+  "resourceType": "Communication",
+  "id": "18",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2024-11-27T17:39:51.575+00:00",
+    "source": "#okIK0L43qMevse47"
+  },
+  "partOf": [ {
+    "reference": "CommunicationRequest/10",
+    "type": "CommunicationRequest"
+  } ],
+  "recipient": [ {
+    "reference": "Practitioner/6",
+    "type": "Practitioner",
+    "display": "Manu van Weel"
+  } ],
+  "sender": {
+    "reference": "Practitioner/6",
+    "type": "Practitioner",
+    "display": "Manu van Weel"
+  },
+  "payload": [ {
+    "contentString": "Message from RelatedPerson to CareTeam"
+  } ]
+}

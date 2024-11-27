@@ -1,0 +1,14 @@
+{
+  "resourceType": "Organization",
+  "id": "3",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2024-11-27T17:39:44.527+00:00",
+    "source": "#tFvxrXy0Q1ProzFv"
+  },
+  "identifier": [ {
+    "system": "ura",
+    "value": "12312312"
+  } ],
+  "name": "Apotheek de Pil"
+}

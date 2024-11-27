@@ -1,0 +1,1 @@
+Alias: $iso-21089-lifecycle = http://terminology.hl7.org/CodeSystem/iso-21089-lifecycle
