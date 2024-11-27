@@ -3,13 +3,14 @@
   "id": "18",
   "meta": {
     "versionId": "1",
-    "lastUpdated": "2024-11-27T17:39:51.575+00:00",
-    "source": "#okIK0L43qMevse47"
+    "lastUpdated": "2024-11-27T18:00:47.847+00:00",
+    "source": "#TK8WKBptTTvfbg7m"
   },
   "partOf": [ {
     "reference": "CommunicationRequest/10",
     "type": "CommunicationRequest"
   } ],
+  "status": "in-progress",
   "recipient": [ {
     "reference": "Practitioner/6",
     "type": "Practitioner",

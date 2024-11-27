@@ -3,13 +3,14 @@
   "id": "15",
   "meta": {
     "versionId": "1",
-    "lastUpdated": "2024-11-27T17:39:49.788+00:00",
-    "source": "#TqPZUeJwQASOyXKy"
+    "lastUpdated": "2024-11-27T18:00:46.073+00:00",
+    "source": "#JzAJ5hk6YIiiOj2U"
   },
   "partOf": [ {
     "reference": "CommunicationRequest/10",
     "type": "CommunicationRequest"
   } ],
+  "status": "in-progress",
   "recipient": [ {
     "reference": "CareTeam/9",
     "type": "CareTeam"
