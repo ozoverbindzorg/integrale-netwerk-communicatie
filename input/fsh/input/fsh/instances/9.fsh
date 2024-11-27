@@ -2,8 +2,8 @@ Instance: 9
 InstanceOf: CareTeam
 Usage: #example
 * meta.versionId = "1"
-* meta.lastUpdated = "2024-11-27T18:00:44.318+00:00"
-* meta.source = "#s4u2VxuQp6hDwSUd"
+* meta.lastUpdated = "2024-11-27T21:45:09.415+00:00"
+* meta.source = "#fl34zgUrRrOfl7NR"
 * status = #active
 * subject = Reference(4) "H. de Boer"
 * subject.type = "Patient"

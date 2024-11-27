@@ -2,8 +2,8 @@ Instance: 4
 InstanceOf: Patient
 Usage: #example
 * meta.versionId = "1"
-* meta.lastUpdated = "2024-11-27T18:00:41.376+00:00"
-* meta.source = "#wtnEHeGcSKcM5acu"
+* meta.lastUpdated = "2024-11-27T21:45:06.502+00:00"
+* meta.source = "#nCfN92Jir73Qq7Pp"
 * identifier.system = "OZO/Person"
 * identifier.value = "784384"
 * name.text = "H. de Boer"
@@ -14,5 +14,3 @@ Usage: #example
 * telecom.value = "611234567"
 * gender = #male
 * birthDate = "3875-09-25"
-* managingOrganization = Reference(1) "Ziekenhuis de Amsterdam"
-* managingOrganization.type = "Organization"

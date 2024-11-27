@@ -2,11 +2,11 @@ Instance: 19
 InstanceOf: AuditEvent
 Usage: #example
 * meta.versionId = "1"
-* meta.lastUpdated = "2024-11-27T18:00:48.418+00:00"
-* meta.source = "#6c84I5FyKpBz1tm1"
+* meta.lastUpdated = "2024-11-27T21:45:13.513+00:00"
+* meta.source = "#F1zHwGKs0QRPNAcw"
 * type = $iso-21089-lifecycle#access
 * action = #R
-* recorded = "2024-11-27T19:00:48.393+01:00"
+* recorded = "2024-11-27T22:45:13.506+01:00"
 * agent.who = Reference(5)
 * agent.who.type = "RelatedPerson"
 * agent.requestor = true
