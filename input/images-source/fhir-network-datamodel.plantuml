@@ -1,0 +1,45 @@
+@startuml
+!define RECTANGLE class
+
+RECTANGLE Patient {
+  +identifier: Identifier
+  ...
+}
+
+RECTANGLE RelatedPerson {
+  +identifier: Identifier
+  ...
+}
+
+RECTANGLE Practitioner {
+  +identifier: Identifier
+  ...
+}
+
+RECTANGLE Organization {
+  +identifier: Identifier
+  ...
+}
+
+
+RECTANGLE CareTeam {
+  +participant: Member
+  ...
+}
+
+RECTANGLE Member {
+  +member: Reference(Practitioner | RelatedPerson | CareTeam)
+  onBehalfOf: Organization
+  ...
+}
+
+
+
+Patient "1" <-- "1..1" CareTeam : subject <
+Patient "1" --> "1..1" Organization : managingOrganization >
+CareTeam "1..*" --> Member : participant >
+Member "1" --> "1" Practitioner: member >
+Member "1" --> Patient: member >
+Member "1" --> RelatedPerson: member >
+Member "*" --> Organization: onBehalfOf >
+@enduml

@@ -1,0 +1,39 @@
+actor user
+control client_app
+control client_nuts
+boundary ozo_issuer
+control ozo_nuts
+database ozo_api
+
+@startuml
+
+group Issue User Access VC
+
+user -> client_app
+client_app -> client_nuts: request VC issuance
+client_nuts -> ozo_issuer: request VC
+ozo_issuer -> user: authenticate
+user --> ozo_issuer: user credentials
+ozo_issuer -> ozo_issuer: create VC
+ozo_issuer --> client_nuts: issue VC
+client_nuts -> client_nuts: store VC
+client_nuts --> client_app: done
+
+end
+
+group Access API
+
+user -> client_app
+client_app -> client_nuts: request access_token (With VC)
+client_nuts -> ozo_nuts: request access_token (With VP)
+ozo_nuts --> client_nuts: access_token
+client_nuts --> client_app: access_token
+client_app -> ozo_api: access resource (access_token)
+ozo_api -> ozo_nuts: /introspect (access_token)
+ozo_nuts -> ozo_nuts: validate
+ozo_nuts --> ozo_api: ok
+ozo_api -->  client_app: resource
+
+
+end
+@enduml
