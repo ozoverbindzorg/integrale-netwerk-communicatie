@@ -1,8 +1,12 @@
 pages:
-  image: docker:dind
+  image: docker:20.10.16
+  stage: build
+  services:
+    - docker:20.10.16-dind
   script:
-    - docker build . -t scp
-    - docker run --rm -v ./input:/app/input -v ./output:/app/output  scp
+    - echo "$CI_REGISTRY_PASSWORD" | docker login $CI_REGISTRY -u $CI_REGISTRY_USER --password-stdin
+    - docker build -t $CI_REGISTRY/group/project/image:latest .
+    - docker run --rm -v ./input:/app/input -v ./output:/app/output
   artifacts:
     paths:
     - output
