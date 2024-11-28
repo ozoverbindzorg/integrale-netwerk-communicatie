@@ -2,15 +2,15 @@ Instance: 19
 InstanceOf: AuditEvent
 Usage: #example
 * meta.versionId = "1"
-* meta.lastUpdated = "2024-11-27T22:04:47.858+00:00"
-* meta.source = "#fK2aIILAuRDd4Dxj"
+* meta.lastUpdated = "2024-11-28T00:23:39.481+00:00"
+* meta.source = "#3pVFtlAm17cwvICS"
 * type = $iso-21089-lifecycle#access
 * action = #R
-* recorded = "2024-11-27T23:04:47.890+01:00"
+* recorded = "2024-11-28T01:23:39.467+01:00"
 * agent.who = Reference(5)
 * agent.who.type = "RelatedPerson"
 * agent.requestor = true
-* source.site = "OZO platform"
+* source.site = "OZO Client"
 * source.observer = Reference(5)
 * source.observer.type = "RelatedPerson"
 * entity[0].what = Reference(10)

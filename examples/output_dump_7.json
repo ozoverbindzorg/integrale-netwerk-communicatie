@@ -3,9 +3,16 @@
   "id": "7",
   "meta": {
     "versionId": "1",
-    "lastUpdated": "2024-11-27T22:04:41.470+00:00",
-    "source": "#pzihBJbphO53kVvv"
+    "lastUpdated": "2024-11-28T00:23:34.066+00:00",
+    "source": "#kdr7crQgsVy29prG"
   },
+  "identifier": [ {
+    "system": "OZO-CONNECT/Professional",
+    "value": "743227"
+  }, {
+    "system": "email",
+    "value": "info@example.com"
+  } ],
   "active": true,
   "name": [ {
     "text": "Mark Benson",
