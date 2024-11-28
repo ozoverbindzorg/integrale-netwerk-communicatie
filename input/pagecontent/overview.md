@@ -1,6 +1,4 @@
-# Overview
-
-## The OZO platform from a functional perspective
+### The OZO platform from a functional perspective
 
 The OZO platform connects care professionals with informal caregivers. The platform is able to create a link between the
 formal healthcare network with the informal social environment of the patient. Hereby the OZO platform needs to cross
@@ -8,11 +6,11 @@ borders of healthcare and open up to the social context of the patents.
 
 TODO: give a functional overview.
 
-## The OZO care network datamodel
+### The OZO care network datamodel
 
 The FHIR API is based on FHIR R4 and makes use of the following FHIR resources:
 
-### Patient
+#### Patient
 
 The `Patient` represents the client in the domain, for each real-life patient only one single entity exists. The
 `Patient`
@@ -22,14 +20,14 @@ is primary identified by the BSN. Required fields:
 |---------------------------------|-------------|-------------|
 | identifier[system="OZO/Person"] | 1..1        |             |
 
-#### Identity mapping
+##### Identity mapping
 
 The identifier of the `Patient` _must_ be unique and _should_ the internal identifier of the patient in the OZO system.
 
-#### Examples
+##### Examples
 * [Patient-4](Patient-4.html)
 
-### Related Person
+#### Related Person
 
 The related person resource represents the relation between `Patient` and a informal caregiver (`RelatedPerson`). For
 each _relationship_
@@ -42,7 +40,7 @@ resources exist, one for each patient it has a caregiving relationship with.
 | name                                                                     | 1..*        | The name field, as ZIB [NameInformation-v1.0(2017EN)](https://zibs.nl/wiki/NameInformation-v1.0(2017EN)) |
 | patient                                                                  | 1..1        | The reference to the patient                                                                             | 
 
-#### Identity mapping
+##### Identity mapping
 
 The OZO FHIR `RelatedPerson` uses two identities to identify the RelatedPerson entity:
 
@@ -51,10 +49,10 @@ The OZO FHIR `RelatedPerson` uses two identities to identify the RelatedPerson e
 2. The relationship identifier in the OZO system, unique for each relationship between a the OZO related person account
    and the patient.
 
-#### Examples
+##### Examples
 * [RelatedPerson-5](RelatedPerson-5.html)
 
-### Practitioner
+#### Practitioner
 
 The `Practitioner` represents a health care professional that has a relationship with one or more patients. The
 practitioner is linked to the patient by the care team.
@@ -64,15 +62,15 @@ practitioner is linked to the patient by the care team.
 | identifier[system=UZI\|BIG] | 1..1        |                                                                                                          |
 | name                        | 1..*        | The name field, as ZIB [NameInformation-v1.0(2017EN)](https://zibs.nl/wiki/NameInformation-v1.0(2017EN)) |
 
-### Identity mapping
+#### Identity mapping
 
 The identifier of the `Practitioner` _must_ be unique and _should_ the internal identifier of the patient in the OZO
 system.
 
-#### Examples
+##### Examples
 * [Practitioner-6](Practitioner-6.html)
 
-### CareTeam
+#### CareTeam
 
 The `CareTeam` is the resource that binds the patient to the related person(s) and practitioners. There _should_ exist
 only one care team resource for each patient in the system. Multiple care team resources _could_ exist if specific use
@@ -86,10 +84,10 @@ the `Patient` to different `Organization`s
 | participant | 1..*        | a reference to a `Patient`, `RelatedPerson` or `Practitioner` |
 
 
-#### Examples
+##### Examples
 * [CareTeam-9](CareTeam-9.html)
 
-### Organization
+#### Organization
 
 The `Organization` resource represents the different organizations in the network. The relation between the Patient and
 Organization is managed by the participant in the care team. Each member of type Practitioner has an onBehalfOf
@@ -99,32 +97,31 @@ reference to the Organization.
 |-------|-------------|--------------------------------|
 | name  | 1           | The name of the `Organization` |
 
-### Identity mapping
+#### Identity mapping
 
 The identifier of the `Organization` _must_ be unique and _should_ the internal identifier of the patient in the OZO
 system.
 
-#### Examples
+##### Examples
 * [Organization-1](CareTeam-1.html)
 * [Organization-2](CareTeam-2.html)
 * [Organization-3](CareTeam-3.html)
 
-## Diagram
+### Diagram
 
 {% include fhir-network-datamodel.svg %}
-<br clear="all"/>
 
 
-## Interaction with the OZO FHIR Api
+### Interaction with the OZO FHIR Api
 The different interactions are described in the following guides:
 * [use case network](usecase-network.html)
 
 
-## The OZO messaging datamodel
+### The OZO messaging datamodel
 
 Messaging can be used within the OZO FHIR API. To achieve this, the following 2 FHIR Resources are used:
 
-### CommunicationRequest
+#### CommunicationRequest
 The `CommunicationRequest` Resource is used to:
 
 * Initially request a thread
@@ -133,49 +130,49 @@ The `CommunicationRequest` Resource is used to:
 * Manage the participants of a thread in a clear place
 * Display a list of threads for a Patient
 
-#### Examples
+##### Examples
 * [CommunicationRequest-10](CommunicationRequest-10.html)
 
-### Communication
+#### Communication
 The `Communication` resource is used to:
 
 * Place a message in a thread.
 
-#### Examples
+##### Examples
 * [Communication-15](CommunicationRequest-15.html)
 * [Communication-18](CommunicationRequest-18.html)
 
-### Task
+#### Task
 The `Task` resource is used to:
 * Notify the recipient about a new message.
 * Check the status of the thread
 
-#### Examples
+##### Examples
 * [Task-11](Task-11.html)
 * [Task-12](Task-12.html)
 * [Task-13](Task-13.html)
 * [Task-18](Task-18.html)
 
-### AuditEvent
+#### AuditEvent
 The `AuditEvent` is used to:
 * Update the `Task` status field as client of the OZO FHIR Api 
 
-#### Examples
+##### Examples
 * [AuditEvent-16](AuditEvent-16.html)
 * [AuditEvent-17](AuditEvent-17.html)
 
-## Subscriptions
+### Subscriptions
 
 The `Subscription` resource is used for clients of the OZO FHIR Api to receive updates about events in the changes in the FHIR Api:
 * When Tasks are created for the users in the OZO platform
 * When Tasks get updated in the OZO platform
 
-## Diagram
+### Diagram
 
 {% include fhir-messages-datamodel.svg %}
-<br clear="all"/>
 
-## Interaction with the OZO FHIR Api
+### Interaction with the OZO FHIR Api
 The different interactions are described in the following guides:
 * [use case messaging](usecase-messages.html)
 
+x

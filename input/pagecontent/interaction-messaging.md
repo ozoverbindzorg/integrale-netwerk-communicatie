@@ -1,26 +1,25 @@
-# The OZO messaging FHIR API Interaction
 The messaging interaction consists of the following parts:
 * Creating a thread
 * Sending messages
 * Receiving new messages
 * Informing the OZO platform about messages being read.
 
-## Roles
+### Roles
 This IG distinguises the following roles when processing messages:
 * The OZO platform, the environment where practitioners receive and respond to messages from caregivers.
 * The OZO FHIR API that executes actions triggered by CRUD actions on CommunicationRequest, Communication, Task and AuditEvent.
 * The OZO client, an environment where caregivers create, recieve and respond to messages in communication with the practitioners.
 
-## Prerequisite, Subscriptions
+### Prerequisite, Subscriptions
 The following Subscription objects are created by the OZO platform:
 * CommunicationRequest?id
 * Communication?id
 * Task?id
+
 The following Subscription are likely to be created by the ZO client:
 * Task?owner=RelatedPerson/123&status=REQUESTED
 
-
-## Create a new thread, the initial question
+### Create a new thread, the initial question
 As client of the OZO FHIR Api can create a new thread. The process of creating a new thread looks as follows:
 * The OZO client creates a new CommunicationRequest object, the following fields are set:
   * The requester is the RelatePerson
@@ -39,7 +38,7 @@ As client of the OZO FHIR Api can create a new thread. The process of creating a
   * The OZO platform presents the new CommunicationRequest to the recipient
   * The OZO platform accepts the CommunicationRequest by setting the status to ACTIVE
 
-# Respond to a message from the OZO platform
+### Respond to a message from the OZO platform
 A practitioner in the OZO platform responds to a message from a caregiver by the following actions:
 * The OZO platform creates a new Communication with the following fields:
   * The partOf is set to the reference of the CommunicationRequest.
@@ -73,7 +72,7 @@ A practitioner in the OZO platform responds to a message from a caregiver by the
 * The OZO platform receives the update of the Task and does the following:
   * The message is marked as read by the RelatedPerson in the OZO platform.
 
-# Respond to a message from the OZO client
+### Respond to a message from the OZO client
 A caregiver in the OZO platform responds to a message from a practitioner by the following actions:
 * The OZO platform creates a new Communication with the following fields:
   * The partOf is set to the reference of the CommunicationRequest.
@@ -106,40 +105,9 @@ A caregiver in the OZO platform responds to a message from a practitioner by the
   * The Task status is set to COMPLETED
 * The OZO client remains uninformed about the status of the message (CHECK IF CORRECT)
 
-
+### Interaction diagram
+The diagram below displays displays the creation of threads, and responding for both the practitioner and related
+person.
 {% include fhir-messaging-interaction.svg %}
-<br clear="all"/>
 
-# EXAMPLES
-### Subscriptions
-```json
-{
-  "fullUrl": "https://fhir-server.ozo.headease.nl/fhir/Subscription/9820",
-  "resource": {
-    "resourceType": "Subscription",
-    "id": "9820",
-    "meta": {
-      "versionId": "1",
-      "lastUpdated": "2024-10-23T08:04:46.599+00:00",
-      "source": "#fd535b2564f6c6e4",
-      "tag": [
-        {
-          "system": "http://hapifhir.io/fhir/StructureDefinition/subscription-matching-strategy",
-          "code": "IN_MEMORY",
-          "display": "In-memory"
-        }
-      ]
-    },
-    "status": "active",
-    "reason": "Nieuwe of gewijzigde berichten",
-    "criteria": "CommunicationRequest?id",
-    "channel": {
-      "type": "rest-hook",
-      "endpoint": "https://connect.zorgverband.nl/fhir/v4/communication-request/Subscriptions"
-    }
-  },
-  "search": {
-    "mode": "match"
-  }
-}
-```
+
