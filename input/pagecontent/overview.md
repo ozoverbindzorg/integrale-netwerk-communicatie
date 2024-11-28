@@ -175,4 +175,3 @@ The `Subscription` resource is used for clients of the OZO FHIR Api to receive u
 The different interactions are described in the following guides:
 * [use case messaging](usecase-messages.html)
 
-x
