@@ -69,7 +69,7 @@ pages:
     title: Interaction - Creating the network
 
   interaction-messaging.md:
-    title: Interaction - Reading and Messages
+    title: Interaction - Creating Threads and Reading Messages
 
   security-system-access.md:
     title: Security - System Access

@@ -38,7 +38,7 @@ As client of the OZO FHIR Api can create a new thread. The process of creating a
   * The OZO platform presents the new CommunicationRequest to the recipient
   * The OZO platform accepts the CommunicationRequest by setting the status to ACTIVE
 
-### Respond to a message from the OZO platform
+### Respond to a thread from the OZO platform
 A practitioner in the OZO platform responds to a message from a caregiver by the following actions:
 * The OZO platform creates a new Communication with the following fields:
   * The partOf is set to the reference of the CommunicationRequest.
@@ -72,7 +72,7 @@ A practitioner in the OZO platform responds to a message from a caregiver by the
 * The OZO platform receives the update of the Task and does the following:
   * The message is marked as read by the RelatedPerson in the OZO platform.
 
-### Respond to a message from the OZO client
+### Respond to a thread from the OZO client
 A caregiver in the OZO platform responds to a message from a practitioner by the following actions:
 * The OZO platform creates a new Communication with the following fields:
   * The partOf is set to the reference of the CommunicationRequest.
