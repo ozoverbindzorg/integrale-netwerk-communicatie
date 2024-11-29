@@ -8,6 +8,12 @@ TODO: give a functional overview.
 
 ### The OZO care network datamodel
 
+### About the name element.
+
+Please refer to the following documentation of the Dutch name element:
+
+* [NameInformation-v1.0(2017EN)](https://zibs.nl/wiki/NameInformation-v1.0(2017EN))
+
 The FHIR API is based on FHIR R4 and makes use of the following FHIR resources:
 
 #### Patient
@@ -16,9 +22,13 @@ The `Patient` represents the client in the domain, for each real-life patient on
 `Patient`
 is primary identified by the BSN. Required fields:
 
-| field                           | cardinality | description |
-|---------------------------------|-------------|-------------|
-| identifier[system="OZO/Person"] | 1..1        |             |
+| field                           | cardinality | description         |
+|---------------------------------|-------------|---------------------|
+| identifier[system="OZO/Person"] | 1..1        |                     |
+| name                            | 1..*        | The name field, ZIB |
+| gender                          | 1..1        |                     |
+| birthDate                       | 1..1        |                     |
+| active                          | 1..1        | true                |
 
 ##### Identity mapping
 
@@ -34,11 +44,17 @@ each _relationship_
 between a patient and informal caregiver one related person exists. For each real-life person multiple related person
 resources exist, one for each patient it has a caregiving relationship with.
 
-| field                                                                    | cardinality | description                                                                                              |
-|--------------------------------------------------------------------------|-------------|----------------------------------------------------------------------------------------------------------|
-| identifier[system="OZO/NetworkRelation"] identifier[system="OZO/Person"] | 1..*        | The OZO assigned account id                                                                              |
-| name                                                                     | 1..*        | The name field, as ZIB [NameInformation-v1.0(2017EN)](https://zibs.nl/wiki/NameInformation-v1.0(2017EN)) |
-| patient                                                                  | 1..1        | The reference to the patient                                                                             | 
+| field                                                                    | cardinality | description                            |
+|--------------------------------------------------------------------------|-------------|----------------------------------------|
+| identifier[system="OZO/NetworkRelation"] identifier[system="OZO/Person"] | 1..*        | The OZO assigned account id            |
+| name                                                                     | 1..*        | The name field, ZIB                    |
+| patient                                                                  | 1..1        | The reference to the patient           | 
+| relationship                                                             | 1..1        | system=urn:oid:2.16.840.1.113883.5.111 |
+| active                                                                   | 1..1        | true                                   |
+
+The relationship coding can be found here:
+
+* [https://zibs.nl/wiki/Familieanamnese-v3.2(2021NL)](https://zibs.nl/wiki/Familieanamnese-v3.2(2021NL))
 
 ##### Identity mapping
 
@@ -57,10 +73,11 @@ The OZO FHIR `RelatedPerson` uses two identities to identify the RelatedPerson e
 The `Practitioner` represents a health care professional that has a relationship with one or more patients. The
 practitioner is linked to the patient by the care team.
 
-| field                       | cardinality | description                                                                                              |
-|-----------------------------|-------------|----------------------------------------------------------------------------------------------------------|
-| identifier[system=UZI\|BIG] | 1..1        |                                                                                                          |
-| name                        | 1..*        | The name field, as ZIB [NameInformation-v1.0(2017EN)](https://zibs.nl/wiki/NameInformation-v1.0(2017EN)) |
+| field                       | cardinality | description         |
+|-----------------------------|-------------|---------------------|
+| identifier[system=UZI\|BIG] | 1..1        |                     |
+| name                        | 1..1        | The name field, ZIB |
+| active                      | 1..1        | true                |
 
 #### Identity mapping
 
@@ -80,8 +97,9 @@ the `Patient` to different `Organization`s
 
 | field       | Cardinality | description                                                   |
 |-------------|-------------|---------------------------------------------------------------|
-| patients    | 1           | reference to the `Patient`                                    |
+| subject     | 1..1        | reference to the `Patient`                                    |
 | participant | 1..*        | a reference to a `Patient`, `RelatedPerson` or `Practitioner` |
+| status      | 1..1        | "active"                                                      |
 
 
 ##### Examples
@@ -93,9 +111,10 @@ The `Organization` resource represents the different organizations in the networ
 Organization is managed by the participant in the care team. Each member of type Practitioner has an onBehalfOf
 reference to the Organization.
 
-| field | Cardinality | description                    |
-|-------|-------------|--------------------------------|
-| name  | 1           | The name of the `Organization` |
+| field                  | Cardinality | description                    |
+|------------------------|-------------|--------------------------------|
+| identifier[system=ura] | 1..1        |                                |
+| name                   | 1..1        | The name of the `Organization` |
 
 #### Identity mapping
 
@@ -103,9 +122,10 @@ The identifier of the `Organization` _must_ be unique and _should_ the internal 
 system.
 
 ##### Examples
-* [Organization-1](CareTeam-1.html)
-* [Organization-2](CareTeam-2.html)
-* [Organization-3](CareTeam-3.html)
+
+* [Organization-1](Organization-1.html)
+* [Organization-2](Organization-2.html)
+* [Organization-3](Organization-3.html)
 
 ### Diagram
 
@@ -114,7 +134,8 @@ system.
 
 ### Interaction with the OZO FHIR Api
 The different interactions are described in the following guides:
-* [use case network](usecase-network.html)
+
+* [Interaction - Creating the network](interaction-network.html)
 
 
 ### The OZO messaging datamodel
@@ -130,6 +151,16 @@ The `CommunicationRequest` Resource is used to:
 * Manage the participants of a thread in a clear place
 * Display a list of threads for a Patient
 
+##### Fields
+
+| field     | Cardinality | description                                                    |
+|-----------|-------------|----------------------------------------------------------------|
+| status    | 1..1        | draft  \| active \| completed                                  |
+| subject   | 1..1        | Reference to a `Patient`                                       |
+| requester | 1..1        | a reference to a `RelatedPerson` or `Practitioner`             |
+| recipient | 1..*        | a reference to a `RelatedPerson`, `Practitioner` or `CareTeam` |
+| payload   | 1..*        | Initial message                                                |
+
 ##### Examples
 * [CommunicationRequest-10](CommunicationRequest-10.html)
 
@@ -138,14 +169,36 @@ The `Communication` resource is used to:
 
 * Place a message in a thread.
 
+##### Fields
+
+| field     | Cardinality | description                                                                                               |
+|-----------|-------------|-----------------------------------------------------------------------------------------------------------|
+| status    | 1..1        | preparation \| in-progress  \| not-done \| on-hold \| stopped \| completed \| entered-in-error \| unknown |
+| partOf    | 1..1        | Reference to a `CommunicationRequest`                                                                     |
+| sender    | 1..1        | a reference to a `RelatedPerson` or `Practitioner`                                                        |
+| recipient | 1..*        | a reference to a `RelatedPerson`, `Practitioner` or `CareTeam`                                            |
+| payload   | 1..*        | Initial message                                                                                           |
+
 ##### Examples
-* [Communication-15](CommunicationRequest-15.html)
-* [Communication-18](CommunicationRequest-18.html)
+
+* [Communication-15](Communication-15.html)
+* [Communication-18](Communication-18.html)
 
 #### Task
 The `Task` resource is used to:
 * Notify the recipient about a new message.
 * Check the status of the thread
+
+##### Fields
+
+| field   | Cardinality | description                                        |
+|---------|-------------|----------------------------------------------------|
+| status  | 1..1        | requested                                          |
+| basedOn | 1..1        | Reference to a `CommunicationRequest`              |
+| intent  | 1..1        | `order`                                            |
+| for     | 1..1        | a reference to a `Patient`                         |
+| owner   | 1..1        | a reference to a `RelatedPerson` or `Practitioner` |
+| payload | 1..*        | Initial message                                    |
 
 ##### Examples
 * [Task-11](Task-11.html)
@@ -173,5 +226,6 @@ The `Subscription` resource is used for clients of the OZO FHIR Api to receive u
 
 ### Interaction with the OZO FHIR Api
 The different interactions are described in the following guides:
-* [use case messaging](usecase-messages.html)
+
+* [Interaction - Creating Threads and Reading Messages](interaction-messaging.html)
 
