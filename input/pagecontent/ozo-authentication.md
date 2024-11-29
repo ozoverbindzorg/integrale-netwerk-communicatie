@@ -1,11 +1,11 @@
-## Network of trust
-The OZO network of trust can be built through a Verifyable Credential (VC) architecture where OZO is the issuer of membership credentials. OZO, and specifically OZO's did:web, is considered a Trusted Party (TP) by all members who join.
+### Network of trust
+The OZO network of trust can be built through a Verifiable Credential (VC) architecture where OZO is the issuer of membership credentials. OZO, and specifically OZO's did:web, is considered a Trusted Party (TP) by all members who join.
 
-[<img style="float: none!important" src="Trust%201.png" width="50%"/>](Trust%201.png)
+![Image](Trust%201.png)
 
 The membership architecture is as follows: The OZO nuts node issues a VC to the member's NUTS node. This saves him. At the time of communication, the member's NUTS node presents a VP based on the membership VC.
 
-[<img style="float: none!important" src="Trust%202.png" width="50%"/>](Trust%202.png)
+![Image](Trust%202.png)
 
 This model uses the following credential:
 ```yaml
@@ -14,10 +14,10 @@ Issuer: did OZO
 Subject: did Lid
 ```
 
-## Connecting users
+### Connecting users
 Linking users with OZO can be done by issuing a credential (VC) to the NUTS node of the client application, issued by the OZO did:web, linked to the OZO user, and issued to the user's did:web in the client domain.
 
-[<img style="float: none!important" src="Trust%203.png" width="50%"/>](Trust%203.png)
+![Image](Trust%203.png)
 
 This model uses the following credential:
 
@@ -27,19 +27,18 @@ Issuer: another user
 Subject: did client user
 ```
 
+### Explanation of NUTS architecture
+#### Issuance overview
 
-## Explanation of NUTS architecture
-### Issuance overview
-
-[<img style="float: none!important" src="Trust%204.png" width="50%"/>](Trust%204.png)
+![Image](Trust%204.png)
 
 {% include nuts_issuance_overview.svg %}
 
-#### Sequence Diagram Explanation
+##### Sequence Diagram Explanation
 
 This diagram illustrates the process of issuing a Verifiable Credential (VC) to a user and accessing an API using that credential. The sequence is divided into two main groups of operations: **Issue User Access VC** and **Access API**.
 
-##### Issue User Access VC
+###### Issue User Access VC
 
 1. **User Interaction**:
    - The user initiates interaction with the `client_app`.
@@ -60,7 +59,7 @@ This diagram illustrates the process of issuing a Verifiable Credential (VC) to 
 5. **Process Completion**:
    - The `client_nuts` informs the `client_app` that the process is complete.
 
-##### Access API
+###### Access API
 
 1. **Initial User Interaction**:
    - The user interacts with the `client_app`.
@@ -86,11 +85,11 @@ This sequence diagram demonstrates how the system manages the process of VC issu
 
 {% include nuts_issuance_detail.svg %}
 
-#### Sequence Diagram Explanation
+##### Sequence Diagram Explanation
 
 This sequence diagram illustrates the steps involved in obtaining a Verifiable Credential (VC) using the OpenID for Verifiable Credential Issuance (OID4VCI) framework. The interaction involves a user, a client application, a NUTS node client, and an OZO issuer. Here’s a breakdown of the process:
 
-##### Initial Connection and Configuration
+###### Initial Connection and Configuration
 
 1. **User Connection**:
    - The "User Agent" initiates a connection with the `Client application` to start the credential issuance process.
@@ -99,7 +98,7 @@ This sequence diagram illustrates the steps involved in obtaining a Verifiable C
    - The `Client application` instructs the `NUTS node client` to start the OID4VCI issuance process for the issuer identified as `did:web:ozo`.
 
 3. **Request Issuer Configuration**:
-   - The `NUTS node client` queries the `OZO issuer` for its OpenID credential issuer configuration file. 
+   - The `NUTS node client` queries the `OZO issuer` for its OpenID credential issuer configuration file.
    - The `OZO issuer` responds with its configuration details.
 
 4. **Discover Authorization Information**:
@@ -112,7 +111,7 @@ This sequence diagram illustrates the steps involved in obtaining a Verifiable C
    - It generates a URL for the authorization redirect, which includes the `redirect_uri` and any required `authorization_details`.
    - This redirection URL is sent to the `Client application`, which then forwards this information to the user.
 
-##### User Authorization
+###### User Authorization
 
 6. **Authorization Endpoint Access**:
    - The user accesses the authorization endpoint through the `OZO issuer`.
@@ -122,7 +121,7 @@ This sequence diagram illustrates the steps involved in obtaining a Verifiable C
    - The `OZO issuer` validates the user's credentials.
    - Upon successful validation, the user is redirected to a specified redirect URI with an authorization code appended.
 
-##### Credential Issuance
+###### Credential Issuance
 
 8. **Obtain an Access Token**:
    - The user follows the redirect back to the `NUTS node client`, providing the authorization code.
@@ -133,23 +132,22 @@ This sequence diagram illustrates the steps involved in obtaining a Verifiable C
    - The `OZO issuer` generates and returns the VC.
 
 10. **Finalizing the Process**:
-    - The `NUTS node client` securely stores the VC.
-    - A confirmation message is sent back to the user, indicating successful completion of the VC issuance process.
+   - The `NUTS node client` securely stores the VC.
+   - A confirmation message is sent back to the user, indicating successful completion of the VC issuance process.
 
 This structured workflow ensures a secure and reliable end-to-end system for credential issuance, leveraging the capabilities of OpenID for decentralized identity verification.
 
-### Access overview
+#### Access overview
 
-[<img style="float: none!important" src="Trust%205.png" width="50%"/>](Trust%205.png)
+![Image](Trust%205.png)
 
 {% include nuts_access_token.svg %}
 
-
-#### Diagram Explanation
+##### Diagram Explanation
 
 This sequence diagram outlines the interactions required for a client application to obtain an access token and use it to access a specific API, showcasing the collaborative communication between various components. The main participants in this process include the Client App, Client NUTS, NUTS OZO, and OZO API. Here is a detailed explanation of each step:
 
-##### Access Token Request
+###### Access Token Request
 
 1. **Initial Request by Client App**:
    - The `Client App` sends a request to `Client NUTS` for an access token relating to the identity `did:web:user4332`.
@@ -163,7 +161,7 @@ This sequence diagram outlines the interactions required for a client applicatio
 4. **Delivering Presentation Response**:
    - `Client NUTS` generates and sends a `presentation_response` back to `NUTS OZO`, containing the requested credentials.
 
-##### Access Token Processing
+###### Access Token Processing
 
 5. **Validation**:
    - `NUTS OZO` performs the validation of the provided credentials to ensure authenticity and authorize the token issuance.
@@ -172,7 +170,7 @@ This sequence diagram outlines the interactions required for a client applicatio
    - Upon successful validation, `NUTS OZO` sends an access token back to `Client NUTS`.
    - `Client NUTS` then relays this access token to the `Client App`.
 
-##### Accessing the API
+###### Accessing the API
 
 7. **API Request**:
    - The `Client App` uses the access token to make a secured API call to `OZO API`, specifically requesting data from `/api/messages`.
@@ -184,13 +182,6 @@ This sequence diagram outlines the interactions required for a client applicatio
    - `NUTS OZO` confirms the validity of the access token and sends an "ok" response to `OZO API`.
 
 10. **Successful API Response**:
-    - The `OZO API` successfully processes the API request and returns a `200 OK` response, along with the requested data, to the `Client App`.
+   - The `OZO API` successfully processes the API request and returns a `200 OK` response, along with the requested data, to the `Client App`.
 
 This sequence effectively demonstrates a workflow for secure token-based authentication in accessing protected resources via API.
-
-
-
-## Authenticate to the API as RelatedPerson
-
-
-
