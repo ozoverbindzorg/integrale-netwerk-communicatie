@@ -1,11 +1,11 @@
 ### Network of trust
 The OZO network of trust can be built through a Verifiable Credential (VC) architecture where OZO is the issuer of membership credentials. OZO, and specifically OZO's did:web, is considered a Trusted Party (TP) by all members who join.
 
-![Image](Trust%201.png)
+<img alt="Image" style="float: left; width:40%" src="Trust%201.png"/>
 
 The membership architecture is as follows: The OZO nuts node issues a VC to the member's NUTS node. This saves him. At the time of communication, the member's NUTS node presents a VP based on the membership VC.
 
-![Image](Trust%202.png)
+<img alt="Image" style="float: left; width:40%" src="Trust%202.png"/>
 
 This model uses the following credential:
 ```yaml
@@ -17,7 +17,7 @@ Subject: did Lid
 ### Connecting users
 Linking users with OZO can be done by issuing a credential (VC) to the NUTS node of the client application, issued by the OZO did:web, linked to the OZO user, and issued to the user's did:web in the client domain.
 
-![Image](Trust%203.png)
+<img alt="Image" style="float: left; width:40%" src="Trust%203.png"/>
 
 This model uses the following credential:
 
@@ -30,7 +30,7 @@ Subject: did client user
 ### Explanation of NUTS architecture
 #### Issuance overview
 
-![Image](Trust%204.png)
+<img alt="Image" style="float: left; width:40%" src="Trust%204.png"/>
 
 {% include nuts_issuance_overview.svg %}
 
@@ -139,7 +139,7 @@ This structured workflow ensures a secure and reliable end-to-end system for cre
 
 #### Access overview
 
-![Image](Trust%205.png)
+<img alt="Image" style="float: left; width:40%" src="Trust%205.png"/>
 
 {% include nuts_access_token.svg %}
 
