@@ -1,23 +1,11 @@
 Instance: 9
-InstanceOf: CareTeam
+InstanceOf: Practitioner
 Usage: #example
 * meta.versionId = "1"
-* meta.lastUpdated = "2024-11-28T00:23:35.298+00:00"
-* meta.source = "#sSpHvlHhTwgff5Sk"
-* status = #active
-* subject = Reference(4) "H. de Boer"
-* subject.type = "Patient"
-* participant[0].member = Reference(5)
-* participant[=].member.type = "RelatedPerson"
-* participant[+].member = Reference(6) "Manu van Weel"
-* participant[=].member.type = "Practitioner"
-* participant[=].onBehalfOf = Reference(1) "Ziekenhuis de Amsterdam"
-* participant[=].onBehalfOf.type = "Organization"
-* participant[+].member = Reference(7) "Mark Benson"
-* participant[=].member.type = "Practitioner"
-* participant[=].onBehalfOf = Reference(2) "Huisarts van Amsterdam"
-* participant[=].onBehalfOf.type = "Organization"
-* participant[+].member = Reference(8) "A.P. Otheeker"
-* participant[=].member.type = "Practitioner"
-* participant[=].onBehalfOf = Reference(3) "Apotheek de Pil"
-* participant[=].onBehalfOf.type = "Organization"
+* meta.lastUpdated = "2024-12-05T16:24:57.115+00:00"
+* meta.source = "#DcsI5fG7KexfXCQg"
+* active = true
+* name.text = "A.P. Otheeker"
+* name.family = "Otheeker"
+* name.given[0] = "Adrie"
+* name.given[+] = "Pieter"

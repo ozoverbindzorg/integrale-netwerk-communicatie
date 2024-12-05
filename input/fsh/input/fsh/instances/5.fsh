@@ -1,20 +1,16 @@
 Instance: 5
-InstanceOf: RelatedPerson
+InstanceOf: Patient
 Usage: #example
 * meta.versionId = "1"
-* meta.lastUpdated = "2024-11-28T00:23:32.947+00:00"
-* meta.source = "#sdknK7tIHmzOxqyk"
-* identifier[0].system = "OZO/Person"
-* identifier[=].value = "48898909439"
-* identifier[+].system = "OZO/NetworkRelation"
-* identifier[=].value = "0987654321"
-* identifier[+].system = "email"
-* identifier[=].value = "info@example.com"
-* active = true
-* patient = Reference(4) "H. de Boer"
-* patient.type = "Patient"
-* relationship = urn:oid:2.16.840.1.113883.5.111#SONC "Son"
-* name.text = "Kees Groot"
-* name.family = "Groot"
-* name.given[0] = "Kees"
-* name.given[+] = "Gerards"
+* meta.lastUpdated = "2024-12-05T16:24:54.948+00:00"
+* meta.source = "#ZFwWdA2IltYo7EPn"
+* identifier.system = "OZO/Person"
+* identifier.value = "784384"
+* name.text = "H. de Boer"
+* name.family = "de Boer"
+* name.given[0] = "H."
+* name.given[+] = "Hans"
+* telecom.system = #phone
+* telecom.value = "611234567"
+* gender = #male
+* birthDate = "3875-09-25"

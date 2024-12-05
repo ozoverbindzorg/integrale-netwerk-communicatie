@@ -1,16 +1,9 @@
 Instance: 4
-InstanceOf: Patient
+InstanceOf: Organization
 Usage: #example
 * meta.versionId = "1"
-* meta.lastUpdated = "2024-11-28T00:23:32.367+00:00"
-* meta.source = "#laaOJiOgR4gYLMLt"
-* identifier.system = "OZO/Person"
-* identifier.value = "784384"
-* name.text = "H. de Boer"
-* name.family = "de Boer"
-* name.given[0] = "H."
-* name.given[+] = "Hans"
-* telecom.system = #phone
-* telecom.value = "611234567"
-* gender = #male
-* birthDate = "3875-09-25"
+* meta.lastUpdated = "2024-12-05T16:24:54.419+00:00"
+* meta.source = "#LuVc6eX6jhcXsNsE"
+* identifier.system = "ura"
+* identifier.value = "12312312"
+* name = "Apotheek de Pil"

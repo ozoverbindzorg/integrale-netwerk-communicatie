@@ -2,8 +2,8 @@ Instance: 2
 InstanceOf: Organization
 Usage: #example
 * meta.versionId = "1"
-* meta.lastUpdated = "2024-11-28T00:23:31.247+00:00"
-* meta.source = "#7eHIV9G6R0eH9PuR"
+* meta.lastUpdated = "2024-12-05T16:24:53.366+00:00"
+* meta.source = "#jRZdYk5ZuRbbFy50"
 * identifier.system = "ura"
-* identifier.value = "312132312"
-* name = "Huisarts van Amsterdam"
+* identifier.value = "23123123123"
+* name = "Ziekenhuis de Amsterdam"
