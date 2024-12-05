@@ -4,7 +4,7 @@ participant "Client NUTS" as client_nuts
 
 participant "NUTS OZO" as nuts_ozo
 boundary "OZO apl" as ozo_api
-
+group Get access_token
 client_app -> client_nuts: request access_token for\n did:web:user4332
 client_nuts -> nuts_ozo: request access_token for\n did:web:user4332
 nuts_ozo -> client_nuts: presentation_request \n(OZOMembershipCredential, OZOUserCredential)
@@ -12,8 +12,11 @@ client_nuts --> nuts_ozo: presentation_response \n(OZOMembershipCredential, OZOU
 nuts_ozo -> nuts_ozo: validate
 nuts_ozo --> client_nuts: access_token
 client_nuts --> client_app: access_token
+end
+group Use access_token
 client_app -> ozo_api: GET /api/messages \n [Authoroization: Bearer access_token]
 ozo_api -> nuts_ozo: introspect\n(access_token)
 nuts_ozo --> ozo_api: ok
 ozo_api --> client_app: 200 OK [data]
+end
 @enduml
