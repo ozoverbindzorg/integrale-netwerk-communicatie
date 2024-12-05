@@ -215,6 +215,7 @@ export async function getAccessToken(baseUrl: string, subject:string) {
   * The field `dpop_kid` if the `token_type` is DPoP, used for requesting the DPoP header
   * The `expires_in` depicting the validity of the token.
   * The `token_type`, either Bearer of DPoP.
+
 ##### Example
 ```JSON
 {

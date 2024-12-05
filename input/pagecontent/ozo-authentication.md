@@ -159,7 +159,7 @@ This structured workflow ensures a secure and reliable end-to-end system for cre
 
 ###### Process
 
-####### Get Access Token
+**Get Access Token**
 
 1. **Client App** sends a request to **Client NUTS** to get a service access token.
 2. **Client NUTS** forwards the request to **NUTS OZO** to obtain an access token for a specific subject.
@@ -170,7 +170,7 @@ This structured workflow ensures a secure and reliable end-to-end system for cre
 7. **Client NUTS** creates a DPoP key.
 8. **Client NUTS** returns the **access token** along with a DPoP Key ID (dpop_kid) to the **Client App**.
 
-####### Use Access Token
+**Use Access Token**
 
 1. **Client App** initiates a request to **Client NUTS** to get a DPoP token.
 2. **Client NUTS** signs the request using the **DPoP keypair**.

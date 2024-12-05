@@ -70,7 +70,8 @@ async function _createSubject(baseUrl: string, subject: string) {
 
 ### Get the DID from the subject
 * `baseUrl`, from internal NUTS url: example https://nuts-node-int.example.com
-- `subject`, the subject representing the OZO system, for example `ozo-connect`.
+*`subject`, the subject representing the OZO system, for example `ozo-connect`.
+
 ```typescript
 async function _getDid(baseUrl: string, subject: string) {
     url = `${baseUrl}/internal/vdr/v2/subject/${subject}`
@@ -176,6 +177,7 @@ export async function getAccessToken(baseUrl: string, subject:string) {
   * The field `dpop_kid` if the `token_type` is DPoP, used for requesting the DPoP header
   * The `expires_in` depicting the validity of the token.
   * The `token_type`, either Bearer of DPoP.
+
 ##### Example
 ```JSON
 {
