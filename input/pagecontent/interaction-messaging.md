@@ -92,18 +92,8 @@ A caregiver in the **OZO client** responds to a message from a practitioner by t
         * The owner is set to the recipient.
 * The **OZO platform** receives a notification about a new Task and takes the following action:
   * The **OZO platform** delivers the task to the practitioners in the `CareTeam`, as one practitioner of the `CareTeam` reads the message, the messages is marked as read for all the members in the `CareTeam`.
-  * The **OZO platform** creates and AuditEvent with the following properties:
-    * the type is set to `http://terminology.hl7.org/CodeSystem/iso-21089-lifecycle|access`
-    * the action is set to 'R'
-    * the recorded field is set to 'now()'
-    * the agent.who field is set to the `Practitioner`
-    * the entity.what field has two values:
-      * a reference to the `Communication`
-      * a reference to the `CommunicationRequest`
-* The  **OZO FHIR Api** does the following:
-  * The Task is queried for the `Practitioner` as part of the agent.who of the AuditEvent
-  * The Task status is set to COMPLETED
-* The **OZO client** remains uninformed about the status of the message (CHECK IF CORRECT)
+  * The **OZO platform** does not create and AuditEvent.
+* The **OZO client** remains uninformed about the status of the message.
 
 ### Interaction diagram
 The diagram below displays displays the creation of threads, and responding for both the practitioner and related
