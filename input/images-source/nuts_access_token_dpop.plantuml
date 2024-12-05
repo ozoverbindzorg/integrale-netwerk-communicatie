@@ -1,0 +1,39 @@
+@startuml
+participant "Client App" as client_app
+participant "Client NUTS" as client_nuts
+
+participant "NUTS OZO" as nuts_ozo
+boundary "OZO apl" as ozo_api
+entity "access_token" as access_token
+entity "DPoP keypair" as dpop_key
+
+group Get access_token
+    client_app -> client_nuts: /request-service-access-token
+    client_nuts -> nuts_ozo: request access_token for\n subject x
+    nuts_ozo -> client_nuts: presentation_request \n(OZOMembershipCredential, OZOUserCredential)
+    create access_token
+    nuts_ozo -> access_token: create
+    client_nuts --> nuts_ozo: presentation_response \n(OZOMembershipCredential, OZOUserCredential)
+    nuts_ozo -> nuts_ozo: validate
+    nuts_ozo --> client_nuts: access_token
+    create dpop_key
+    client_nuts --> dpop_key: create
+    client_nuts --> client_app: access_token + dpop_kid
+end
+group Use access_token
+    group Get DPoP token
+        client_app -> client_nuts: get dpop_token
+        client_nuts -> dpop_key: sign
+        client_nuts --> client_app: dpop_token
+    end
+    client_app -> ozo_api: GET /api/messages [\n Authoroization: DPoP access_token\n DPoP: dpop_token]
+    ozo_api -> nuts_ozo: introspect\n(access_token)
+    nuts_ozo -> access_token: check
+    nuts_ozo --> ozo_api: ok
+    ozo_api -> nuts_ozo: introspect\n(dpop_token)
+    nuts_ozo -> dpop_token: verify dpop_token
+    nuts_ozo --> ozo_api: ok
+    ozo_api --> client_app: 200 OK [data]
+end
+
+@enduml

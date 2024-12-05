@@ -141,47 +141,47 @@ This structured workflow ensures a secure and reliable end-to-end system for cre
 
 <img alt="Image" style="float: none; width:40%; display: block" src="Trust%205.png"/>
 
-{% include nuts_access_token.svg %}
+{% include nuts_access_token_dpop.svg %}
 
-##### Diagram Explanation
+##### UML Sequence Diagram Explanation
 
-This sequence diagram outlines the interactions required for a client application to obtain an access token and use it to access a specific API, showcasing the collaborative communication between various components. The main participants in this process include the Client App, Client NUTS, NUTS OZO, and OZO API. Here is a detailed explanation of each step:
+###### Participants
 
-###### Access Token Request
+- **Client App**: Represents the application client which initiates the requests.
+- **Client NUTS**: Acts as a mediator for the client app to interact with other services.
+- **NUTS OZO**: A service that handles the access token creation and validation.
+- **OZO API**: An application boundary that provides endpoints for the client app to access.
 
-1. **Initial Request by Client App**:
-   - The `Client App` sends a request to `Client NUTS` for an access token relating to the identity `did:web:user4332`.
+###### Entities
 
-2. **Forwarding the Request**:
-   - `Client NUTS` forwards the request to `NUTS OZO` to obtain the required access token for `did:web:user4332`.
+- **Access Token**: A token used for authentication and authorization.
+- **DPoP Keypair**: A keypair used to generate DPoP tokens.
 
-3. **Presentation Request**:
-   - `NUTS OZO` sends a `presentation_request` to `Client NUTS`, asking for credentials (`OZOMembershipCredential` and `OZOUserCredential`) to be presented.
+###### Process
 
-4. **Delivering Presentation Response**:
-   - `Client NUTS` generates and sends a `presentation_response` back to `NUTS OZO`, containing the requested credentials.
+####### Get Access Token
 
-###### Access Token Processing
+1. **Client App** sends a request to **Client NUTS** to get a service access token.
+2. **Client NUTS** forwards the request to **NUTS OZO** to obtain an access token for a specific subject.
+3. **NUTS OZO** sends a `presentation_request` back to **Client NUTS** requiring membership and user credentials.
+4. **NUTS OZO** creates an **access token** upon receiving the `presentation_response` from **Client NUTS** containing the required credentials.
+5. **NUTS OZO** validates the presentation response.
+6. On successful validation, **NUTS OZO** sends the generated **access token** back to **Client NUTS**.
+7. **Client NUTS** creates a DPoP key.
+8. **Client NUTS** returns the **access token** along with a DPoP Key ID (dpop_kid) to the **Client App**.
 
-5. **Validation**:
-   - `NUTS OZO` performs the validation of the provided credentials to ensure authenticity and authorize the token issuance.
+####### Use Access Token
 
-6. **Issuing Access Token**:
-   - Upon successful validation, `NUTS OZO` sends an access token back to `Client NUTS`.
-   - `Client NUTS` then relays this access token to the `Client App`.
+1. **Client App** initiates a request to **Client NUTS** to get a DPoP token.
+2. **Client NUTS** signs the request using the **DPoP keypair**.
+3. The signed DPoP token is returned to **Client App**.
+4. **Client App** makes an authenticated request to **OZO API** with the **access token** and **dpop_token**.
+5. **OZO API** introspects the **access token** with **NUTS OZO**.
+6. **NUTS OZO** checks the **access token**'s validity.
+7. On successful validation, **NUTS OZO** indicates success to **OZO API**.
+8. **OZO API** then introspects the **dpop_token** with **NUTS OZO**.
+9. **NUTS OZO** verifies the **dpop_token**.
+10. On successful verification, **NUTS OZO** signals success back to **OZO API**.
+11. **OZO API** responds successfully to the **Client App** with the requested data.
 
-###### Accessing the API
-
-7. **API Request**:
-   - The `Client App` uses the access token to make a secured API call to `OZO API`, specifically requesting data from `/api/messages`.
-
-8. **Token Introspection**:
-   - `OZO API` seeks to verify the access token's validity through a token introspection request to `NUTS OZO`.
-
-9. **Verification Success**:
-   - `NUTS OZO` confirms the validity of the access token and sends an "ok" response to `OZO API`.
-
-10. **Successful API Response**:
-   - The `OZO API` successfully processes the API request and returns a `200 OK` response, along with the requested data, to the `Client App`.
-
-This sequence effectively demonstrates a workflow for secure token-based authentication in accessing protected resources via API.
+This diagram outlines the flow for obtaining and using an access token with DPoP for secure communication between the client application and the server, illustrating interaction sequences among different participants.
