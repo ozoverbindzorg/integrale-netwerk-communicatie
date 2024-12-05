@@ -95,11 +95,11 @@ cases require this. A CareTeam has a set of `participants` that consists of a `m
 relationship _should_ also contain the `onBehalfOf` property, linking to the `Organization`, this maps the relation of
 the `Patient` to different `Organization`s
 
-| field       | Cardinality | description                                                   |
-|-------------|-------------|---------------------------------------------------------------|
-| subject     | 1..1        | reference to the `Patient`                                    |
-| participant | 1..*        | a reference to a `Patient`, `RelatedPerson` or `Practitioner` |
-| status      | 1..1        | "active"                                                      |
+| field       | Cardinality | description                                                               |
+|-------------|-------------|---------------------------------------------------------------------------|
+| subject     | 1..1        | reference to the `Patient`                                                |
+| participant | 1..*        | a reference to a `Patient`, `RelatedPerson`, `Practitioner` or `CareTeam` |
+| status      | 1..1        | "active"                                                                  |
 
 
 ##### Examples
@@ -153,13 +153,13 @@ The `CommunicationRequest` Resource is used to:
 
 ##### Fields
 
-| field     | Cardinality | description                                                    |
-|-----------|-------------|----------------------------------------------------------------|
-| status    | 1..1        | draft  \| active \| completed                                  |
-| subject   | 1..1        | Reference to a `Patient`                                       |
-| requester | 1..1        | a reference to a `RelatedPerson` or `Practitioner`             |
-| recipient | 1..*        | a reference to a `RelatedPerson`, `Practitioner` or `CareTeam` |
-| payload   | 1..*        | Initial message                                                |
+| field     | Cardinality | description                                                          |
+|-----------|-------------|----------------------------------------------------------------------|
+| status    | 1..1        | draft  \| active \| completed                                        |
+| subject   | 1..1        | Reference to a `Patient`                                             |
+| requester | 1..1        | a reference to a `RelatedPerson` or `Practitioner`                   |
+| recipient | 1..*        | a reference to a `RelatedPerson`, `Practitioner` or `CareTeam`       |
+| payload   | 1..*        | Message or attachment, one of `contentString` or `contentAttachment` |
 
 ##### Examples
 * [CommunicationRequest-10](CommunicationRequest-10.html)
@@ -177,12 +177,18 @@ The `Communication` resource is used to:
 | partOf    | 1..1        | Reference to a `CommunicationRequest`                                                                     |
 | sender    | 1..1        | a reference to a `RelatedPerson` or `Practitioner`                                                        |
 | recipient | 1..*        | a reference to a `RelatedPerson`, `Practitioner` or `CareTeam`                                            |
-| payload   | 1..*        | Initial message                                                                                           |
+| payload   | 1..*        | Message or attachment, one of `contentString` or `contentAttachment`                                      |
 
 ##### Examples
 
 * [Communication-15](Communication-15.html)
 * [Communication-18](Communication-18.html)
+
+##### Attachment
+
+The `Attachment` resource is used to:
+
+* Add documents to the `CommunicationRequesr` and `Communication` resource.
 
 #### Task
 The `Task` resource is used to:
@@ -198,12 +204,12 @@ The `Task` resource is used to:
 | intent  | 1..1        | `order`                                            |
 | for     | 1..1        | a reference to a `Patient`                         |
 | owner   | 1..1        | a reference to a `RelatedPerson` or `Practitioner` |
-| payload | 1..*        | Initial message                                    |
 
 ##### Examples
 * [Task-11](Task-11.html)
 * [Task-12](Task-12.html)
 * [Task-13](Task-13.html)
+* [Task-14](Task-14.html)
 * [Task-18](Task-18.html)
 
 #### AuditEvent
@@ -213,6 +219,7 @@ The `AuditEvent` is used to:
 ##### Examples
 * [AuditEvent-16](AuditEvent-16.html)
 * [AuditEvent-17](AuditEvent-17.html)
+* [AuditEvent-20](AuditEvent-20.html)
 
 ### Subscriptions
 
