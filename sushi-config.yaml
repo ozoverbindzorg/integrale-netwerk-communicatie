@@ -88,6 +88,9 @@ pages:
 
   technical-walkthrough-access-rp.md:
     title: Access the API as RelatedPerson System
+
+  technical-walkthrough-validate-access-token.md:
+    title: Validate Access Tokens and DPoP headers
 #
 #  security-privacy.md:
 #    title: Security - Privacy
@@ -151,6 +154,7 @@ menu:
     Authentication: ozo-authentication.html
     Authorization: ozo-authorization.html
   Technical Walkthrough:
+    Validate Access Tokens and DPoP headers: technical-walkthrough-validate-access-token
     Access the API as OZO System: technical-walkthrough-access-ozo.html
     Access the API as Related Person: technical-walkthrough-access-rp.html
   Interactions:
