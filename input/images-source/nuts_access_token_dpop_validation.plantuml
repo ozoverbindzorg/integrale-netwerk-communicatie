@@ -1,0 +1,27 @@
+@startuml
+title Access Token and DPoP Token Flow
+
+actor Client
+participant "NUTS Node" as NutsNode
+participant "Authorization Server" as AuthServer
+
+Client -> NutsNode: Request Access Token
+NutsNode -> AuthServer: POST /internal/auth/v2/{subject}/request-service-access-token
+AuthServer -> NutsNode: JSON { access_token, dpop_kid, expires_in, token_type }
+NutsNode -> Client: JSON { access_token, dpop_kid, expires_in, token_type }
+
+Client -> NutsNode: Request DPoP Header
+NutsNode -> NutsNode: POST /internal/auth/v2/dpop/{dpop_kid}
+NutsNode -> Client: JSON { dpop }
+
+Client -> API: API Request with Access Token and DPoP Header
+API -> NutsNode: Validate Access Token
+NutsNode -> AuthServer: POST /internal/auth/v2/accesstoken/introspect
+AuthServer -> NutsNode: JSON { active, client_id, cnf, exp, iat, iss, scope }
+NutsNode -> API: Validation Result
+
+API -> NutsNode: Validate DPoP Header
+NutsNode -> NutsNode: Validate DPoP Header with { dpop_header, thumbprint, access_token, http_url, http_method }
+NutsNode -> API: Validation Result
+
+@enduml
