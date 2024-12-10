@@ -35,7 +35,7 @@ is primary identified by the BSN. Required fields:
 The identifier of the `Patient` _must_ be unique and _should_ the internal identifier of the patient in the OZO system.
 
 ##### Examples
-* [Patient-4](Patient-4.html)
+* [Patient-5](Patient-5.html)
 
 #### Related Person
 
@@ -66,7 +66,7 @@ The OZO FHIR `RelatedPerson` uses two identities to identify the RelatedPerson e
    and the patient.
 
 ##### Examples
-* [RelatedPerson-5](RelatedPerson-5.html)
+* [RelatedPerson-6](RelatedPerson-6.html)
 
 #### Practitioner
 
@@ -85,7 +85,9 @@ The identifier of the `Practitioner` _must_ be unique and _should_ the internal 
 system.
 
 ##### Examples
-* [Practitioner-6](Practitioner-6.html)
+* [Practitioner-7](Practitioner-7.html)
+* [Practitioner-8](Practitioner-8.html)
+* [Practitioner-9](Practitioner-9.html)
 
 #### CareTeam
 
@@ -103,7 +105,7 @@ the `Patient` to different `Organization`s
 
 
 ##### Examples
-* [CareTeam-9](CareTeam-9.html)
+* [CareTeam-10](CareTeam-10.html)
 
 #### Organization
 
@@ -126,6 +128,7 @@ system.
 * [Organization-1](Organization-1.html)
 * [Organization-2](Organization-2.html)
 * [Organization-3](Organization-3.html)
+* [Organization-4](Organization-4.html)
 
 ### Diagram
 
@@ -162,7 +165,7 @@ The `CommunicationRequest` Resource is used to:
 | payload   | 1..*        | Message or attachment, one of `contentString` or `contentAttachment` |
 
 ##### Examples
-* [CommunicationRequest-10](CommunicationRequest-10.html)
+* [CommunicationRequest-11](CommunicationRequest-11.html)
 
 #### Communication
 The `Communication` resource is used to:
@@ -181,8 +184,7 @@ The `Communication` resource is used to:
 
 ##### Examples
 
-* [Communication-15](Communication-15.html)
-* [Communication-18](Communication-18.html)
+* [Communication-16](Communication-16.html)
 
 ##### Attachment
 
@@ -206,19 +208,17 @@ The `Task` resource is used to:
 | owner   | 1..1        | a reference to a `RelatedPerson` or `Practitioner` |
 
 ##### Examples
-* [Task-11](Task-11.html)
 * [Task-12](Task-12.html)
 * [Task-13](Task-13.html)
 * [Task-14](Task-14.html)
-* [Task-18](Task-18.html)
 
 #### AuditEvent
 The `AuditEvent` is used to:
 * Update the `Task` status field as client of the OZO FHIR Api 
 
 ##### Examples
-* [AuditEvent-16](AuditEvent-16.html)
 * [AuditEvent-17](AuditEvent-17.html)
+* [AuditEvent-18](AuditEvent-18.html)
 * [AuditEvent-20](AuditEvent-20.html)
 
 ### Subscriptions
