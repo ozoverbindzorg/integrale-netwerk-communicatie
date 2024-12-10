@@ -70,8 +70,6 @@ export async function introspect(base_url: string, access_token: string) {
 - `http_url`, the url from the request.
 - `http_method`, the HTTP method from the request, such as `GET` or `POST`.
 
-```TypeScript
-
 ```JSON
 {
   "dpop_proof": "<dpop_header>",
