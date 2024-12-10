@@ -65,12 +65,6 @@ pages:
   overview.md:
     title: Overview
 
-  interaction-network.md:
-    title: Interaction - Creating the network
-
-  interaction-messaging.md:
-    title: Interaction - Creating Threads and Reading Messages
-
   security-system-access.md:
     title: Security - System Access
 
@@ -83,14 +77,21 @@ pages:
   ozo-authorization.md:
     title: Authorization
 
+  technical-walkthrough-validate-access-token.md:
+    title: Validate Access Tokens and DPoP headers
+
   technical-walkthrough-access-ozo.md:
     title: Access the API as OZO System
 
   technical-walkthrough-access-rp.md:
     title: Access the API as RelatedPerson System
 
-  technical-walkthrough-validate-access-token.md:
-    title: Validate Access Tokens and DPoP headers
+  interaction-network.md:
+    title: Interaction - Creating the network
+
+  interaction-messaging.md:
+    title: Interaction - Creating Threads and Reading Messages
+
 #
 #  security-privacy.md:
 #    title: Security - Privacy
@@ -154,7 +155,7 @@ menu:
     Authentication: ozo-authentication.html
     Authorization: ozo-authorization.html
   Technical Walkthrough:
-    Validate Access Tokens and DPoP headers: technical-walkthrough-validate-access-token
+    Validate Access Tokens and DPoP headers: technical-walkthrough-validate-access-token.html
     Access the API as OZO System: technical-walkthrough-access-ozo.html
     Access the API as Related Person: technical-walkthrough-access-rp.html
   Interactions:
