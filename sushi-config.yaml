@@ -77,6 +77,9 @@ pages:
   ozo-authorization.md:
     title: Authorization
 
+  technical-walkthrough-mtls.md:
+    title: Setup Mutual TLS for OZO
+
   technical-walkthrough-validate-access-token.md:
     title: Validate Access Tokens and DPoP headers
 
@@ -155,6 +158,7 @@ menu:
     Authentication: ozo-authentication.html
     Authorization: ozo-authorization.html
   Technical Walkthrough:
+    Setup Mutual TLS for OZO: technical-walkthrough-mtls.html
     Validate Access Tokens and DPoP headers: technical-walkthrough-validate-access-token.html
     Access the API as OZO System: technical-walkthrough-access-ozo.html
     Access the API as Related Person: technical-walkthrough-access-rp.html
