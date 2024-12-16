@@ -1,5 +1,5 @@
 @startuml
-title Access Token and DPoP Token Flow
+title Validate Access Token and DPoP Header
 
 actor Client
 participant "NUTS Node" as NutsNode
