@@ -83,6 +83,9 @@ pages:
   technical-walkthrough-validate-access-token.md:
     title: Validate Access Tokens and DPoP headers
 
+  technical-walkthrough-access.md:
+    title: Access the API
+
   technical-walkthrough-access-ozo.md:
     title: Access the API as OZO System
 
@@ -94,6 +97,9 @@ pages:
 
   interaction-messaging.md:
     title: Interaction - Creating Threads and Reading Messages
+
+  interaction-dropbox.md:
+    title: Adding attachments with the dropbox
 
 #
 #  security-privacy.md:
@@ -160,11 +166,14 @@ menu:
   Technical Walkthrough:
     Setup Mutual TLS for OZO: technical-walkthrough-mtls.html
     Validate Access Tokens and DPoP headers: technical-walkthrough-validate-access-token.html
-    Access the API as OZO System: technical-walkthrough-access-ozo.html
-    Access the API as Related Person: technical-walkthrough-access-rp.html
+    Getting Access to the APIs:
+      Access the API: technical-walkthrough-access.html
+      Access the API as OZO System: technical-walkthrough-access-ozo.html
+      Access the API as Related Person: technical-walkthrough-access-rp.html
   Interactions:
     Creating the network: interaction-network.html
     Reading and updating messages: interaction-messaging.html
+    Adding attachments with the dropbox: interaction-dropbox.html
 #    Get data for home care: usecase-view-all-data.html
 #    Referral/Nursing handoff: usecase-nursing-handoff.html
 #
