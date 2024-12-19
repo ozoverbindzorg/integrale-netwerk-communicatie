@@ -166,10 +166,8 @@ menu:
   Technical Walkthrough:
     Setup Mutual TLS for OZO: technical-walkthrough-mtls.html
     Validate Access Tokens and DPoP headers: technical-walkthrough-validate-access-token.html
-    Getting Access to the APIs:
-      Access the API: technical-walkthrough-access.html
-      Access the API as OZO System: technical-walkthrough-access-ozo.html
-      Access the API as Related Person: technical-walkthrough-access-rp.html
+    Access the API as OZO System: technical-walkthrough-access-ozo.html
+    Access the API as Related Person: technical-walkthrough-access-rp.html
   Interactions:
     Creating the network: interaction-network.html
     Reading and updating messages: interaction-messaging.html
