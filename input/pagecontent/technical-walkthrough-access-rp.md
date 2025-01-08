@@ -195,7 +195,7 @@ export async function getAccessToken(baseUrl: string, subject:string) {
     const url = `${baseUrl}/internal/auth/v2/${subject}/request-service-access-token`;
     const data = {
         "authorization_server": authorization_server,
-        "scope": "other",
+        "scope": "sub",
         "token_type" : 'DPoP' // "Bearer" if skipping DPoP
     }
     return await fetch(url, {
