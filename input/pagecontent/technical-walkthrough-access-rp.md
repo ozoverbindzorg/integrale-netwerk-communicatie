@@ -191,7 +191,7 @@ A JSON map with the `access_token` as access token and, in case of token type th
 
 ```typescript
 export async function getAccessToken(baseUrl: string, subject:string) {
-    const authorization_server = `https://nuts-node.ozo.headease.nl/oauth2/ozo`
+    const authorization_server = `https://nuts-node-ozo.ozo.headease.nl/oauth2/ozo`
     const url = `${baseUrl}/internal/auth/v2/${subject}/request-service-access-token`;
     const data = {
         "authorization_server": authorization_server,
