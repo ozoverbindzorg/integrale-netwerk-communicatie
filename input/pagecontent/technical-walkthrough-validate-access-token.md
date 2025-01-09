@@ -64,19 +64,29 @@ export async function introspect(base_url: string, access_token: string) {
 
 #### Parameters:
 
-- `dpop_header`, the DPoP header from the request.
+- `dpop_header`, the DPoP header of the request.
 - `thumbprint`, the thumbprint from the introspection response at the field `cnf.jkt`.
-- `access_token`, the access_token from the Authorization header.
-- `http_url`, the url from the request.
-- `http_method`, the HTTP method from the request, such as `GET` or `POST`.
+- `access_token`, the access_token from the Authorization header of the request.
+- `request_url`, the URL of the request.
+- `request_method`, the HTTP method from the request, such as `GET` or `POST`.
 
-```JSON
-{
-  "dpop_proof": "<dpop_header>",
-  "thumbprint": "<cnf.jkt>",
-  "token": "<access_token>",
-  "url": "<http_url>",
-  "method": "<http_method>"
+```TypeScript
+export async function valudate_dpop(base_url: string, access_token: string, dpop_header:string, cnfJkt: string, request_url: string, request_method: string) {
+    const url = `${base_url}/internal/auth/v2/dpop/validate`
+    const data = {
+      "dpop_proof": dpop_header,
+      "thumbprint": cnfJkt,
+      "token": access_token,
+      "url": request_url,
+      "method": request_method
+    }
+    return await fetch(url, {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }).then((data) => data.json())
 }
 ```
 #### Response
