@@ -1,56 +1,58 @@
 @startuml
-participant User
-participant App
-entity KeyPair
-participant BackEnd
-participant FireBase
-participant Nuts
-participant OZO
+actor usr as "User"
+control fire as "Fire Base"
+control app as "Hello App"
+control api as "Hello Api"
+control nuts as "Nuts Node"
+control ozo as "OZO Api"
+control ozo_auth as "OZO Auth"
+entity secret as "App Secret"
+entity vc as "OzoUserCredential"
 
-
-group Setup OZO
-User -> App: start with OZO
-App <--> User: something biometric
-App -> KeyPair: create
-App -> KeyPair: sign JWT
-App -> App: create data (Request + METHOD + jti (uuid))
-KeyPair --> App: signed data + public key
-App -> BackEnd: init OZO (signed data + public key)
-BackEnd -> BackEnd: verify signature signed data
-BackEnd -> FireBase: register hash(public key)
-BackEnd -> Nuts: create subject subject=firebase identity
-BackEnd -> OZO: fetch credentials
-OZO -> Nuts: place credential
-OZO <--> User: log in
-OZO --> BackEnd: done
+app -> fire: login
+fire <--> usr: identify
+fire --> app: JWT
+app -> secret: fetch
+alt No secret present
+app -> secret: create
+app -> app: store
 end
-
-group Use OZO
-User -> App: view OZO messages OZO
-App <--> User: something biometric
-App -> KeyPair: unseal
-App -> App: create data (Request + METHOD + jti (uuid))
-App -> KeyPair: sign JWT
-KeyPair --> App: signed data + public key
-App -> BackEnd: fetch data (sign JWT + public key)
-BackEnd -> BackEnd: verify signature signed data
-BackEnd -> FireBase: validate hash(public key) met firebase attrubuut
-BackEnd -> OZO: get accesstoken subject=firebase identity
-
+app -> api: GET / HTTP1.1\nHeader: X-Ozo-Key: App Secret\nHeader: X-Fire-Key: JWT
+api -> api: validate JWT
+api -> fire: get user properties
+fire --> api: user properties
+api -> api: check for ozo subject property
+alt No property present
+api -> nuts: create subject
+nuts --> api: subject
+api -> api: Step 1: encrypt with Api Secret
+api -> api: Step 2: encrypt with App Secret
+api -> fire: store encrypted subject
+group authentication
+app -> nuts: request OIDC4CVI flow to authenticate the user
+nuts --> app: redirect URL
+app -> usr: redirect /auth
+usr -> ozo_auth: GET /auth
+ozo_auth <-> usr: login
+ozo_auth -> vc: create
+ozo_auth <-> nuts: store VC for subject (simplification)
+ozo_auth -> usr: redirect
+usr --> app: done
 end
-
-
-group Encryption
-App -> BackEnd: give public key
-BackEnd -> BackEnd: generate data to encrypt
-BackEnd -> BackEnd: encryption data w/public key
-BackEnd --> App: encrypted data
-App -> KeyPair: decrypt data
-App -> BackEnd: GET + decrypted data
-
+else Property present
+api -> api: Step 1: decrypt with App Secret
+api -> api: Step 2: decrypt with Api Secret
+note right
+If the decryption fails, the "No property present" needs to be executed.
+end note
+api -> nuts: get subject
 end
+api -> nuts: get access_token for subject
+nuts -> vc: use
+nuts --> api: access_token
+api -> nuts: sign request
+nuts --> api: dpop_token
 
-
-
+api -> ozo: GET /fhir/RelatedPerson\nHeader: Authorization access_token\nHeader: DPoP dpop
 
 @enduml
