@@ -71,8 +71,8 @@ pages:
   security-client-access.md:
     title: Security - Client Access
 
-  firebase-app-security.md:
-    title: Firebase App Security
+  client-app-security.md:
+    title: Client App Security
 
   ozo-authentication.md:
     title: Authentication
@@ -166,7 +166,7 @@ menu:
   Security:
     Authentication: ozo-authentication.html
     Authorization: ozo-authorization.html
-    Firebase App Security: firebase-app-security.html
+    Client App Security: client-app-security.html
   Technical Walkthrough:
     Setup Mutual TLS for OZO: technical-walkthrough-mtls.html
     Validate Access Tokens and DPoP headers: technical-walkthrough-validate-access-token.html
