@@ -93,7 +93,7 @@ pages:
     title: Access the API as OZO System
 
   technical-walkthrough-access-rp.md:
-    title: Access the API as RelatedPerson System
+    title: Access the API as RelatedPerson
 
   interaction-network.md:
     title: Interaction - Creating the network
