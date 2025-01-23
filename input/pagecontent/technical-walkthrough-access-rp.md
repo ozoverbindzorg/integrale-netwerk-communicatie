@@ -241,6 +241,8 @@ The following example code fetches the header:
 * `baseUrl`, from internal NUTS url: example https://nuts-node-client-int.ozo.headease.nl
 * `dpop_kid`: the dpop_kid from the access token response.
 * `access_token`: the access_token from the token response.
+* `requestMethod`: the request method in capitals, eg GET, POST or DELETE
+* `requestUrl`: The URL used in the request. eg. https://example.com/fhir/Patient
 
 ```typescript
 export async function getDpopHeader(baseUrl: string, dpop_kid: string, token: string, requestMethod: string, requestUrl: string) : Promise<{ dpop: string }> {
