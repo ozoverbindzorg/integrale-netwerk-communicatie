@@ -2,7 +2,7 @@ pages:
   image: docker:latest
   stage: build
   services:
-    - docker:dind-stable
+    - docker:stable-dind
   variables:
     IMAGE_NAME: $CI_REGISTRY/headease/ozo-refererence-impl/headease-ig-builder/main:latest
   script:
