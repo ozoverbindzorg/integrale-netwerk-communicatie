@@ -1,8 +1,8 @@
 pages:
-  image: docker:20.10.16
+  image: docker:24.0.5
   stage: build
   services:
-    - docker:20.10.16-dind
+    - docker:24.0.5-dind
   variables:
     IMAGE_NAME: $CI_REGISTRY/headease/ozo-refererence-impl/headease-ig-builder/main:latest
   script:
