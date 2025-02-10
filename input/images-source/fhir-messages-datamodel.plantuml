@@ -28,6 +28,12 @@ RECTANGLE Communication {
   ...
 }
 
+RECTANGLE Attachment {
+  +contentType: code
+  +data: base64Binary
+  ...
+}
+
 RECTANGLE Task {
   +status: code
   +focus: Reference(Communication)
@@ -35,11 +41,13 @@ RECTANGLE Task {
   ...
 }
 
-RECTANGLE Attachment {
-  +contentType: code
-  +data: base64Binary
+RECTANGLE AuditEvent {
+  +entity: Reference(Task)
+  +agent: Reference(Patient)
+  +action: code
   ...
 }
+
 
 Patient "1" <-- "1..*" CareTeam : has >
 CareTeam "1..*" -right-> CommunicationRequest : requests communication >
@@ -47,5 +55,7 @@ CommunicationRequest <-- "0..*" Communication : based on
 Communication <-- "0..*" Task : is focus of >
 CommunicationRequest "0..*" -- Attachment : includes >
 Communication "0..*" -- Attachment : includes >
-Task "0..*" -right-> CommunicationRequest : based on >
+Task "0..*" -left-> "1" CommunicationRequest : based on >
+AuditEvent  - "1" Task: entity
+Patient  ---- AuditEvent: who
 @enduml
