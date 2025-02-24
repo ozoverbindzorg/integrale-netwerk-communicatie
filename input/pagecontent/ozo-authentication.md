@@ -9,12 +9,12 @@ The membership architecture is as follows: The OZO nuts node issues a VC to the 
 
 This model uses the following credential:
 ```yaml
-Type: OZOMembershipCredential
+Type: NutsOrganizationCredential
 Issuer: did OZO
 Subject: did Lid
 ```
 
-### Connecting users
+### Connecting Related Persons
 Linking users with OZO can be done by issuing a credential (VC) to the NUTS node of the client application, issued by the OZO did:web, linked to the OZO user, and issued to the user's did:web in the client domain.
 
 <img alt="Image" style="float: none; width:40%; display: block" src="Trust%203.png"/>
@@ -27,18 +27,18 @@ Issuer: another user
 Subject: did client user
 ```
 
-### Explanation of NUTS architecture
-#### Issuance overview
+#### Explanation of NUTS architecture
+##### Issuance overview
 
 <img alt="Image" style="float: none; width:40%; display: block" src="Trust%204.png"/>
 
 {% include nuts_issuance_overview.svg %}
 
-##### Sequence Diagram Explanation
+###### Sequence Diagram Explanation
 
 This diagram illustrates the process of issuing a Verifiable Credential (VC) to a user and accessing an API using that credential. The sequence is divided into two main groups of operations: **Issue User Access VC** and **Access API**.
 
-###### Issue User Access VC
+**Issue User Access VC**
 
 1. **User Interaction**:
    - The user initiates interaction with the `client_app`.
@@ -59,7 +59,7 @@ This diagram illustrates the process of issuing a Verifiable Credential (VC) to 
 5. **Process Completion**:
    - The `client_nuts` informs the `client_app` that the process is complete.
 
-###### Access API
+**Access API**
 
 1. **Initial User Interaction**:
    - The user interacts with the `client_app`.
@@ -85,11 +85,11 @@ This sequence diagram demonstrates how the system manages the process of VC issu
 
 {% include nuts_issuance_detail.svg %}
 
-##### Sequence Diagram Explanation
+###### Sequence Diagram Explanation
 
 This sequence diagram illustrates the steps involved in obtaining a Verifiable Credential (VC) using the OpenID for Verifiable Credential Issuance (OID4VCI) framework. The interaction involves a user, a client application, a NUTS node client, and an OZO issuer. Here’s a breakdown of the process:
 
-###### Initial Connection and Configuration
+**Initial Connection and Configuration**
 
 1. **User Connection**:
    - The "User Agent" initiates a connection with the `Client application` to start the credential issuance process.
@@ -111,7 +111,7 @@ This sequence diagram illustrates the steps involved in obtaining a Verifiable C
    - It generates a URL for the authorization redirect, which includes the `redirect_uri` and any required `authorization_details`.
    - This redirection URL is sent to the `Client application`, which then forwards this information to the user.
 
-###### User Authorization
+**User Authorization**
 
 6. **Authorization Endpoint Access**:
    - The user accesses the authorization endpoint through the `OZO issuer`.
@@ -121,7 +121,7 @@ This sequence diagram illustrates the steps involved in obtaining a Verifiable C
    - The `OZO issuer` validates the user's credentials.
    - Upon successful validation, the user is redirected to a specified redirect URI with an authorization code appended.
 
-###### Credential Issuance
+**Credential Issuance**
 
 8. **Obtain an Access Token**:
    - The user follows the redirect back to the `NUTS node client`, providing the authorization code.
@@ -137,29 +137,29 @@ This sequence diagram illustrates the steps involved in obtaining a Verifiable C
 
 This structured workflow ensures a secure and reliable end-to-end system for credential issuance, leveraging the capabilities of OpenID for decentralized identity verification.
 
-#### Access overview
+##### Access overview
 
 <img alt="Image" style="float: none; width:40%; display: block" src="Trust%205.png"/>
 
 {% include nuts_access_token_dpop.svg %}
 
-##### UML Sequence Diagram Explanation
+###### UML Sequence Diagram Explanation
 
-###### Participants
+**Participants**
 
 - **Client App**: Represents the application client which initiates the requests.
 - **Client NUTS**: Acts as a mediator for the client app to interact with other services.
 - **NUTS OZO**: A service that handles the access token creation and validation.
 - **OZO API**: An application boundary that provides endpoints for the client app to access.
 
-###### Entities
+**Entities**
 
 - **Access Token**: A token used for authentication and authorization.
 - **DPoP Keypair**: A keypair used to generate DPoP tokens.
 
-###### Process
+**Process**
 
-**Get Access Token**
+**1. Get Access Token**
 
 1. **Client App** sends a request to **Client NUTS** to get a service access token.
 2. **Client NUTS** forwards the request to **NUTS OZO** to obtain an access token for a specific subject.
@@ -170,7 +170,7 @@ This structured workflow ensures a secure and reliable end-to-end system for cre
 7. **Client NUTS** creates a DPoP key.
 8. **Client NUTS** returns the **access token** along with a DPoP Key ID (dpop_kid) to the **Client App**.
 
-**Use Access Token**
+**2. Use Access Token**
 
 1. **Client App** initiates a request to **Client NUTS** to get a DPoP token.
 2. **Client NUTS** signs the request using the **DPoP keypair**.
