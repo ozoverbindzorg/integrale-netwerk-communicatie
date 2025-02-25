@@ -73,7 +73,7 @@ async function _createSubject(baseUrl: string, subject: string) {
 *`subject`, the subject representing the OZO system, for example `ozo-connect`.
 
 ```typescript
-async function _getDid(baseUrl: string, subject: string) {
+async function _fetchDid(baseUrl: string, subject: string) {
     url = `${baseUrl}/internal/vdr/v2/subject/${subject}`
     resp = await fetch(url)
     if (resp.ok) {
@@ -108,8 +108,8 @@ async function _getDid(baseUrl: string, subject: string) {
 
 ```TypeScript
 export async function selfIssue(baseUrl: string, subject: string) {
-    const own_did = _getDid(baseUrl, subject);
-    const issuer_did = _getDid(baseUrl, "ozo");
+    const own_did = _fetchDid(baseUrl, subject);
+    const issuer_did = _getOrCreateDid(baseUrl, "ozo");
     let url = `${baseUrl}/internal/vcr/v2/issuer/vc`;
     const data = {
         "type": "OzoSystemCredential",
@@ -137,6 +137,21 @@ export async function selfIssue(baseUrl: string, subject: string) {
         },
         body: JSON.stringify(credential),
     })
+}
+
+/**
+ * Helper function to create the subject if missing.
+ * @param subject
+ * @param internalBaseUrl
+ */
+async function _getOrCreateDid(subject: string, internalBaseUrl: string) {
+    let did: string = ''
+    did = await _fetchDid(subject, internalBaseUrl, agent)
+    if (did === '') {
+        await _createSubject(internalBaseUrl, subject);
+        did = await _fetchDid(subject, internalBaseUrl)
+    }
+    return did
 }
 
 ```
