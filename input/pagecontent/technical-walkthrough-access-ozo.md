@@ -85,7 +85,7 @@ async function _getDid(baseUrl: string, subject: string) {
         }
         console.error("Failed to find a did web")
     } else {
-        console.error("Failed to create did", resp.statusText)
+        console.error("Failed to get did", resp.statusText)
     }
 }
 ```
@@ -104,11 +104,12 @@ async function _getDid(baseUrl: string, subject: string) {
 ### Self issue a `OzoSystemCredential` and load it into the wallet
 * `baseUrl`, from internal NUTS url: example https://nuts-node-int.example.com
 - `subject`, the subject representing the OZO system, for example `ozo-connect`
+- Note that the issuer in this case is the subject `ozo`.
 
 ```TypeScript
 export async function selfIssue(baseUrl: string, subject: string) {
-    const own_did = _fetchDid(baseUrl, subject);
-    const issuer_did = _fetchDid(baseUrl, "ozo");
+    const own_did = _getDid(baseUrl, subject);
+    const issuer_did = _getDid(baseUrl, "ozo");
     let url = `${baseUrl}/internal/vcr/v2/issuer/vc`;
     const data = {
         "type": "OzoSystemCredential",
