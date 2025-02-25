@@ -108,10 +108,11 @@ async function _getDid(baseUrl: string, subject: string) {
 ```TypeScript
 export async function selfIssue(baseUrl: string, subject: string) {
     const own_did = _fetchDid(baseUrl, subject);
+    const issuer_did = _fetchDid(baseUrl, "ozo");
     let url = `${baseUrl}/internal/vcr/v2/issuer/vc`;
     const data = {
         "type": "OzoSystemCredential",
-        "issuer": own_did,
+        "issuer": issuer_did,
         "credentialSubject": {
             "id": own_did
         },
