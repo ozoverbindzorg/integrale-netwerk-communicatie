@@ -9,7 +9,7 @@ pages:
     - echo "$CI_REGISTRY_PASSWORD" | docker login $CI_REGISTRY -u $CI_REGISTRY_USER --password-stdin
     - docker pull $IMAGE_NAME
     - mkdir ./public
-    - docker run --rm  -v "${PWD}/input:/workspace/input" -v "${PWD}/public:/workspace/output" --mount type=bind,source=${PWD}/ig.ini,target=/workspace/ig.ini --mount type=bind,source=${PWD}/sushi-config.yaml,target=/workspace/sushi-config.yaml $IMAGE_NAME
+    - docker run --rm  -v "${PWD}/input:/workspace/input" -v "${PWD}/public:/workspace/output" -v ./ig.ini:/workspace/ig.ini -v ./sushi-config.yaml:/workspace/sushi-config.yaml $IMAGE_NAME
   artifacts:
     paths:
     - public
