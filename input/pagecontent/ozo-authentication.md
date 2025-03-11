@@ -185,3 +185,27 @@ This structured workflow ensures a secure and reliable end-to-end system for cre
 11. **OZO API** responds successfully to the **Client App** with the requested data.
 
 This diagram outlines the flow for obtaining and using an access token with DPoP for secure communication between the client application and the server, illustrating interaction sequences among different participants.
+
+### Connecting Practitioners
+
+Practitioners from outside the OZO platform connect in a different way than RelatedPersons. The primary assumption of providing access to practitioners is that they share the same identity provider as the OZO platform does. The secondary assumption is that the application that identifies the practitioner is a health care application and is part of the OZO network as a trusted participant.  As the platforms share the same source of trust, the NutsEmployeeCredential can be leveraged to pass the user identity from the healthcare provider to the OZO platform. The credentials involved in connecting practitioners are:
+ * The NutsOrganizationCredential, backed by a X509Credential
+ * The NutsEmployeeCredential for each logged in practitioner.
+
+<img alt="Image" style="float: none; width:40%; display: block" src="Trust%20Pracitioner%201.png"/>
+
+#### Onboarding Health Care Providers
+
+##### UZI Verifiable Credential
+
+In order to act on behalf of a health care organization in the OZO network, a health care provider needs to identify themselves by an UZI server certificate. This certificate can be used to self-sign and issue an `X509Credential`. This credential is loaded in the organization wallet and is used to proof the UZI number ownership to the OZO network.
+
+A tool on generating the UZI VC can be found here:
+
+https://github.com/nuts-foundation/go-didx509-toolkit
+
+##### NutsOrganizationCredential
+The second stage of the onboarding is the `NutsOrganizationCredential`, this credential is issued by OZO in order to welcome the health care organization in the OZO network.
+
+#### Getting API access for a logged in user
+
