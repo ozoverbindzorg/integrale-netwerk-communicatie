@@ -5,6 +5,7 @@ pages:
     - docker:stable-dind
   variables:
     IMAGE_NAME: $CI_REGISTRY/headease/ozo-refererence-impl/headease-ig-builder/main:latest
+    GIT_STRATEGY: clone
   script:
     - echo "$CI_REGISTRY_PASSWORD" | docker login $CI_REGISTRY -u $CI_REGISTRY_USER --password-stdin
     - docker pull $IMAGE_NAME
