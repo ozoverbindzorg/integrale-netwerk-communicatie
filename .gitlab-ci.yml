@@ -12,8 +12,6 @@ pages:
     - echo "$CI_REGISTRY_PASSWORD" | docker login $CI_REGISTRY -u $CI_REGISTRY_USER --password-stdin
     - docker pull $IMAGE_NAME
     - mkdir ./public
-    - cat "${PWD}/ig.ini"
-    - cat "${PWD}/sushi-config.yaml"
     - docker run --rm  -v "${PWD}/input:/workspace/input" -v "${PWD}/public:/workspace/output" -v "${PWD}/ig.ini:/workspace/ig.ini" -v "${PWD}/sushi-config.yaml:/workspace/sushi-config.yaml" $IMAGE_NAME
   artifacts:
     paths:
