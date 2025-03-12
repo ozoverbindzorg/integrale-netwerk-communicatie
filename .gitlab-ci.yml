@@ -4,8 +4,9 @@ pages:
   script:
     - /workspace/_updatePublisher.sh -y -f
     - bash _genonce.sh
+    - mv ./output ./public
   artifacts:
     paths:
-    - output
+    - public
   only:
   - main
