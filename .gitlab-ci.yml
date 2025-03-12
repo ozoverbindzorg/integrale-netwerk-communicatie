@@ -2,7 +2,7 @@ pages:
   image: $CI_REGISTRY/headease/ozo-refererence-impl/headease-ig-builder/main:latest
   stage: build
   script:
-    - /workspace/_updatePublisher.sh
+    - /workspace/_updatePublisher.sh -y -f
     - bash _genonce.sh
   artifacts:
     paths:
