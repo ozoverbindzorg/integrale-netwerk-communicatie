@@ -1,20 +1,11 @@
 pages:
-  image: docker:latest
+  image: $CI_REGISTRY/headease/ozo-refererence-impl/headease-ig-builder/main:latest
   stage: build
-  services:
-    - docker:stable-dind
-  variables:
-    IMAGE_NAME: $CI_REGISTRY/headease/ozo-refererence-impl/headease-ig-builder/main:latest
-    DOCKER_TLS_CERTDIR: ""
-    DOCKER_HOST: tcp://docker:2375
-    DOCKER_DRIVER: overlay2
   script:
-    - echo "$CI_REGISTRY_PASSWORD" | docker login $CI_REGISTRY -u $CI_REGISTRY_USER --password-stdin
-    - docker pull $IMAGE_NAME
-    - mkdir ./public
-    - docker run --rm  -v "${PWD}/input:/workspace/input" -v "${PWD}/public:/workspace/output" -v "${PWD}/ig.ini:/workspace/ig.ini" -v "${PWD}/sushi-config.yaml:/workspace/sushi-config.yaml" $IMAGE_NAME
+    - /workspace/_updatePublisher.sh
+    - bash _genonce.sh
   artifacts:
     paths:
-    - public
+    - output
   only:
   - main
