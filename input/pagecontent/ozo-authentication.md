@@ -116,9 +116,9 @@ This sequence diagram illustrates the steps involved in obtaining a Verifiable C
 This structured workflow ensures a secure and reliable end-to-end system for credential issuance, leveraging the capabilities of OpenID for decentralized identity verification.
 
 ##### Access overview
-Access to the API is provided in the context of the RelatedPerson that is active in the client application. The NUTS node of the client application holds the secrets that are required to access the OZO API, the link between the logged in user and the subject in the nuts-node needs to be protected.
+Access to the API is provided in the context of the RelatedPerson that is active in the client application. The NUTS node of the client application holds the secrets that are required to access the OZO API, the link between the logged in user and the subject in the NUTS node needs to be protected.
 
-The procedure of getting access to the OZO api starts with a request towards the nuts-node for an access credential. The nuts-node starts a negotiation with the nuts-node of the OZO platform. As soon as the nuts-node of the client has presented the right Verifiable Credentials in de form of signed Verifiable Presentations, the nuts-node of OZO provides an access_token. The client application uses the access_token to access the OZO API. The OZO Api introspects the access_token and uses the information in the introspection result to apply search narrowing. 
+The procedure of getting access to the OZO api starts with a request towards the NUTS node for an access credential. The NUTS node starts a negotiation with the NUTS node of the OZO platform. As soon as the NUTS node of the client has presented the right Verifiable Credentials in de form of signed Verifiable Presentations, the NUTS node of OZO provides an access_token. The client application uses the access_token to access the OZO API. The OZO Api introspects the access_token and uses the information in the introspection result to apply search narrowing. 
 
 <img alt="Image" style="float: none; width:40%; display: block" src="Trust%205.png"/>
 
@@ -259,7 +259,7 @@ This workflow focuses on requesting, issuing, and storing the `NutsOrganizationC
 
 
 
-##### Getting API access for a logged-in user
+##### Getting API access for a logged-in Practitioner
 
 
 <img alt="Image" style="float: none; width:40%; display: block" src="Access%20Practitioner%201.png"/>
