@@ -59,28 +59,6 @@ This diagram illustrates the process of issuing a Verifiable Credential (VC) to 
 5. **Process Completion**:
    - The `client_nuts` informs the `client_app` that the process is complete.
 
-**Access API**
-
-1. **Initial User Interaction**:
-   - The user interacts with the `client_app`.
-
-2. **Request for Access Token**:
-   - `client_app` requests an access token from `client_nuts` using the VC.
-   - The request is forwarded to `ozo_nuts` with a Verifiable Presentation.
-
-3. **Token Issuance and Communication**:
-   - `ozo_nuts` provides an access token to `client_nuts`.
-   - `client_nuts` conveys the access token to `client_app`.
-
-4. **Accessing Resources**:
-   - The `client_app` uses the access token to request a resource from `ozo_api`.
-   - `ozo_api` requests token introspection from `ozo_nuts`.
-
-5. **Validation and Response**:
-   - `ozo_nuts` validates the access token.
-   - `ozo_nuts` sends a validation response back to `ozo_api`.
-   - `ozo_api` provides the requested resource to `client_app`.
-
 This sequence diagram demonstrates how the system manages the process of VC issuance followed by secure resource access using the credential.
 
 {% include nuts_issuance_detail.svg %}
@@ -207,77 +185,70 @@ https://github.com/nuts-foundation/go-didx509-toolkit
 ##### NutsOrganizationCredential
 The second stage of the onboarding is the `NutsOrganizationCredential`, this credential is issued by OZO in order to welcome the health care organization in the OZO network.
 
-##### Issuance overview
+##### Onboarding overview
 
-{% include nuts_care_organization_overview.svg %}
+{% include nuts_onboarding_overview.svg %}
 
-###### Diagram Explanation
+###### Explanation of the Diagram 
 
- **Actors and Components**
+**Actors and Components**  
 
- **Actors**
-- **`user`**: Represents an end-user interacting with the `client_app`.
-- **`client_administrator`**: Handles administrative tasks in the client system.
-- **`ozo_administrator`**: Manages administrative operations within the `ozo` system.
+**Actors:**  
+- **`user`:** Represents the end user initiating actions in the system.  
 
- **Systems and Tools**
-- **`x509_toolkit`**: Used for issuing X509Credentials.
-- **`client_nuts`**: Handles operations like credential creation, storage, and access token requests.
-- **`client_app`**: Acts as the intermediary between the user and other systems (handles login, token generation, and API requests).
-- **`ozo_nuts`**: Validates tokens and performs introspection for accessing resources.
-- **`ozo_api`**: Provides protected resources for authenticated requests.
+ **Controls:**  
+- **`client_administrator`:** The primary control that interacts with different components to facilitate credential issuance and storage.  
+- **`x509_toolkit`:** A control used for issuing X509 credentials.  
+- **`client_nuts`:** A control used for managing credential-related actions, such as creating subjects and storing credentials.  
+- **`client_app`:** Represents the user-facing entry point into the client system.  
 
- **Databases and Boundaries**
-- **`database ozo_api`**: Represents the resources/services accessed through `ozo_api`.
+ **Boundary:**  
+- **`ozo_administrator`:** An administrative boundary involved in issuing the `NutsOrganizationCredential`.  
 
----
-
- **Processes**
-
- **1. Self Sign X509Credential**
-- The `client_administrator` initiates the process by communicating with the `client_nuts` to create a subject/identifier.
-- `client_nuts` responds with a `did:web` (Decentralized Identifier in web format).
-- The `client_administrator` then requests the `x509_toolkit` to issue an X509Credential containing:
-  - UZI certificate
-  - Private Key
-  - `did:web`
-- The `x509_toolkit` returns the newly-issued X509Credential to the `client_administrator`.
-- The `client_administrator` stores the X509Credential in `client_nuts`.
+ **Control (Specific to OZO):**  
+- **`ozo_nuts`:** A special control within the `ozo_administrator`.  
 
 ---
 
- **2. Request NutsOrganizationCredential**
-- The `client_administrator` requests the issuance of a `NutsOrganizationCredential` by providing a URA (Unique Resource Allocation) number to the `ozo_administrator`.
-- The `ozo_administrator` uses the `client_nuts` to create the `NutsOrganizationCredential`.
-- Once created, the `NutsOrganizationCredential` is sent back to the `ozo_administrator` and then forwarded to the `client_administrator`.
-- Finally, the `client_administrator` stores the `NutsOrganizationCredential` in `client_nuts`.
+**Workflow 1: Self-sign X509Credential**  
+
+ **Overview:**  
+This workflow demonstrates the process of creating, signing, and storing an X509 credential.  
+
+1. **Creating a Subject:**  
+   - `client_administrator` sends a request to `client_nuts` to **create a subject**.  
+   - `client_nuts` responds by sending back a `did:web` to the `client_administrator`.  
+
+2. **Credential Issuance:**  
+   - The `client_administrator` uses the `x509_toolkit` to request issuance of a **Verifiable Credential (VC)**, which includes:  
+     - UZI certificate  
+     - Private key  
+     - `did:web`  
+   - The `x509_toolkit` returns the signed `X509Credential` to the `client_administrator`.  
+
+3. **Storing the X509Credential:**  
+   - The `client_administrator` sends the signed `X509Credential` to `client_nuts` for storage.  
 
 ---
 
- **3. Access API**
+ **Workflow 2: Request NutsOrganizationCredential**  
 
- **User Authentication**
-- A `user` interacts with the `client_app` for authentication and login.
-- The `client_app` creates an `id_token` to authenticate the user.
+ **Overview:**  
+This workflow focuses on requesting, issuing, and storing the `NutsOrganizationCredential`.  
 
- **Token and Credential Requests**
-- The `client_app` generates a `NutsEmployeeCredential` to request an `access_token` from `client_nuts`.
-- To process the request, `client_nuts` creates a Verifiable Presentation (VP) using:
-  - `NutsEmployeeCredential`
-- The `client_nuts` further requests an `access_token` from `ozo_nuts` using:
-  - `NutsEmployeeCredential`
-  - `NutsOrganizationCredential`
-  - X509Credential
+1. **Credential Request:**  
+   - `client_administrator` requests the `ozo_administrator` to issue a `NutsOrganizationCredential`, providing a **URA number** as input.  
 
- **Token Handling**
-- If validated, `ozo_nuts` issues an `access_token` to `client_nuts`, which is forwarded to the `client_app`.
+2. **Credential Creation:**  
+   - The `ozo_administrator` forwards this request to `client_nuts` to create the `NutsOrganizationCredential`.  
+   - `client_nuts` returns the created credential back to the `ozo_administrator`.  
 
- **API Access and Validation**
-- The `client_app` uses the `access_token` to request a resource from `ozo_api`.
-- The `ozo_api` calls `/introspect` on `ozo_nuts` to validate the `access_token`.
-- Validation involves matching:
-  - URA from `NutsOrganizationCredential`
-  - X509Credential
-- If validated successfully, `ozo_nuts` sends an "ok" response to `ozo_api`, allowing `ozo_api` to provide the requested resource to the `client_app`.
+3. **Returning the Credential:**  
+   - The `ozo_administrator` sends the `NutsOrganizationCredential` to the `client_administrator`.  
+
+4. **Storing the NutsOrganizationCredential:**  
+   - The `client_administrator` stores the `NutsOrganizationCredential` in `client_nuts`.  
+
+
 
 #### Getting API access for a logged-in user

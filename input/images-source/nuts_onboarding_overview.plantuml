@@ -8,7 +8,6 @@ control client_app
 
 boundary ozo_administrator
 control ozo_nuts
-database ozo_api
 
 
 group Self sign X509Credential
@@ -27,20 +26,4 @@ ozo_administrator --> client_administrator: NutsOrganizationCredential
 client_administrator -> client_nuts: store NutsOrganizationCredential
 end
 
-group Access API
-
-user -> client_app
-client_app <--> user: login, id_token
-client_app -> client_app: create NutsEmployeeCredential
-client_app -> client_nuts: request access_token \n(NutsEmployeeCredential)
-client_nuts -> client_nuts: Create VP for NutsEmployeeCredential
-client_nuts -> ozo_nuts: request access_token \n(NutsEmployeeCredential, \nNutsOrganizationCredential \nand X509Credential)
-ozo_nuts --> client_nuts: access_token
-client_nuts --> client_app: access_token
-client_app -> ozo_api: access resource (access_token)
-ozo_api -> ozo_nuts: /introspect (access_token)
-ozo_nuts -> ozo_nuts: validate (Match URA NutsOrganizationCredential and X509Credential)
-ozo_nuts --> ozo_api: ok
-ozo_api -->  client_app: resource
-end
 @enduml
