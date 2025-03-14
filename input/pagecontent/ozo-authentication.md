@@ -275,3 +275,80 @@ The procedure of getting access to the OZO api starts with a request towards the
 
 
 {% include nuts_access_token_practitioner.svg %}
+
+###### Diagram Description
+
+The diagram illustrates a sequence of interactions between several entities to manage login, token acquisition, and secure API usage. The interactions are grouped into three key stages: **Login**, **Get access_token**, and **Use access_token**.
+
+---
+
+**Actors and Components**
+
+1. **Practitioner (User)**: The end-user interacting with the system.
+2. **Client App**: The application facilitating interactions between the user and backend services.
+3. **Client NUTS**: A central service acting as a mediator for access management.
+4. **IdP (Identity Provider)**: Performs user authentication and provides identity proofs (IdP assertions).
+5. **NUTS OZO**: The organization managing credentials and tokens in the NUTS ecosystem.
+6. **OZO API**: Backend API of the service being accessed.
+7. **Entities Created**:
+   - **access_token**: A secure token used for authentication of API requests.
+   - **DPoP keypair**: Used for securing access_token with proof-of-possession.
+
+---
+
+**Process Breakdown**
+
+**1. Login**
+- The **Practitioner (User)** interacts with the **Client App** to log in.
+- The **Client App** requests authentication from the **IdP** (Identity Provider).
+- The **IdP** authenticates the user and provides an **IdP assertion** (identity proof) to the **Client App**.
+
+---
+
+**2. Get access_token**
+- The **Client App** creates a **NutsEmployeeCredential** using the received IdP assertion.
+- **Client App** requests an **access_token** from **Client NUTS**, forwarding the necessary credentials.
+- **Client NUTS** contacts the **NUTS OZO** system to request an access token for the user. It sends a set of credentials for validation:
+  - **X509Credential**
+  - **NutsOrganizationCredential**
+  - **NutsEmployeeCredential**
+- **NUTS OZO** evaluates the request, validates the credentials, and creates an **access_token**.
+- A **DPoP keypair** is additionally generated for the token.
+- The **access_token** and the associated `dpop_kid` (key ID) are returned to the **Client App** via **Client NUTS**.
+
+---
+
+**3. Use access_token**
+
+**Get DPoP token**
+- The **Client App** requests a **DPoP token** from **Client NUTS**.
+- **Client NUTS** signs the request using the previously generated **DPoP keypair** and provides the **DPoP token** to the **Client App**.
+
+**Make API Request**
+- The **Client App** makes an authenticated API request (`GET /api/messages`) to **OZO API**. The request includes:
+  - `Authorization`: DPoP access_token
+  - `DPoP`: dpop_token
+
+**Validate access_token**
+- The **OZO API** introspects the `access_token` by forwarding it to **NUTS OZO** for validation.
+- **NUTS OZO** checks the token's validity and responds to the **OZO API**.
+- Similarly, the **DPoP token** is verified by **NUTS OZO**, matching the DPoP proof against the access token.
+- Additional checks include cross-verifying the credentials (e.g., ensuring the organization matches) and consulting the **IdP** for assertion validation if needed.
+- Upon successful validation, the **OZO API** responds to the **Client App** with a `200 OK` and the requested data.
+
+---
+
+**Key Highlights**
+
+1. **Authentication and Authorization Flow**:
+   - Authentication is handled through the **IdP assertion**.
+   - Authorization relies on both **access_token** and **DPoP token**, ensuring security and proof of possession.
+
+2. **Credential Validation**:
+   - Credentials such as **X509Credential**, **NutsOrganizationCredential**, and **NutsEmployeeCredential** are required to validate the user's identity and affiliation.
+
+3. **Secure API Calls**:
+   - Dual token validation (access and DPoP) ensures API requests are secure and originate from legitimate sources.
+
+4. **Token Introspection and Verification**:
+   - Tokens are introspected and verified by **NUTS OZO** to ensure validity throughout the process.
