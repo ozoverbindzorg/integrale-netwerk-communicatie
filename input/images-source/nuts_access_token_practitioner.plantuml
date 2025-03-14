@@ -9,11 +9,11 @@ entity "DPoP keypair" as dpop_key
 
 group Get access_token
     client_app -> client_nuts: /request-service-access-token
-    client_nuts -> nuts_ozo: request access_token for\n subject x
-    nuts_ozo -> client_nuts: presentation_request \n(OZOMembershipCredential, OZOUserCredential)
+    client_nuts -> nuts_ozo: request access_token for\n subject x with NutsEmployeeCredential
+    nuts_ozo -> client_nuts: presentation_request \n(X509Credential,\n NutsOrganizationCredential,\n NutsEmployeeCredential)
     create access_token
     nuts_ozo -> access_token: create
-    client_nuts --> nuts_ozo: presentation_response \n(OZOMembershipCredential, OZOUserCredential)
+    client_nuts --> nuts_ozo: presentation_response \n(X509Credential,\n NutsOrganizationCredential,\n  NutsEmployeeCredential)
     nuts_ozo -> nuts_ozo: validate
     nuts_ozo --> client_nuts: access_token
     create dpop_key
@@ -32,6 +32,7 @@ group Use access_token
         nuts_ozo -> access_token: check
         nuts_ozo --> ozo_api: ok
         ozo_api -> nuts_ozo: introspect\n(dpop_token)
+        ozo_api -> ozo_api: check if URA NutsOrganizationCredential\n matches the X509Credential
         nuts_ozo -> dpop_token: verify dpop_token
         nuts_ozo --> ozo_api: ok
     end
