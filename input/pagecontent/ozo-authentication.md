@@ -122,7 +122,7 @@ The procedure of getting access to the OZO api starts with a request towards the
 
 <img alt="Image" style="float: none; width:40%; display: block" src="Trust%205.png"/>
 
-{% include nuts_access_token_dpop.svg %}
+{% include nuts_access_token_related_person.svg %}
 
 ###### UML Sequence Diagram Explanation
 
@@ -170,7 +170,8 @@ This diagram outlines the flow for obtaining and using an access token with DPoP
 ### Connecting Practitioners
 
 Practitioners from outside the OZO platform connect in a different way than RelatedPersons. The primary assumption of providing access to practitioners is that they share the same identity provider as the OZO platform does. The secondary assumption is that the application that identifies the practitioner is a health care application and is part of the OZO network as a trusted participant.  As the platforms share the same source of trust, the NutsEmployeeCredential can be leveraged to pass the user identity from the healthcare provider to the OZO platform. The credentials involved in connecting practitioners are:
- * The NutsOrganizationCredential, backed by a X509Credential
+ * The X509Credential, signed by the private key of a UZI certificate.
+ * The NutsOrganizationCredential, matching the URA number of the X509Credential
  * The NutsEmployeeCredential for each logged in practitioner.
 
 #### Explanation of NUTS architecture
