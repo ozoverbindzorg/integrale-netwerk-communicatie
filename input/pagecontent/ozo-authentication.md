@@ -336,19 +336,3 @@ The diagram illustrates a sequence of interactions between several entities to m
 - Additional checks include cross-verifying the credentials (e.g., ensuring the organization matches) and consulting the **IdP** for assertion validation if needed.
 - Upon successful validation, the **OZO API** responds to the **Client App** with a `200 OK` and the requested data.
 
----
-
-**Key Highlights**
-
-1. **Authentication and Authorization Flow**:
-   - Authentication is handled through the **IdP assertion**.
-   - Authorization relies on both **access_token** and **DPoP token**, ensuring security and proof of possession.
-
-2. **Credential Validation**:
-   - Credentials such as **X509Credential**, **NutsOrganizationCredential**, and **NutsEmployeeCredential** are required to validate the user's identity and affiliation.
-
-3. **Secure API Calls**:
-   - Dual token validation (access and DPoP) ensures API requests are secure and originate from legitimate sources.
-
-4. **Token Introspection and Verification**:
-   - Tokens are introspected and verified by **NUTS OZO** to ensure validity throughout the process.
