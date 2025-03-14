@@ -116,6 +116,9 @@ This sequence diagram illustrates the steps involved in obtaining a Verifiable C
 This structured workflow ensures a secure and reliable end-to-end system for credential issuance, leveraging the capabilities of OpenID for decentralized identity verification.
 
 ##### Access overview
+Access to the API is provided in the context of the RelatedPerson that is active in the client application. The NUTS node of the client application holds the secrets that are required to access the OZO API, the link between the logged in user and the subject in the nuts-node needs to be protected.
+
+The procedure of getting access to the OZO api starts with a request towards the nuts-node for an access credential. The nuts-node starts a negotiation with the nuts-node of the OZO platform. As soon as the nuts-node of the client has presented the right Verifiable Credentials in de form of signed Verifiable Presentations, the nuts-node of OZO provides an access_token. The client application uses the access_token to access the OZO API. The OZO Api introspects the access_token and uses the information in the introspection result to apply search narrowing. 
 
 <img alt="Image" style="float: none; width:40%; display: block" src="Trust%205.png"/>
 
@@ -170,11 +173,15 @@ Practitioners from outside the OZO platform connect in a different way than Rela
  * The NutsOrganizationCredential, backed by a X509Credential
  * The NutsEmployeeCredential for each logged in practitioner.
 
-<img alt="Image" style="float: none; width:40%; display: block" src="Trust%20Pracitioner%201.png"/>
+#### Explanation of NUTS architecture
 
-#### Onboarding Health Care Providers
 
-##### UZI Verifiable Credential
+<img alt="Image" style="float: none; width:40%; display: block" src="Onboard%20Organizattion%201.png"/>
+
+
+##### Onboarding Health Care Providers
+
+###### UZI Verifiable Credential
 
 In order to act on behalf of a health care organization in the OZO network, a health care provider needs to identify themselves by an UZI server certificate. This certificate can be used to self-sign and issue an `X509Credential`. This credential is loaded in the organization wallet and is used to proof the UZI number ownership to the OZO network.
 
@@ -182,14 +189,14 @@ A tool on generating the UZI VC can be found here:
 
 https://github.com/nuts-foundation/go-didx509-toolkit
 
-##### NutsOrganizationCredential
+###### NutsOrganizationCredential
 The second stage of the onboarding is the `NutsOrganizationCredential`, this credential is issued by OZO in order to welcome the health care organization in the OZO network.
 
-##### Onboarding overview
+###### Onboarding overview
 
 {% include nuts_onboarding_overview.svg %}
 
-###### Explanation of the Diagram 
+**Explanation of the Diagram** 
 
 **Actors and Components**  
 
@@ -251,4 +258,7 @@ This workflow focuses on requesting, issuing, and storing the `NutsOrganizationC
 
 
 
-#### Getting API access for a logged-in user
+##### Getting API access for a logged-in user
+
+
+<img alt="Image" style="float: none; width:40%; display: block" src="Access%20Practitioner%201.png"/>
