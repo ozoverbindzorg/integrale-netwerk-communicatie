@@ -260,7 +260,16 @@ This workflow focuses on requesting, issuing, and storing the `NutsOrganizationC
 
 
 ##### Getting API access for a logged-in Practitioner
+The trust is between OZO and the client application scoped at both organization and `Practitioner` level. For each organization the following must be arranged:
+* The organization must have UZI server certificate.
+* The organization must have an `X509Credential` signed by the private key of the UZI server certificate.
+* The organization must have an `NutsOrganizationCredential` linked to the `X509Credential` with the URA number.
+* The organization must have an IdP that is used to login `Practitioner` in both the OZO platform and the client application.
+* The `Practitioner` must be known in both the client application and the OZO platform.
 
+The `X509Credential` and `NutsOrganizationCredential` reside in the wallet of the organization in the NUTS node. 
+
+The procedure of getting access to the OZO api starts with a request towards the NUTS node for an access credential. The Practitioner must be logged in to the application with the IdP of the Organization. To request an access_token, the client application needs to initiate the token request with a self-signed `NutsEmployeeCredential` that contains the `id_token` or `SAML assertion` of the IdP. The NUTS node starts a negotiation with the NUTS node of the OZO platform. As soon as the NUTS node of the client has presented the right Verifiable Credentials in de form of signed Verifiable Presentations, the NUTS node of OZO provides an access_token. The client application uses the `access_token` to access the OZO API. The OZO Api introspects the `access_token` and uses the information in the introspection result to apply search narrowing. Furthermore, the OZO Api must check the id_token or SAML assertion with the known IdP for the domain and must check if the URA number of the `X509Credential` matches the `NutsOrganizationCredential`
 
 <img alt="Image" style="float: none; width:40%; display: block" src="Access%20Practitioner%201.png"/>
 
