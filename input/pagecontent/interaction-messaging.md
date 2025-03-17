@@ -97,6 +97,7 @@ A caregiver in the **OZO client** responds to a message from a practitioner by t
 
 ### Interaction diagram
 The diagram below displays displays the creation of threads, and responding for both the practitioner and related person.
+{::nomarkdown}
 {% include fhir-messaging-interaction.svg %}
-
+{:/}
 

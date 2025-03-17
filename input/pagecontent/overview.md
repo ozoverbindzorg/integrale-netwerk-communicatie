@@ -131,9 +131,9 @@ system.
 * [Organization-4](Organization-4.html)
 
 ### Diagram
-
+{::nomarkdown}
 {% include fhir-network-datamodel.svg %}
-
+{:/}
 
 ### Interaction with the OZO FHIR Api
 The different interactions are described in the following guides:
@@ -228,8 +228,9 @@ The `Subscription` resource is used for clients of the OZO FHIR Api to receive u
 * When Tasks get updated in the OZO platform
 
 ### Diagram
-
+{::nomarkdown}
 {% include fhir-messages-datamodel.svg %}
+{:/}
 
 ### Interaction with the OZO FHIR Api
 The different interactions are described in the following guides:

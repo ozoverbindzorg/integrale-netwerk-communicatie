@@ -32,7 +32,9 @@ Subject: did client user
 
 <img alt="Image" style="float: none; width:40%; display: block" src="Trust%204.png"/>
 
+{::nomarkdown}
 {% include nuts_issuance_overview.svg %}
+{:/}
 
 ###### Sequence Diagram Explanation
 
@@ -61,7 +63,9 @@ This diagram illustrates the process of issuing a Verifiable Credential (VC) to 
 
 This sequence diagram demonstrates how the system manages the process of VC issuance followed by secure resource access using the credential.
 
+{::nomarkdown}
 {% include nuts_issuance_detail.svg %}
+{:/}
 
 ###### Sequence Diagram Explanation
 
@@ -122,7 +126,9 @@ The procedure of getting access to the OZO api starts with a request towards the
 
 <img alt="Image" style="float: none; width:40%; display: block" src="Trust%205.png"/>
 
+{::nomarkdown}
 {% include nuts_access_token_related_person.svg %}
+{:/}
 
 ###### UML Sequence Diagram Explanation
 
@@ -195,7 +201,9 @@ The second stage of the onboarding is the `NutsOrganizationCredential`, this cre
 
 ###### Onboarding overview
 
+{::nomarkdown}
 {% include nuts_onboarding_overview.svg %}
+{:/}
 
 **Explanation of the Diagram** 
 
@@ -273,8 +281,9 @@ The procedure of getting access to the OZO api starts with a request towards the
 
 <img alt="Image" style="float: none; width:40%; display: block" src="Access%20Practitioner%201.png"/>
 
-
+{::nomarkdown}
 {% include nuts_access_token_practitioner.svg %}
+{:/}
 
 ###### Diagram Description
 

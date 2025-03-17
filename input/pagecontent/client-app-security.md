@@ -1,6 +1,7 @@
 
-
+{::nomarkdown}
 {% include firebase-app-security.svg %}
+{:/}
 
 ### Sequence Diagram Description
 
