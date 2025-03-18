@@ -15,9 +15,7 @@ The primary assumption of providing access to practitioners is that they share t
 
 In order to act on behalf of a health care organization in the OZO network, a health care provider needs to identify themselves by an UZI server certificate. This certificate can be used to self-sign and issue an `X509Credential`. This credential is loaded in the organization wallet and is used to proof the UZI number ownership to the OZO network.
 
-A tool on generating the UZI VC can be found here:
-
-https://github.com/nuts-foundation/go-didx509-toolkit
+A tool on generating the UZI VC can be found at the [Golang did:x509 and X509Credential Toolkit](https://github.com/nuts-foundation/go-didx509-toolkit)
 
 ##### NutsOrganizationCredential
 The second stage of the onboarding is the `NutsOrganizationCredential`, this credential is issued by OZO in order to welcome the health care organization in the OZO network.
