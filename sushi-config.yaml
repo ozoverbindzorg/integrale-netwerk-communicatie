@@ -71,14 +71,23 @@ pages:
   security-client-access.md:
     title: Security - Client Access
 
-  client-app-security.md:
-    title: Client App Security
+  mobile-app-security.md:
+    title: Mobile App Security
 
-  ozo-authentication.md:
-    title: Authentication
+  ozo-authentication-overview.md:
+    title: Authentication Overview
 
-  ozo-authorization.md:
-    title: Authorization
+  ozo-authentication-practitioner.md:
+    title: Authentication Practitioner
+
+  ozo-authentication-related-person.md:
+    title: Authentication Related Person
+
+  ozo-authorization-practitioner.md:
+    title: Authorization of the Practitioner
+
+  ozo-authorization-related-person.md:
+    title: Authorization of the Related Person
 
   technical-walkthrough-mtls.md:
     title: Setup Mutual TLS for OZO
@@ -163,10 +172,14 @@ menu:
 #    Creating and responding to a Task: transaction-task-negotiation.html
 #    Updating CarePlan and CareTeam: transaction-careplan-careteam-mngt.html
 #    Getting data from CareTeam members: transaction-discovery.html
-  Security:
-    Authentication: ozo-authentication.html
-    Authorization: ozo-authorization.html
-    Client App Security: client-app-security.html
+  Authentication:
+    Overview: ozo-authentication-overview.html
+    Practitioner: ozo-authentication-practitioner.html
+    Related Person: ozo-authentication-related-person.html
+    Mobile App Security: mobile-app-security.html
+  Authorization:
+    Practitioner: ozo-authorization-practitioner.html
+    Related Person: ozo-authorization-related-person.html
   Technical Walkthrough:
     Setup Mutual TLS for OZO: technical-walkthrough-mtls.html
     Validate Access Tokens and DPoP headers: technical-walkthrough-validate-access-token.html
