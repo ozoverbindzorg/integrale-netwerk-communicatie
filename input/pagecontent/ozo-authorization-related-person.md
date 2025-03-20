@@ -1,4 +1,13 @@
-|                      | As RelatedPerson                                                           | CRUD | Read validation                                                                     | Create validation                                                                 |
+### Authorization rules of the RelatedPerson access
+
+This table describes the access rules for a Practitioner role in a healthcare system, showing:
+1. **Entities**: Various healthcare resources like Patient, CareTeam, Communication, etc.
+2. **Access conditions**: When a Practitioner can access specific resources
+3. **CRUD permissions**: Whether they can Create (C) and/or Read (R) the resources
+4. **Validation queries**: The FHIR search queries used to validate read or create access
+
+
+| Entity               | As RelatedPerson                                                           | CRUD | Read validation                                                                     | Create validation                                                                 |
 |----------------------|----------------------------------------------------------------------------|------|-------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------|
 | RelatedPerson        | If the identity matches                                                    | R    | RelatedPerson?<br>identifier=system\|user_id                                        |                                                                                   |                   |
 | Patient              | If the RelatedPerson.patient is the Patient                                | R    | Patient?<br>_has:RelatedPerson:patient:identifier=system\|user_id                   |                                                                                   |

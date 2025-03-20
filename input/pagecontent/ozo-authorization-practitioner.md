@@ -1,4 +1,13 @@
-|                      | As Practitioner                                                                    | CRUD | Read validation                                                                    | Create validation                                                                |
+### Authorization rules of the Practitioner access
+
+This table describes the access rules for a Practitioner role in a healthcare system, showing:
+1. **Entities**: Various healthcare resources like Patient, CareTeam, Communication, etc.
+2. **Access conditions**: When a Practitioner can access specific resources
+3. **CRUD permissions**: Whether they can Create (C) and/or Read (R) the resources
+4. **Validation queries**: The FHIR search queries used to validate read or create access
+
+
+| Entity               | As Practitioner                                                                    | CRUD | Read validation                                                                    | Create validation                                                                |
 |----------------------|------------------------------------------------------------------------------------|------|------------------------------------------------------------------------------------|----------------------------------------------------------------------------------|
 | RelatedPerson        | If the Practitioner is a member the same CareTeam                                  | R    | RelatedPerson?<br>_has:CareTeam:participant:participant=Practitioner/1             |                                                                                  |                   |
 | Patient              | If the Practitioner is a member of a CareTeam where the Patient = CareTeam.patient | R    | Patient?<br>_has:CareTeam:patient:participant=Practitioner/1                       |                                                                                  |
