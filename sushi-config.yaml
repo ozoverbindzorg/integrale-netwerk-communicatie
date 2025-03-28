@@ -117,7 +117,7 @@ pages:
     title: Adding attachments with the dropbox
 
   ozo-on-matrix.md:
-    title: Adding attachments with the dropbox
+    title: Matrix.io for OZO
 
 #
 #  security-privacy.md:
@@ -196,7 +196,7 @@ menu:
     Creating the network: interaction-network.html
     Reading and updating messages: interaction-messaging.html
     Adding attachments with the dropbox: interaction-dropbox.html
-  Le matrix ⊹:
+  Le matrix:
     OZO on matrix: ozo-on-matrix.html
 #    Get data for home care: usecase-view-all-data.html
 #    Referral/Nursing handoff: usecase-nursing-handoff.html
