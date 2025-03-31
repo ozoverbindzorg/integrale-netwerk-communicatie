@@ -1,11 +1,11 @@
 
-## 🏗️ Implementation Plan: Matrix.io for OZO
+## 🏗️ Implementation Plan: matrix.org for OZO
 
 ---
 
 ### **1. Objective**
 
-To integrate **Matrix.io** as a secure, federated communication protocol within OZO to support care coordination, messaging, and team-based workflows—aligned with healthcare data standards and identity management.
+To integrate **matrix.org** as a secure, federated communication protocol within OZO to support care coordination, messaging, and team-based workflows—aligned with healthcare data standards and identity management.
 
 ---
 
@@ -22,7 +22,8 @@ To integrate **Matrix.io** as a secure, federated communication protocol within 
 
 - Implement a **Matrix IdentityServer** that supports:
   - Mapping identifiers such as UZI numbers, email, or ZorgId to Matrix user IDs.
-  - Using `IdP + userID` or `UZI + method` as unique identity keys.
+    - Use Generieke Functie (GF) adressering to locate care professionals.
+  - Using `IdP + userID` or `UZI + method` (Dezi) as unique identity keys.
   - A single IdentityServer per homeserver (required by Matrix spec).
 
 ---
@@ -44,7 +45,9 @@ To integrate **Matrix.io** as a secure, federated communication protocol within 
 #### 🩺 Patient Association
 
 - Use **room metadata** to link the patient (e.g., BSN) to the care room.
+- Optionally use **m.room.topic**  to link the patient (e.g., BSN) to the care room.
 - If the patient is **not a room member**, represent the association as a **state event** within the room (e.g., `care.ozo.patient` event type with BSN in content).
+- Note of concern: Is it ok to use the BSN, or should a pseudo-identifier should be used?
 
 ---
 
@@ -107,8 +110,11 @@ To integrate **Matrix.io** as a secure, federated communication protocol within 
 #### ⚙️ Matrix Component Overview
 
 - **Synapse** or another Matrix homeserver as the core.
-- Custom **IdentityServer** for OZO (e.g., using [mxisd](https://github.com/kamax-io/mxisd) or custom-built).
-- Other **shared libraries**:
+- Custom **IdentityServer** for OZO:
+  - Generieke Functie adressering.
+  - Authenticate users with "username" + "IdP"
+  - Authenticate users with "UZI" + "method", such as Dezi
+- Other **shared libraries**:
   - Message transformation (e.g., OZO FHIR FHIR ↔ Matrix)
 
 ####
