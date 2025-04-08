@@ -18,12 +18,18 @@ To integrate **matrix.org** as a secure, federated communication protocol within
   - **RelatedPersons (e.g., family caregivers)**: Use email + password + 2FA (OZOverbindzorg.nl).
   - **Patients**: Optionally onboarded; may have local Matrix accounts based on email.
 
+#### 🏠 Homeserver
+Homeservers should be bound to the origin of the user. Each user type needs a homeserver that is scoped to the right context:
+  * the **Practitioners**: are bound to the Zorgaanbieder
+  * the **RelatedPersons**  (e.g., family caregivers) and **Patients**  are bound to the OZO platform as homeserver.
+
 #### ✅ IdentityServer API
 
 - Implement a **Matrix IdentityServer** that supports:
-  - Mapping identifiers such as UZI numbers, email, or ZorgId to Matrix user IDs.
+  - For **Practitioners** the identity server is bound to the Zorgaanbieder's IdP (`IdP + userID`), alternatively:
     - Use Generieke Functie (GF) adressering to locate care professionals.
-  - Using `IdP + userID` or `UZI + method` (Dezi) as unique identity keys.
+    - Use `UZI + method` (Dezi) as identifying mechanism.
+  - For **RelatedPersons**  (e.g., family caregivers) and **Patients** the identities are provisioned by the OZO platform.
   - A single IdentityServer per homeserver (required by Matrix spec).
 
 ---
@@ -32,19 +38,21 @@ To integrate **matrix.org** as a secure, federated communication protocol within
 
 #### 🧠 Core Design
 
-- **Matrix Room = Care Team**
+- **Matrix Space = Care Team**
 
-  - Each room represents a care team associated with a specific patient.
+  - Each space represents a care team associated with a specific patient.
   - Membership includes professionals and related persons involved in that patient's care.
 
-- **Matrix Thread = Conversation**
+- **Matrix Room = Conversation**
 
-  - Each thread models a FHIR `CommunicationRequest` and its subsequent `Communications`.
+  - Each room models a FHIR `CommunicationRequest` and its subsequent `Communications`.
   - Allows structured, directed conversations with sender/recipient logic.
 
 #### 🩺 Patient Association
 
+
 - Use **room metadata** to link the patient (e.g., BSN) to the care room.
+  - Use `m.space.child` and `m.space.parent` events to create a top level room and child rooms for each conversation.
 - Optionally use **m.room.topic**  to link the patient (e.g., BSN) to the care room.
 - If the patient is **not a room member**, represent the association as a **state event** within the room (e.g., `care.ozo.patient` event type with BSN in content).
 - Note of concern: Is it ok to use the BSN, or should a pseudo-identifier should be used?
@@ -57,12 +65,12 @@ To integrate **matrix.org** as a secure, federated communication protocol within
 
 - `CommunicationRequest`
 
-  - Becomes a **Matrix thread root message**.
+  - Becomes a **Matrix room with the initial message**.
   - Includes sender, recipient(s), and purpose.
 
 - `Communication`
 
-  - Follows up as **thread replies**.
+  - Follows up as **room replies**.
   - Includes timeline of discussions, acknowledgments, or outcomes.
 
 #### 🧭 Addressing
@@ -88,7 +96,7 @@ To integrate **matrix.org** as a secure, federated communication protocol within
 
 #### 🔎 GF Adressering Integration (via LRZA)
 
-- Use LRZA (Landelijke Register Zorgadressering) to:
+- Use LRZA (Landelijke Register Zorgadressering) and mCSD to:
   - Look up practitioners and services by function or location.
   - Retrieve endpoint URLs and service metadata.
 
@@ -111,9 +119,10 @@ To integrate **matrix.org** as a secure, federated communication protocol within
 
 - **Synapse** or another Matrix homeserver as the core.
 - Custom **IdentityServer** for OZO:
-  - Generieke Functie adressering.
-  - Authenticate users with "username" + "IdP"
-  - Authenticate users with "UZI" + "method", such as Dezi
+  - Generieke Functie adressering and mCSD.
+  - Authenticate users with a Zorgverlener IdP.
+    - Authenticate users with "UZI" + "method", such as Dezi
+  - Authenticate the users with their OZO account.
 - Other **shared libraries**:
   - Message transformation (e.g., OZO FHIR FHIR ↔ Matrix)
 
