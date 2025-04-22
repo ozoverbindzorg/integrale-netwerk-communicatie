@@ -102,7 +102,7 @@ To integrate **matrix.org** as a secure, federated communication protocol within
 
 #### 🔎 Generieke Functie Adressering via LRZA
 
-**Generieke Functie Adressering** (implemented as centralized mCSD Directory via LRZA) provides the framework for localization:
+**Generieke Functie Adressering** (implemented as centralized mCSD Directory via LRZA) provides the framework for localization of the Homeserver:
   - LRZA (Landelijke Register Zorgadressering) publishes one URL per Healthcare provider with their mCSD endpoint.
   - Each Healthcare provider selects one vendor to implement their mCSD endpoint.
   - The mCSD endpoint functions as an address book for each Healthcare provider.
