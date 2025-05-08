@@ -124,10 +124,10 @@ if [[ $skipPrompts == true ]] || [[ $response =~ ^[yY].*$ ]]; then
   rm /tmp/_gencontinuous.new
 
   curl -L $gen_sh_url -o /tmp/_genonce.new
-  cp /tmp/_genonce.new _genonce.sh
+  sed s/tx.fhir.org/captive.apple.com/g /tmp/_genonce.new > _genonce.sh
   rm  /tmp/_genonce.new
 
   curl -L $update_sh_url -o /tmp/_updatePublisher.new
-  sed s/tx.fhir.org/captive.apple.com/g /tmp/_genonce.new > _genonce.sh
+  sed s/tx.fhir.org/captive.apple.com/g /tmp/_updatePublisher.new > _updatePublisher.sh
   rm /tmp/_updatePublisher.new
 fi
