@@ -12,8 +12,6 @@ gencont_bat_url=$scriptdlroot/_gencontinuous.bat
 gencont_sh_url=$scriptdlroot/_gencontinuous.sh
 gen_sh_url=$scriptdlroot/_genonce.sh
 update_sh_url=$scriptdlroot/_updatePublisher.sh
-build_sh_url=$scriptdlroot/_build.sh
-build_bat_url=$scriptdlroot/_build.bat
 
 skipPrompts=false
 FORCE=false
@@ -33,7 +31,7 @@ while [ "$#" -gt 0 ]; do
 done
 
 echo "Checking internet connection"
-curl -sSf tx.fhir.org > /dev/null
+curl -sSf captive.apple.com > /dev/null
 
 if [ $? -ne 0 ] ; then
   echo "Offline (or the terminology server is down), unable to update.  Exiting"
@@ -105,16 +103,6 @@ if [[ $skipPrompts != true ]]; then
 if [[ $skipPrompts == true ]] || [[ $response =~ ^[yY].*$ ]]; then
   echo "Downloading most recent scripts "
 
-  curl -L $build_bat_url -o /tmp/_build.new
-  cp /tmp/_build.new _build.bat
-  rm /tmp/_build.new
-
-
-  curl -L $build_sh_url -o /tmp/_build.new
-  cp /tmp/_build.new _build.sh
-  chmod +x _build.sh
-  rm /tmp/_build.new
-
   curl -L $update_bat_url -o /tmp/_updatePublisher.new
   cp /tmp/_updatePublisher.new _updatePublisher.bat
   rm /tmp/_updatePublisher.new
@@ -133,12 +121,12 @@ if [[ $skipPrompts == true ]] || [[ $response =~ ^[yY].*$ ]]; then
   rm /tmp/_gencontinuous.new
 
   curl -L $gen_sh_url -o /tmp/_genonce.new
-  cp /tmp/_genonce.new _genonce.sh
+  sed s/tx.fhir.org/captive.apple.com/g /tmp/_genonce.new > _genonce.sh
   chmod +x _genonce.sh
   rm  /tmp/_genonce.new
 
   curl -L $update_sh_url -o /tmp/_updatePublisher.new
-  cp /tmp/_updatePublisher.new _updatePublisher.sh
+  sed s/tx.fhir.org/captive.apple.com/g /tmp/_updatePublisher.new  > _updatePublisher.sh
   chmod +x _updatePublisher.sh
   rm /tmp/_updatePublisher.new
 fi
