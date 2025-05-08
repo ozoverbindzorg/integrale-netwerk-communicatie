@@ -128,6 +128,6 @@ if [[ $skipPrompts == true ]] || [[ $response =~ ^[yY].*$ ]]; then
   rm  /tmp/_genonce.new
 
   curl -L $update_sh_url -o /tmp/_updatePublisher.new
-  cp /tmp/_updatePublisher.new _updatePublisher.sh
+  sed s/tx.fhir.org/captive.apple.com/g /tmp/_genonce.new > _genonce.sh
   rm /tmp/_updatePublisher.new
 fi
