@@ -30,10 +30,11 @@ while [ "$#" -gt 0 ]; do
     shift
 done
 
-echo "Checking internet connection"
+export PING_HOST="captive.apple.com"
+echo "Checking internet connection at $PING_HOST"
 case "$OSTYPE" in
-	linux-gnu* ) ping captive.apple.com -4 -c 1 -w 1000 >/dev/null ;;
-  darwin* )	ping captive.apple.com -c 1 >/dev/null ;;
+	linux-gnu* ) ping $PING_HOST -4 -c 1 -w 1000 >/dev/null ;;
+  darwin* )	ping $PING_HOST -c 1 >/dev/null ;;
 	*) echo "unknown: $OSTYPE"; exit 1 ;;
 esac
 
