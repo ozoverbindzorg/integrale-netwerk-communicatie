@@ -30,6 +30,19 @@ while [ "$#" -gt 0 ]; do
     shift
 done
 
+export PING_HOST="captive.apple.com"
+echo "Checking internet connection at $PING_HOST"
+case "$OSTYPE" in
+	linux-gnu* ) ping $PING_HOST -4 -c 1 -w 1000 >/dev/null ;;
+  darwin* )	ping $PING_HOST -c 1 >/dev/null ;;
+	*) echo "unknown: $OSTYPE"; exit 1 ;;
+esac
+
+if [ $? -ne 0 ] ; then
+  echo "Offline (or the terminology server is down), unable to update.  Exiting"
+  exit 1
+fi
+
 if [ ! -d "$input_cache_path" ] ; then
   if [ $FORCE != true ]; then
     echo "$input_cache_path does not exist"
