@@ -10,7 +10,7 @@ RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
 RUN apt-get install -y nodejs
 
 # Install Jekyll for Ubuntu/Debian: https://jekyllrb.com/docs/installation/ubuntu/
-RUN apt-get install -y ruby-full build-essential zlib1g-dev
+RUN apt-get install -y ruby-full build-essential zlib1g-dev graphviz
 RUN gem install -N jekyll bundler
 
 RUN mkdir /app
