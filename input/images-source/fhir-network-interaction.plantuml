@@ -1,0 +1,69 @@
+@startuml
+participant "OZO Platform" as Platform
+participant "OZO FHIR API" as API
+database "FHIR Repository" as Repository
+
+== 1. Create Person Resources (Foundation) ==
+
+group Create Patient Resource
+Platform -> API : POST Patient\n(Jan de Hoop)\nidentifiers: email, {ORIGIN}/Person
+API -> Repository : Store Patient/747
+API --> Platform : Patient created\n(id: 747)
+end
+
+group Create Practitioner Resources
+Platform -> API : POST Practitioner\n(Marijke van der Berg - POH)\nidentifiers: email, {ORIGIN}/Professional
+API -> Repository : Store Practitioner/1208
+API --> Platform : Practitioner created\n(id: 1208)
+
+Platform -> API : POST Practitioner\n(Pieter de Vries - Huisarts)\nidentifiers: email, {ORIGIN}/Professional
+API -> Repository : Store Practitioner/1209
+API --> Platform : Practitioner created\n(id: 1209)
+
+Platform -> API : POST Practitioner\n(Annemiek Jansen - Verpleegkundige)\nidentifiers: email, {ORIGIN}/Professional
+API -> Repository : Store Practitioner/1210
+API --> Platform : Practitioner created\n(id: 1210)
+
+Platform -> API : POST Practitioner\n(Johan van den Berg - Fysiotherapeut)\nidentifiers: email, {ORIGIN}/Professional
+API -> Repository : Store Practitioner/1211
+API --> Platform : Practitioner created\n(id: 1211)
+end
+
+group Create RelatedPerson Resources
+Platform -> API : POST RelatedPerson\n(Maria Groen-de Wit - Spouse)\npatient: Patient/747\nidentifiers: email, {ORIGIN}/Person
+API -> Repository : Store RelatedPerson/1501
+API --> Platform : RelatedPerson created\n(id: 1501)
+
+Platform -> API : POST RelatedPerson\n(Thomas Groen - Son)\npatient: Patient/747\nidentifiers: email, {ORIGIN}/Person
+API -> Repository : Store RelatedPerson/1502
+API --> Platform : RelatedPerson created\n(id: 1502)
+
+Platform -> API : POST RelatedPerson\n(Jane Groen - Family)\npatient: Patient/747\nidentifiers: email, {ORIGIN}/Person
+API -> Repository : Store RelatedPerson/1500
+API --> Platform : RelatedPerson created\n(id: 1500)
+
+Platform -> API : POST RelatedPerson\n(Willem Bakker - Friend)\npatient: Patient/747\nidentifiers: email, {ORIGIN}/Person
+API -> Repository : Store RelatedPerson/1503
+API --> Platform : RelatedPerson created\n(id: 1503)
+end
+
+== 2. Create Floating Care Teams (Optional) ==
+
+group Create Department Team
+Platform -> API : POST CareTeam\n(Afdeling Thuiszorg Oost)\nno subject (floating team)\nparticipants: Practitioners\nidentifiers: email, {ORIGIN}/Team
+API -> Repository : Store CareTeam/1473
+API --> Platform : Floating CareTeam created\n(id: 1473)
+end
+
+== 3. Create Patient-Specific Care Teams ==
+
+group Create Patient Care Team
+Platform -> API : POST CareTeam\n(Zorgteam Jan de Hoop)\nsubject: Patient/747\nparticipants:\n- Practitioners (1208, 1209, 1210, 1211)\n- RelatedPersons (1500, 1501, 1502, 1503)\n- CareTeam/1473 (nested team)\nidentifiers: email, {ORIGIN}/Team
+API -> Repository : Store CareTeam/1472
+API --> Platform : Patient CareTeam created\n(id: 1472)
+end
+
+== Care Network Established ==
+note over Platform, Repository : Care network is now complete with:\n- Patient and care providers\n- Nested team structure\n- Communication identifiers\n- Role assignments with SNOMED codes
+
+@enduml
