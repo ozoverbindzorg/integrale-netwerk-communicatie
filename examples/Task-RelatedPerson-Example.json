@@ -1,0 +1,22 @@
+{
+  "resourceType": "Task",
+  "id": "Task-RelatedPerson-Example",
+  "meta": {
+    "versionId": "4",
+    "lastUpdated": "2024-12-05T16:25:01.748+00:00",
+    "source": "#U6VCo7xym473IrO6"
+  },
+  "basedOn": [ {
+    "reference": "CommunicationRequest/CommunicationRequest-Thread-Example"
+  } ],
+  "status": "completed",
+  "intent": "order",
+  "for": {
+    "reference": "Patient/Patient-H-de-Boer",
+    "type": "Patient",
+    "display": "H. de Boer"
+  },
+  "owner": {
+    "reference": "RelatedPerson/RelatedPerson-Kees-Groot"
+  }
+}

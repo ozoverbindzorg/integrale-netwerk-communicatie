@@ -1,0 +1,24 @@
+{
+  "resourceType": "Patient",
+  "id": "Patient-H-de-Boer",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2024-12-05T16:24:54.948+00:00",
+    "source": "#ZFwWdA2IltYo7EPn"
+  },
+  "identifier": [ {
+    "system": "OZO/Person",
+    "value": "784384"
+  } ],
+  "name": [ {
+    "text": "H. de Boer",
+    "family": "de Boer",
+    "given": [ "H.", "Hans" ]
+  } ],
+  "telecom": [ {
+    "system": "phone",
+    "value": "611234567"
+  } ],
+  "gender": "male",
+  "birthDate": "3875-09-25"
+}

@@ -1,0 +1,25 @@
+{
+  "resourceType": "Communication",
+  "id": "Communication-RelatedPerson-to-CareTeam",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2024-12-05T16:24:59.480+00:00",
+    "source": "#WrQmGkFS9t2VMX1A"
+  },
+  "partOf": [ {
+    "reference": "CommunicationRequest/CommunicationRequest-Thread-Example",
+    "type": "CommunicationRequest"
+  } ],
+  "status": "in-progress",
+  "recipient": [ {
+    "reference": "CareTeam/CareTeam-H-de-Boer",
+    "type": "CareTeam"
+  } ],
+  "sender": {
+    "reference": "RelatedPerson/RelatedPerson-Kees-Groot",
+    "type": "RelatedPerson"
+  },
+  "payload": [ {
+    "contentString": "Message from RelatedPerson to CareTeam"
+  } ]
+}

@@ -1,0 +1,54 @@
+{
+  "resourceType": "CareTeam",
+  "id": "CareTeam-H-de-Boer",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2024-12-05T16:24:57.767+00:00",
+    "source": "#bHxcc9zOwXaXp92c"
+  },
+  "status": "active",
+  "subject": {
+    "reference": "Patient/Patient-H-de-Boer",
+    "type": "Patient",
+    "display": "H. de Boer"
+  },
+  "participant": [ {
+    "member": {
+      "reference": "RelatedPerson/RelatedPerson-Kees-Groot",
+      "type": "RelatedPerson"
+    }
+  }, {
+    "member": {
+      "reference": "Practitioner/Practitioner-Manu-van-Weel",
+      "type": "Practitioner",
+      "display": "Manu van Weel"
+    },
+    "onBehalfOf": {
+      "reference": "Organization/Organization-Ziekenhuis-Amsterdam-2",
+      "type": "Organization",
+      "display": "Ziekenhuis de Amsterdam"
+    }
+  }, {
+    "member": {
+      "reference": "Practitioner/Practitioner-Mark-Benson",
+      "type": "Practitioner",
+      "display": "Mark Benson"
+    },
+    "onBehalfOf": {
+      "reference": "Organization/Organization-Huisarts-Amsterdam",
+      "type": "Organization",
+      "display": "Huisarts van Amsterdam"
+    }
+  }, {
+    "member": {
+      "reference": "Practitioner/Practitioner-A-P-Otheeker",
+      "type": "Practitioner",
+      "display": "A.P. Otheeker"
+    },
+    "onBehalfOf": {
+      "reference": "Organization/Organization-Apotheek-de-Pil",
+      "type": "Organization",
+      "display": "Apotheek de Pil"
+    }
+  } ]
+}

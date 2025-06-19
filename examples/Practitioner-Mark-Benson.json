@@ -1,0 +1,22 @@
+{
+  "resourceType": "Practitioner",
+  "id": "Practitioner-Mark-Benson",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2024-12-05T16:24:56.583+00:00",
+    "source": "#3BXUq4cav1bNYSUb"
+  },
+  "identifier": [ {
+    "system": "OZO-CONNECT/Professional",
+    "value": "743227"
+  }, {
+    "system": "email",
+    "value": "info@example.com"
+  } ],
+  "active": true,
+  "name": [ {
+    "text": "Mark Benson",
+    "family": "Mark",
+    "given": [ "Mark", "Andrew" ]
+  } ]
+}

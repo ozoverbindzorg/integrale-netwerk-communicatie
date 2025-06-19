@@ -35,7 +35,7 @@ is primary identified by the BSN. Required fields:
 The identifier of the `Patient` _must_ be unique and _should_ the internal identifier of the patient in the OZO system.
 
 ##### Examples
-* [Patient-5](Patient-5.html)
+* [Patient-H-de-Boer](Patient-H-de-Boer.html)
 
 #### Related Person
 
@@ -66,7 +66,7 @@ The OZO FHIR `RelatedPerson` uses two identities to identify the RelatedPerson e
    and the patient.
 
 ##### Examples
-* [RelatedPerson-6](RelatedPerson-6.html)
+* [RelatedPerson-Kees-Groot](RelatedPerson-Kees-Groot.html)
 
 #### Practitioner
 
@@ -85,9 +85,9 @@ The identifier of the `Practitioner` _must_ be unique and _should_ the internal 
 system.
 
 ##### Examples
-* [Practitioner-7](Practitioner-7.html)
-* [Practitioner-8](Practitioner-8.html)
-* [Practitioner-9](Practitioner-9.html)
+* [Practitioner-Manu-van-Weel](Practitioner-Manu-van-Weel.html)
+* [Practitioner-Mark-Benson](Practitioner-Mark-Benson.html)
+* [Practitioner-A-P-Otheeker](Practitioner-A-P-Otheeker.html)
 
 #### CareTeam
 
@@ -105,7 +105,7 @@ the `Patient` to different `Organization`s
 
 
 ##### Examples
-* [CareTeam-10](CareTeam-10.html)
+* [CareTeam-H-de-Boer](CareTeam-H-de-Boer.html)
 
 #### Organization
 
@@ -125,10 +125,10 @@ system.
 
 ##### Examples
 
-* [Organization-1](Organization-1.html)
-* [Organization-2](Organization-2.html)
-* [Organization-3](Organization-3.html)
-* [Organization-4](Organization-4.html)
+* [Organization-Ziekenhuis-Amsterdam](Organization-Ziekenhuis-Amsterdam.html)
+* [Organization-Ziekenhuis-Amsterdam-2](Organization-Ziekenhuis-Amsterdam-2.html)
+* [Organization-Huisarts-Amsterdam](Organization-Huisarts-Amsterdam.html)
+* [Organization-Apotheek-de-Pil](Organization-Apotheek-de-Pil.html)
 
 ### Diagram
 {::nomarkdown}
@@ -165,7 +165,7 @@ The `CommunicationRequest` Resource is used to:
 | payload   | 1..*        | Message or attachment, one of `contentString` or `contentAttachment` |
 
 ##### Examples
-* [CommunicationRequest-11](CommunicationRequest-11.html)
+* [CommunicationRequest-Thread-Example](CommunicationRequest-Thread-Example.html)
 
 #### Communication
 The `Communication` resource is used to:
@@ -184,7 +184,7 @@ The `Communication` resource is used to:
 
 ##### Examples
 
-* [Communication-16](Communication-16.html)
+* [Communication-RelatedPerson-to-CareTeam](Communication-RelatedPerson-to-CareTeam.html)
 
 ##### Attachment
 
@@ -208,18 +208,18 @@ The `Task` resource is used to:
 | owner   | 1..1        | a reference to a `RelatedPerson` or `Practitioner` |
 
 ##### Examples
-* [Task-12](Task-12.html)
-* [Task-13](Task-13.html)
-* [Task-14](Task-14.html)
+* [Task-RelatedPerson-Example](Task-RelatedPerson-Example.html)
+* [Task-Practitioner-Manu-Example](Task-Practitioner-Manu-Example.html)
+* [Task-Practitioner-Mark-Example](Task-Practitioner-Mark-Example.html)
 
 #### AuditEvent
 The `AuditEvent` is used to:
 * Update the `Task` status field as client of the OZO FHIR Api 
 
 ##### Examples
-* [AuditEvent-17](AuditEvent-17.html)
-* [AuditEvent-18](AuditEvent-18.html)
-* [AuditEvent-20](AuditEvent-20.html)
+* [AuditEvent-Practitioner-Manu-Access](AuditEvent-Practitioner-Manu-Access.html)
+* [AuditEvent-Practitioner-Mark-Access](AuditEvent-Practitioner-Mark-Access.html)
+* [AuditEvent-RelatedPerson-Access](AuditEvent-RelatedPerson-Access.html)
 
 ### Subscriptions
 

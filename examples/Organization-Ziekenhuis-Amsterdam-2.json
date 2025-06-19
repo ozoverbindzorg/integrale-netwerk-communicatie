@@ -1,0 +1,14 @@
+{
+  "resourceType": "Organization",
+  "id": "Organization-Ziekenhuis-Amsterdam-2",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2024-12-05T16:24:53.366+00:00",
+    "source": "#jRZdYk5ZuRbbFy50"
+  },
+  "identifier": [ {
+    "system": "ura",
+    "value": "23123123123"
+  } ],
+  "name": "Ziekenhuis de Amsterdam"
+}
