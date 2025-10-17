@@ -205,8 +205,8 @@ menu:
     Adding attachments with the dropbox: interaction-dropbox.html
   Compliance:
     AuditEvent for NEN7510: auditevent-nen7510.html
-  matrix.org:
-    OZO on matrix: ozo-on-matrix.html
+#  matrix.org:
+#    OZO on matrix: ozo-on-matrix.html
 #    Get data for home care: usecase-view-all-data.html
 #    Referral/Nursing handoff: usecase-nursing-handoff.html
 #
