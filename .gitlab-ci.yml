@@ -7,6 +7,10 @@ stages:
 variables:
   # Use the pre-built Docker image from GitLab registry
   BUILDER_IMAGE: $CI_REGISTRY/headease/ozo-refererence-impl/headease-ig-builder/main:latest
+  # Disable TLS for DinD (simplifies local runners / shared runners)
+  DOCKER_TLS_CERTDIR: ""
+  # Use overlay2 driver for better performance
+  DOCKER_DRIVER: overlay2
 
 # Build the Implementation Guide on all branches
 build:
@@ -61,11 +65,14 @@ validate:
 # Optional: Build Docker image (manual trigger)
 build-docker-image:
   stage: build
-  image: docker:latest
+  image: docker:24
   services:
-    - docker:dind
+    - docker:24-dind
+  variables:
+    # Override if you prefer a different network or daemon opts
+    DOCKER_HOST: "tcp://docker:2375"
   before_script:
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - echo "$CI_JOB_TOKEN" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
   script:
     - echo "Building Docker image..."
     - docker build --pull -t $BUILDER_IMAGE .
@@ -75,5 +82,3 @@ build-docker-image:
       when: manual
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
       when: manual
-  tags:
-    - shell
