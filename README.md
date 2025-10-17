@@ -48,7 +48,7 @@ This script will:
 
 ```bash
 # Set the image name (or use default)
-IMAGE_NAME=registry.gitlab.com/headease/ozo-refererence-impl/headease-ig-builder/main:latest
+IMAGE_NAME=registry.gitlab.com/headease/ozo-refererence-impl/ozo-implementation-guide/main:latest
 
 # Pull the latest image
 docker pull $IMAGE_NAME
@@ -187,7 +187,7 @@ The Makefile is designed to run inside the Docker container. To get an interacti
 ```bash
 docker run -it --entrypoint /bin/bash \
   -v "${PWD}:/src" \
-  registry.gitlab.com/headease/ozo-refererence-impl/headease-ig-builder/main:latest
+  registry.gitlab.com/headease/ozo-refererence-impl/ozo-implementation-guide/main:latest
 ```
 
 Inside the container, you can use:
@@ -279,7 +279,7 @@ For faster iteration, you can work inside an interactive container session:
 # Start interactive session
 docker run -it --entrypoint /bin/bash \
   -v "${PWD}:/src" \
-  registry.gitlab.com/headease/ozo-refererence-impl/headease-ig-builder/main:latest
+  registry.gitlab.com/headease/ozo-refererence-impl/ozo-implementation-guide/main:latest
 
 # Inside container: make changes and build
 vim input/fsh/profiles/ozo-patient.fsh
@@ -372,7 +372,7 @@ This repository uses GitLab CI/CD for continuous integration and deployment to G
 docker build --no-cache -t ozo-ig-builder .
 
 # Or pull latest pre-built image
-docker pull registry.gitlab.com/headease/ozo-refererence-impl/headease-ig-builder/main:latest
+docker pull registry.gitlab.com/headease/ozo-refererence-impl/ozo-implementation-guide/main:latest
 ```
 
 ### FSH Validation Errors
@@ -384,7 +384,7 @@ docker pull registry.gitlab.com/headease/ozo-refererence-impl/headease-ig-builde
 # Inside container, run validation
 docker run -it --entrypoint /bin/bash \
   -v "${PWD}:/src" \
-  registry.gitlab.com/headease/ozo-refererence-impl/headease-ig-builder/main:latest
+  registry.gitlab.com/headease/ozo-refererence-impl/ozo-implementation-guide/main:latest
 
 # Then inside container
 make validate
@@ -407,7 +407,7 @@ make validate
 ```bash
 # Increase Docker memory limits
 docker run --memory="4g" --rm -v "${PWD}:/src" \
-  registry.gitlab.com/headease/ozo-refererence-impl/headease-ig-builder/main:latest
+  registry.gitlab.com/headease/ozo-refererence-impl/ozo-implementation-guide/main:latest
 ```
 
 ### Volume Mounting Issues

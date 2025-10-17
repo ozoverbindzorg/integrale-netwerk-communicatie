@@ -6,7 +6,7 @@ stages:
 
 variables:
   # Use the pre-built Docker image from GitLab registry
-  BUILDER_IMAGE: $CI_REGISTRY/headease/ozo-refererence-impl/headease-ig-builder/main:latest
+  BUILDER_IMAGE: $CI_REGISTRY/headease/ozo-refererence-impl/ozo-implementation-guide/main:latest
   # Disable TLS for DinD (simplifies local runners / shared runners)
   DOCKER_TLS_CERTDIR: ""
   # Use overlay2 driver for better performance
