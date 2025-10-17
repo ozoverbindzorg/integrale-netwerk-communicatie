@@ -14,12 +14,9 @@ build:
   image: $BUILDER_IMAGE
   script:
     - echo "Building OZO Implementation Guide..."
-    # Extract and display version
     - export VERSION=$(grep '^version:' sushi-config.yaml | sed 's/version://' | tr -d '[:space:]')
-    - echo "Version: ${VERSION}"
-    # Run the build
+    - echo "Version:" $VERSION
     - make build
-    # Copy output to public for GitLab Pages
     - mv ./output ./public
   artifacts:
     name: "ozo-ig-${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHORT_SHA}"
@@ -39,12 +36,8 @@ pages:
     - build
   script:
     - echo "Deploying Implementation Guide to GitLab Pages..."
-    # Ensure public directory exists with content
-    - |
-      if [ ! -d "./public" ] || [ -z "$(ls -A ./public)" ]; then
-        echo "Error: public directory is empty or doesn't exist"
-        exit 1
-      fi
+    - test -d "./public" || (echo "Error public directory does not exist" && exit 1)
+    - test "$(ls -A ./public)" || (echo "Error public directory is empty" && exit 1)
     - ls -la ./public/
     - echo "Deployment successful!"
   artifacts:
