@@ -1,30 +1,57 @@
-FROM openjdk:24-jdk-bookworm
+FROM mcr.microsoft.com/dotnet/sdk:8.0
+
 LABEL maintainer="roland@headease.nl"
 
-# Install native compilation dependencies.
-RUN apt-get update -y && apt-get upgrade -y
-RUN apt-get install -y gcc g++ make apt-utils
+# Build arguments for version control
+ARG PUBLISHER_VERSION=2.0.15
+ARG SUSHI_VERSION=3.16.5
 
-# Install Node from NodeSource.
-RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
-RUN apt-get install -y nodejs
+# Install system dependencies
+RUN apt-get update && \
+    apt-get install -y \
+        make \
+        jq \
+        default-jdk \
+        python3 \
+        python3-pip \
+        python3-yaml \
+        graphviz \
+        jekyll \
+        nodejs \
+        npm \
+        wget \
+        curl \
+    && rm -rf /var/lib/apt/lists/*
 
-# Install Jekyll for Ubuntu/Debian: https://jekyllrb.com/docs/installation/ubuntu/
-RUN apt-get install -y ruby-full build-essential zlib1g-dev graphviz
-RUN gem install -N jekyll bundler
+# Install Firely Terminal
+RUN dotnet tool install -g firely.terminal
 
-RUN mkdir /app
-WORKDIR /app
+# Install FHIR Shorthand (SUSHI)
+RUN npm install -g fsh-sushi@${SUSHI_VERSION}
 
-# Install the FHIR Shorthand transfiler:
-RUN npm i -g fsh-sushi
+# Set up working directory
+RUN mkdir "/src"
+WORKDIR /src
 
-# Download the IG publisher.
-COPY ./_updatePublisher.sh .
-RUN bash ./_updatePublisher.sh -y
-RUN chmod +x *.sh *.bat
+# Download IG Publisher
+RUN curl -L https://github.com/HL7/fhir-ig-publisher/releases/download/${PUBLISHER_VERSION}/publisher.jar \
+    -o /usr/local/publisher.jar
 
-ADD ig.ini .
-ADD sushi-config.yaml .
+# Set up Saxon for FHIR IG Publisher
+ENV saxonPath=/root/.ant/lib/
+RUN mkdir -p ${saxonPath} && \
+    wget https://repo1.maven.org/maven2/net/sf/saxon/Saxon-HE/11.4/Saxon-HE-11.4.jar \
+        -O ${saxonPath}/saxon-he-11.4.jar && \
+    wget https://repo1.maven.org/maven2/org/xmlresolver/xmlresolver/5.3.0/xmlresolver-5.3.0.jar \
+        -O ${saxonPath}/xmlresolver-5.3.0.jar
 
-CMD ["bash", "_genonce.sh"]
+# Environment variables
+ENV FHIR_EMAIL=roland@headease.nl
+ENV DEBUG=1
+ENV PATH="${PATH}:/root/.dotnet/tools"
+
+# Copy entrypoint script
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
