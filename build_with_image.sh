@@ -1,8 +1,25 @@
-#plantuml -o ../images/ -tsvg ./input/images-source/*.plantuml
-gofsh --useFHIRVersion=4.0.1 examples/ --out input/fsh/
+#!/bin/bash
+# Quick build script using pre-built Docker image
 
-export IMAGE_NAME=registry.gitlab.com/headease/ozo-refererence-impl/headease-ig-builder/main:latest
-docker pull $IMAGE_NAME
-mkdir -p mkdir ./public
-docker run --rm  -v "${PWD}/input:/workspace/input" -v "${PWD}/public:/workspace/output" -v "${PWD}/ig.ini:/workspace/ig.ini" -v "${PWD}/sushi-config.yaml:/workspace/sushi-config.yaml" $IMAGE_NAME
-open public/index.html
+set -e
+
+echo "Building OZO Implementation Guide using Docker..."
+
+# Configuration
+IMAGE_NAME=${IMAGE_NAME:-registry.gitlab.com/headease/ozo-refererence-impl/headease-ig-builder/main:latest}
+
+# Pull latest image
+echo "Pulling Docker image: $IMAGE_NAME"
+docker pull "$IMAGE_NAME"
+
+# Create output directories
+mkdir -p ./public ./output
+
+# Run the build
+echo "Running build in Docker container..."
+docker run --rm -v "${PWD}:/src" "$IMAGE_NAME"
+
+echo ""
+echo "Build complete!"
+echo "Opening Implementation Guide in browser..."
+open public/index.html || xdg-open public/index.html || echo "Please open public/index.html manually"

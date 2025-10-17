@@ -1,12 +1,85 @@
-pages:
-  image: $CI_REGISTRY/headease/ozo-refererence-impl/headease-ig-builder/main:latest
+# GitLab CI/CD Configuration for OZO FHIR Implementation Guide
+
+stages:
+  - build
+  - deploy
+
+variables:
+  # Use the pre-built Docker image from GitLab registry
+  BUILDER_IMAGE: $CI_REGISTRY/headease/ozo-refererence-impl/headease-ig-builder/main:latest
+  # Extract version from sushi-config.yaml
+  VERSION: $(grep '^version:' sushi-config.yaml | sed 's/version: //' | tr -d '[:space:]')
+
+# Build the Implementation Guide on all branches
+build:
   stage: build
+  image: $BUILDER_IMAGE
   script:
-    - /workspace/_updatePublisher.sh -y -f
-    - bash _genonce.sh
+    - echo "Building OZO Implementation Guide..."
+    - echo "Version: ${VERSION}"
+    # The Docker entrypoint calls 'make build' by default
+    - make build
     - mv ./output ./public
   artifacts:
+    name: "ozo-ig-${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHORT_SHA}"
     paths:
-    - public
-  only:
-  - main
+      - output/
+      - public/
+    expire_in: 30 days
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH
+
+# Deploy to GitLab Pages (main branch only)
+pages:
+  stage: deploy
+  image: alpine:latest
+  dependencies:
+    - build
+  script:
+    - echo "Deploying Implementation Guide to GitLab Pages..."
+    # Ensure public directory exists with content
+    - |
+      if [ ! -d "./public" ] || [ -z "$(ls -A ./public)" ]; then
+        echo "Error: public directory is empty or doesn't exist"
+        exit 1
+      fi
+    - ls -la ./public/
+    - echo "Deployment successful!"
+  artifacts:
+    paths:
+      - public
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+
+# Optional: Validate FSH files
+validate:
+  stage: build
+  image: $BUILDER_IMAGE
+  script:
+    - echo "Validating FSH files..."
+    - make validate
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH
+  allow_failure: true
+
+# Optional: Build Docker image (manual trigger)
+build-docker-image:
+  stage: build
+  image: docker:latest
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - echo "Building Docker image..."
+    - docker build --pull -t $BUILDER_IMAGE .
+    - docker push $BUILDER_IMAGE
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+      when: manual
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      when: manual
+  tags:
+    - docker
