@@ -163,9 +163,17 @@ pages:
 # For parameters defined by the FHIR Tools IG see:
 # http://build.fhir.org/ig/FHIR/fhir-tools-ig/branches/master/CodeSystem-ig-parameters.html
 #
-# parameters:
-#   excludettl: true
-#   validation: [allow-any-extensions, no-broken-links]
+parameters: # see https://confluence.hl7.org/display/FHIR/Implementation+Guide+Parameters
+  excludettl: true
+  path-resource:
+    - input/resources
+    - fsh-generated/resources
+  path-pages:
+    - input/pagecontent
+    - fsh-generated/includes
+  # Show FSH source files in the artifacts pages
+  show-inherited-invariants: false
+  usage-stats-opt-out: true
 #
 # ╭────────────────────────────────────────────menu.xml────────────────────────────────────────────╮
 # │ The menu property will be used to generate the input/menu.xml file. The menu is represented    │
@@ -207,12 +215,12 @@ menu:
     Adding attachments with the dropbox: interaction-dropbox.html
   Compliance:
     AuditEvent for NEN7510: auditevent-nen7510.html
+  Artifacts: artifacts.html
 #  matrix.org:
 #    OZO on matrix: ozo-on-matrix.html
 #    Get data for home care: usecase-view-all-data.html
 #    Referral/Nursing handoff: usecase-nursing-handoff.html
 #
-#  Artifacts: artifacts.html
 #  Changes & Issues: history.html
 
 
