@@ -1,12 +1,12 @@
-**Fhir** 
+# Organization Addressing Proposal
 
-**1\. Business Goal** 
+## Business Goal
 
 Enable pharmacies and clinics to have **organization-level visibility** of all incoming and outgoing FHIR-based messages in OZO, so that multiple staff members can collaborate and respond to communications, instead of restricting messages to individual practitioners. 
 
-**2\. Requirements** 
+## Requirements
 
-Messages must remain compliant with OZO’s restrictions 
+Messages must remain compliant with OZO's restrictions 
 
 (Practitioner/RelatedPerson/CareTeam only). 
 
@@ -16,7 +16,7 @@ All members of a pharmacy (or clinic) should be able to respond to any messages.
 
 The solution must remain compatible with **OZO FHIR** and **HAPI FHIR**. 
 
-**3\. Current Limitation** 
+## Current Limitation
 
 In OZO, Communication.sender and CommunicationRequest.requester must be of type **Practitioner** or **RelatedPerson**. 
 
@@ -30,7 +30,7 @@ If messages are addressed only to **Practitioners**, they are visible only to th
 
 Colleagues from the same pharmacy cannot see each other’s conversations, which breaks the “shared inbox” requirement. 
 
-**4\. Proposed Solution: Use CareTeam as Proxy for Organization** 
+## Proposed Solution: Use CareTeam as Proxy for Organization
 
 Define a **CareTeam** resource for each organization (e.g., *Pharmacy A*). 
 
@@ -41,9 +41,11 @@ Keep the actual **Practitioner** as the sender (for Communication) and requester
 
 add all pharmacists or staff members of that organization as participants in the CareTeam. 
 
-link the CareTeam back to its managing Organization for traceability.\* **5\. Messaging Flow** 
+link the CareTeam back to its managing Organization for traceability.
 
-**Actors** 
+## Messaging Flow
+
+### Actors 
 
 **Pharmacy A (Organization)** 
 
@@ -55,9 +57,9 @@ link the CareTeam back to its managing Organization for traceability.\* **5\. Me
 
 **Practitioner B1** (general practitioner) 
 
-**CareTeam B** (all general practitioners in Clinic B) 
+**CareTeam B** (all general practitioners in Clinic B)
 
-**Step-by-Step Flow** 
+### Step-by-Step Flow
 
 Step 1: Pharmacy A send a message to Clinic B 
 
