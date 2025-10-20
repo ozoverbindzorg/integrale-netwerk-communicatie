@@ -15,10 +15,16 @@ variables:
 # Build the Implementation Guide on all branches
 build:
   stage: build
-  image: $BUILDER_IMAGE
+  image:
+    name: $BUILDER_IMAGE
+    # Override the default entrypoint to prevent conflicts with GitLab CI's shell execution
+    # GitLab CI passes commands with 'sh -c' which would conflict with docker-entrypoint.sh
+    # The entrypoint still works normally when running 'docker run' from the host machine
+    entrypoint: [""]
   script:
     - echo "Building OZO Implementation Guide..."
     - make build
+    # Move output to public directory for GitLab Pages deployment
     - mv ./output ./public
   artifacts:
     name: "ozo-ig-${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHORT_SHA}"
@@ -51,7 +57,10 @@ pages:
 # Optional: Validate FSH files
 validate:
   stage: build
-  image: $BUILDER_IMAGE
+  image:
+    name: $BUILDER_IMAGE
+    # Override entrypoint (same reason as build job - see above)
+    entrypoint: [""]
   script:
     - echo "Validating FSH files..."
     - make validate
