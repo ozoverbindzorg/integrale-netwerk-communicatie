@@ -2,8 +2,9 @@
 
 FHIR Implementation Guide for the OZO platform - connecting care professionals with informal caregivers.
 
-This repository is linked to GitLab Pages and publishes the Implementation Guide at:
-`http://headease.gitlab.io/ozo-refererence-impl/ozo-implementation-guide`
+**Published URLs:**
+- **Primary (GitHub Pages)**: `https://ozo-implementation-guide.headease.nl`
+- **GitLab Pages**: `https://ozo-implementation-guide-405d2b.gitlab.io`
 
 ----
 
@@ -354,11 +355,21 @@ This repository uses GitLab CI/CD for continuous integration and deployment to G
   5. IG Publisher creates the documentation
   6. Publishes to GitLab Pages (main branch only)
 
-### GitLab Pages Deployment
+### Deployment
 
-- **URL**: `http://headease.gitlab.io/ozo-refererence-impl/ozo-implementation-guide`
+This project is deployed to two locations:
+
+#### GitHub Pages (Primary)
+- **URL**: `https://ozo-implementation-guide.headease.nl`
+- **Workflow**: `.github/workflows/build_deploy.yml`
 - **Trigger**: Automatic on push to `main` branch
-- **Content**: Complete Implementation Guide with all documentation, profiles, and examples
+- **DNS**: Custom domain pointing to `ozoverbindzorg.github.io`
+
+#### GitLab Pages (Secondary)
+- **URL**: `https://ozo-implementation-guide-405d2b.gitlab.io`
+- **Workflow**: `.gitlab-ci.yml`
+- **Trigger**: Automatic on push to `main` branch
+- **Purpose**: Alternative deployment and CI/CD testing
 
 ## Troubleshooting
 

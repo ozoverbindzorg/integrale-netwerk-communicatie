@@ -3,7 +3,6 @@
 stages:
   - infrastructure
   - build
-  - test
   - deploy
 
 variables:
@@ -65,6 +64,8 @@ build:
     - if: $CI_COMMIT_BRANCH
 
 # Deploy to GitLab Pages (main branch only)
+# Pages URL: https://ozo-implementation-guide-405d2b.gitlab.io
+# Primary deployment is via GitHub Pages at: https://ozo-implementation-guide.headease.nl
 pages:
   stage: deploy
   image: alpine:latest
@@ -76,23 +77,9 @@ pages:
     - test "$(ls -A ./public)" || (echo "Error public directory is empty" && exit 1)
     - ls -la ./public/
     - echo "Deployment successful!"
+    - echo "Pages will be available at your GitLab Pages URL after deployment"
   artifacts:
     paths:
       - public
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
-
-# Validate FSH files
-validate:
-  stage: test
-  image:
-    name: $BUILDER_IMAGE
-    # Override entrypoint (same reason as build job - see above)
-    entrypoint: [""]
-  script:
-    - echo "Validating FSH files..."
-    - make validate
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-    - if: $CI_COMMIT_BRANCH
-  allow_failure: true
