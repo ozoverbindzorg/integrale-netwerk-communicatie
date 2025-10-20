@@ -22,7 +22,7 @@ The FHIR API is based on FHIR R4 and makes use of the following FHIR resources:
 
 #### Patient
 
-**Profile:** [Patient](http://hl7.org/fhir/R4/patient.html) (based on FHIR R4 Patient resource)
+**Profile:** [OZOPatient](StructureDefinition-ozo-patient.html)
 
 The `Patient` represents the client in the domain, for each real-life patient only one single entity exists. The
 `Patient`
@@ -45,7 +45,7 @@ The identifier of the `Patient` _must_ be unique and _should_ the internal ident
 
 #### Related Person
 
-**Profile:** [RelatedPerson](http://hl7.org/fhir/R4/relatedperson.html) (based on FHIR R4 RelatedPerson resource)
+**Profile:** [OZORelatedPerson](StructureDefinition-ozo-relatedperson.html)
 
 The related person resource represents the relation between `Patient` and a informal caregiver (`RelatedPerson`). For
 each _relationship_
@@ -78,7 +78,7 @@ The OZO FHIR `RelatedPerson` uses two identities to identify the RelatedPerson e
 
 #### Practitioner
 
-**Profile:** [Practitioner](http://hl7.org/fhir/R4/practitioner.html) (based on FHIR R4 Practitioner resource)
+**Profile:** [OZOPractitioner](StructureDefinition-ozo-practitioner.html)
 
 The `Practitioner` represents a health care professional that has a relationship with one or more patients. The
 practitioner is linked to the patient by the care team.
@@ -101,7 +101,7 @@ system.
 
 #### CareTeam
 
-**Profile:** [CareTeam](http://hl7.org/fhir/R4/careteam.html) (based on FHIR R4 CareTeam resource)
+**Profile:** [OZOCareTeam](StructureDefinition-ozo-careteam.html)
 
 The `CareTeam` is the resource that binds the patient to the related person(s) and practitioners. There _should_ exist
 only one care team resource for each patient in the system. Multiple care team resources _could_ exist if specific use
@@ -121,7 +121,7 @@ the `Patient` to different `Organization`s
 
 #### Organization
 
-**Profile:** [Organization](http://hl7.org/fhir/R4/organization.html) (based on FHIR R4 Organization resource)
+**Profile:** [OZOOrganization](StructureDefinition-ozo-organization.html)
 
 The `Organization` resource represents the different organizations in the network. The relation between the Patient and
 Organization is managed by the participant in the care team. Each member of type Practitioner has an onBehalfOf
@@ -161,7 +161,7 @@ Messaging can be used within the OZO FHIR API. To achieve this, the following 2 
 
 #### CommunicationRequest
 
-**Profile:** [CommunicationRequest](http://hl7.org/fhir/R4/communicationrequest.html) (based on FHIR R4 CommunicationRequest resource)
+**Profile:** [OZOCommunicationRequest](StructureDefinition-ozo-communicationrequest.html)
 
 The `CommunicationRequest` Resource is used to:
 
@@ -186,7 +186,7 @@ The `CommunicationRequest` Resource is used to:
 
 #### Communication
 
-**Profile:** [Communication](http://hl7.org/fhir/R4/communication.html) (based on FHIR R4 Communication resource)
+**Profile:** [OZOCommunication](StructureDefinition-ozo-communication.html)
 
 The `Communication` resource is used to:
 
@@ -214,7 +214,7 @@ The `Attachment` resource is used to:
 
 #### Task
 
-**Profile:** [Task](http://hl7.org/fhir/R4/task.html) (based on FHIR R4 Task resource)
+**Profile:** [OZOTask](StructureDefinition-ozo-task.html)
 
 The `Task` resource is used to:
 * Notify the recipient about a new message.
