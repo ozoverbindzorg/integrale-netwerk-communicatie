@@ -6,6 +6,10 @@ borders of healthcare and open up to the social context of the patents.
 
 TODO: give a functional overview.
 
+### FHIR Resources and Profiles
+
+For a complete list of all FHIR profiles, examples, and resources defined in this Implementation Guide, see the [Artifacts](artifacts.html) page. The Artifacts page includes links to the FSH source files for all resources.
+
 ### The OZO care network datamodel
 
 ### About the name element.
@@ -17,6 +21,8 @@ Please refer to the following documentation of the Dutch name element:
 The FHIR API is based on FHIR R4 and makes use of the following FHIR resources:
 
 #### Patient
+
+**Profile:** [Patient](http://hl7.org/fhir/R4/patient.html) (based on FHIR R4 Patient resource)
 
 The `Patient` represents the client in the domain, for each real-life patient only one single entity exists. The
 `Patient`
@@ -38,6 +44,8 @@ The identifier of the `Patient` _must_ be unique and _should_ the internal ident
 * [Patient-H-de-Boer](Patient-H-de-Boer.html)
 
 #### Related Person
+
+**Profile:** [RelatedPerson](http://hl7.org/fhir/R4/relatedperson.html) (based on FHIR R4 RelatedPerson resource)
 
 The related person resource represents the relation between `Patient` and a informal caregiver (`RelatedPerson`). For
 each _relationship_
@@ -70,6 +78,8 @@ The OZO FHIR `RelatedPerson` uses two identities to identify the RelatedPerson e
 
 #### Practitioner
 
+**Profile:** [Practitioner](http://hl7.org/fhir/R4/practitioner.html) (based on FHIR R4 Practitioner resource)
+
 The `Practitioner` represents a health care professional that has a relationship with one or more patients. The
 practitioner is linked to the patient by the care team.
 
@@ -91,6 +101,8 @@ system.
 
 #### CareTeam
 
+**Profile:** [CareTeam](http://hl7.org/fhir/R4/careteam.html) (based on FHIR R4 CareTeam resource)
+
 The `CareTeam` is the resource that binds the patient to the related person(s) and practitioners. There _should_ exist
 only one care team resource for each patient in the system. Multiple care team resources _could_ exist if specific use
 cases require this. A CareTeam has a set of `participants` that consists of a `member`. For practitioners, this
@@ -108,6 +120,8 @@ the `Patient` to different `Organization`s
 * [CareTeam-H-de-Boer](CareTeam-H-de-Boer.html)
 
 #### Organization
+
+**Profile:** [Organization](http://hl7.org/fhir/R4/organization.html) (based on FHIR R4 Organization resource)
 
 The `Organization` resource represents the different organizations in the network. The relation between the Patient and
 Organization is managed by the participant in the care team. Each member of type Practitioner has an onBehalfOf
@@ -146,6 +160,9 @@ The different interactions are described in the following guides:
 Messaging can be used within the OZO FHIR API. To achieve this, the following 2 FHIR Resources are used:
 
 #### CommunicationRequest
+
+**Profile:** [CommunicationRequest](http://hl7.org/fhir/R4/communicationrequest.html) (based on FHIR R4 CommunicationRequest resource)
+
 The `CommunicationRequest` Resource is used to:
 
 * Initially request a thread
@@ -168,6 +185,9 @@ The `CommunicationRequest` Resource is used to:
 * [CommunicationRequest-Thread-Example](CommunicationRequest-Thread-Example.html)
 
 #### Communication
+
+**Profile:** [Communication](http://hl7.org/fhir/R4/communication.html) (based on FHIR R4 Communication resource)
+
 The `Communication` resource is used to:
 
 * Place a message in a thread.
@@ -190,9 +210,12 @@ The `Communication` resource is used to:
 
 The `Attachment` resource is used to:
 
-* Add documents to the `CommunicationRequesr` and `Communication` resource.
+* Add documents to the `CommunicationRequest` and `Communication` resource.
 
 #### Task
+
+**Profile:** [Task](http://hl7.org/fhir/R4/task.html) (based on FHIR R4 Task resource)
+
 The `Task` resource is used to:
 * Notify the recipient about a new message.
 * Check the status of the thread
@@ -213,15 +236,27 @@ The `Task` resource is used to:
 * [Task-Practitioner-Mark-Example](Task-Practitioner-Mark-Example.html)
 
 #### AuditEvent
+
+**Profile:** [OZOAuditEvent](StructureDefinition-OZOAuditEvent.html) (custom profile for NEN7510 compliance)
+
 The `AuditEvent` is used to:
-* Update the `Task` status field as client of the OZO FHIR Api 
+* Update the `Task` status field as client of the OZO FHIR Api
+* Provide NEN7510-compliant audit logging with W3C Trace Context support
+
+For detailed information about NEN7510 compliance and audit logging, see [AuditEvent for NEN7510 Compliance](auditevent-nen7510.html).
 
 ##### Examples
 * [AuditEvent-Practitioner-Manu-Access](AuditEvent-Practitioner-Manu-Access.html)
 * [AuditEvent-Practitioner-Mark-Access](AuditEvent-Practitioner-Mark-Access.html)
 * [AuditEvent-RelatedPerson-Access](AuditEvent-RelatedPerson-Access.html)
+* [AuditEvent-REST-Create-Example](AuditEvent-REST-Create-Example.html)
+* [AuditEvent-REST-Search-Example](AuditEvent-REST-Search-Example.html)
+* [AuditEvent-REST-Update-Failure](AuditEvent-REST-Update-Failure.html)
+* [AuditEvent-System-Access](AuditEvent-System-Access.html)
 
 ### Subscriptions
+
+**Profile:** [Subscription](http://hl7.org/fhir/R4/subscription.html) (based on FHIR R4 Subscription resource)
 
 The `Subscription` resource is used for clients of the OZO FHIR Api to receive updates about events in the changes in the FHIR Api:
 * When Tasks are created for the users in the OZO platform
