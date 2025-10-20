@@ -1,7 +1,9 @@
 # GitLab CI/CD Configuration for OZO FHIR Implementation Guide
 
 stages:
+  - infrastructure
   - build
+  - test
   - deploy
 
 variables:
@@ -11,6 +13,32 @@ variables:
   DOCKER_TLS_CERTDIR: ""
   # Use overlay2 driver for better performance
   DOCKER_DRIVER: overlay2
+
+# Build Docker image automatically
+# This builds the Docker image used for IG builds, not the IG itself
+# Leverages Docker layer caching for faster builds
+build-docker-image:
+  stage: infrastructure
+  image: docker:24
+  services:
+    - docker:24-dind
+  variables:
+    # Override if you prefer a different network or daemon opts
+    DOCKER_HOST: "tcp://docker:2375"
+  before_script:
+    - echo "$CI_JOB_TOKEN" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
+  script:
+    - echo "Building Docker image with layer caching..."
+    # Pull existing image to use as cache (ignore errors if not exists)
+    - docker pull $BUILDER_IMAGE || true
+    # Build with cache-from to leverage GitLab's Docker layer caching
+    - docker build --cache-from $BUILDER_IMAGE --pull -t $BUILDER_IMAGE .
+    - docker push $BUILDER_IMAGE
+  rules:
+    # Only rebuild Docker image when Dockerfile or entrypoint changes
+    - changes:
+        - Dockerfile
+        - docker-entrypoint.sh
 
 # Build the Implementation Guide on all branches
 build:
@@ -54,9 +82,9 @@ pages:
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
 
-# Optional: Validate FSH files
+# Validate FSH files
 validate:
-  stage: build
+  stage: test
   image:
     name: $BUILDER_IMAGE
     # Override entrypoint (same reason as build job - see above)
@@ -68,24 +96,3 @@ validate:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
     - if: $CI_COMMIT_BRANCH
   allow_failure: true
-
-# Optional: Build Docker image (manual trigger)
-build-docker-image:
-  stage: build
-  image: docker:24
-  services:
-    - docker:24-dind
-  variables:
-    # Override if you prefer a different network or daemon opts
-    DOCKER_HOST: "tcp://docker:2375"
-  before_script:
-    - echo "$CI_JOB_TOKEN" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
-  script:
-    - echo "Building Docker image..."
-    - docker build --pull -t $BUILDER_IMAGE .
-    - docker push $BUILDER_IMAGE
-  rules:
-    - if: $CI_COMMIT_BRANCH == "main"
-      when: manual
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-      when: manual
