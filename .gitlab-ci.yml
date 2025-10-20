@@ -18,8 +18,6 @@ build:
   image: $BUILDER_IMAGE
   script:
     - echo "Building OZO Implementation Guide..."
-    - export VERSION=$(grep '^version:' sushi-config.yaml | sed 's/version://' | tr -d '[:space:]')
-    - echo "Version:" $VERSION
     - make build
     - mv ./output ./public
   artifacts:
