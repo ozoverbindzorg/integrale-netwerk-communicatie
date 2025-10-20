@@ -1,6 +1,4 @@
-### FHIR Addressing Analysis for Organization-Level Messaging
-
-#### Document Purpose
+### Document Purpose
 
 This document analyzes the addressing problem in the FHIR proposal for organization-level messaging and proposes a solution to enable organization-to-organization communication while maintaining individual auditability.
 
@@ -8,9 +6,9 @@ This document analyzes the addressing problem in the FHIR proposal for organizat
 
 ---
 
-#### OZO Context and Resource Semantics
+### OZO Context and Resource Semantics
 
-##### Resource Meanings in OZO:
+### Resource Meanings in OZO:
 
 1. **CareTeam**: Represents all people involved in a **patient's care**
    - Includes both formal (practitioners) and informal (related persons) caregivers
@@ -26,30 +24,30 @@ This document analyzes the addressing problem in the FHIR proposal for organizat
    - Contains the reply message as payload
    - Can reference previous Communications via `inResponseTo`
 
-##### Key Observations
+### Key Observations
 
-###### 1. **CommunicationRequest has a distinct `requester` field**
+### 1. **CommunicationRequest has a distinct `requester` field**
 - FHIR R4 allows: Practitioner, PractitionerRole, **Organization**, Patient, RelatedPerson, Device
 - OZO restricts to: Practitioner, RelatedPerson
 - **Important:** `requester` can be different from `sender`
 
-###### 2. **Both resources allow Organization in sender**
+### 2. **Both resources allow Organization in sender**
 - FHIR R4 `sender` allows: Device, **Organization**, Patient, Practitioner, PractitionerRole, RelatedPerson, HealthcareService
 - OZO restricts `sender` to: Practitioner, RelatedPerson (excludes Organization!)
 
-###### 3. **Both resources allow Organization in recipient**
+### 3. **Both resources allow Organization in recipient**
 - FHIR R4 `recipient` allows: Device, **Organization**, Patient, Practitioner, PractitionerRole, RelatedPerson, HealthcareService, Group, **CareTeam**, Endpoint
 - OZO restricts `recipient` to: Practitioner, RelatedPerson, CareTeam (excludes Organization!)
 
-###### 4. **CareTeam is already allowed as recipient in OZO**
+### 4. **CareTeam is already allowed as recipient in OZO**
 - This is why the proposal suggests using CareTeam as proxy for Organization
 - CareTeam is NOT allowed as sender/requester in OZO
 
 ---
 
-#### Analysis: The Addressing Problem Revisited
+### Analysis: The Addressing Problem Revisited
 
-##### Standard FHIR R4 Solution (If OZO didn't have constraints):
+### Standard FHIR R4 Solution (If OZO didn't have constraints):
 
 ```
 Step 1: Pharmacy sends request
@@ -73,7 +71,7 @@ Communication:
 - `sender` in Communication tracks the individual who responds (auditability)
 - No discovery needed - the information is in the CommunicationRequest
 
-##### Current OZO Constraints Problem:
+### Current OZO Constraints Problem:
 
 ```
 Step 1: Pharmacy sends request
@@ -95,22 +93,22 @@ Communication:
 
 ---
 
-#### Proposed Solution: Allow Organization Addressing
+### Proposed Solution: Allow Organization Addressing
 
 *Note: This is the recommended solution. See [Detailed Analysis](#detailed-analysis) below for complete specification.*
 
-##### Constraint Changes:
+### Constraint Changes:
 
-###### **CommunicationRequest:**
+### **CommunicationRequest:**
 - `requester`: **Keep as Practitioner | RelatedPerson** (to track individual who initiated the conversation)
 - `sender`: Allow **Organization** (in addition to Practitioner, RelatedPerson)
 - `recipient`: Allow **Organization** (in addition to Practitioner, RelatedPerson, CareTeam)
 
-###### **Communication:**
+### **Communication:**
 - `sender`: **Keep as Practitioner | RelatedPerson** (must be an individual for auditability)
 - `recipient`: Allow **Organization** (in addition to Practitioner, RelatedPerson, CareTeam)
 
-##### Rationale:
+### Rationale:
 
 1. **Individual auditability preserved**:
    - `CommunicationRequest.requester` tracks who initiated the conversation
@@ -126,7 +124,7 @@ Communication:
    - Use Organization for organizational messaging (not CareTeam)
    - CareTeam remains for patient care coordination
 
-##### Message Flow Example:
+### Message Flow Example:
 
 ```
 Step 1: Pharmacy A initiates conversation with first message
@@ -153,7 +151,7 @@ Communication:
   payload = "Thank you for the quick response"
 ```
 
-##### Key Benefits:
+### Key Benefits:
 
 1. ✅ **Clear addressing**: Organizations can be senders and recipients
 2. ✅ **Individual auditability**: Every message is from an identifiable person
@@ -163,7 +161,7 @@ Communication:
 6. ✅ **Reply-to address**: Read from CommunicationRequest.sender or CommunicationRequest.recipient
 7. ✅ **Thread management**: CommunicationRequest defines conversation participants
 
-##### Constraint Summary:
+### Constraint Summary:
 
 | Resource | Field | Allowed Types | Note |
 |----------|-------|---------------|------|
@@ -175,9 +173,9 @@ Communication:
 
 ---
 
-#### Alternative Solutions (For Reference)
+### Alternative Solutions (For Reference)
 
-##### **Option 1: Extend OZO constraints to allow CareTeam in sender**
+### **Option 1: Extend OZO constraints to allow CareTeam in sender**
 
 **Change:**
 ```
@@ -220,7 +218,7 @@ Communication (follow-up):
 
 ---
 
-##### **Option 2: Keep all Communication.sender as individuals, add extension**
+### **Option 2: Keep all Communication.sender as individuals, add extension**
 
 Add `representedCareTeam` extension:
 
@@ -239,7 +237,7 @@ Communication:
 
 ---
 
-#### Summary Table: Comparison of Alternative Approaches
+### Summary Table: Comparison of Alternative Approaches
 
 *Note: These are early exploratory options. The recommended solution (Solution B: Organization + Payload Rules) is described in the next section.*
 
@@ -251,7 +249,7 @@ Communication:
 
 ---
 
-#### Final Recommendation
+### Final Recommendation
 
 **Best approach: Allow Organization Addressing**
 
@@ -259,13 +257,13 @@ The proposed solution uses Organization directly for organizational messaging, w
 
 ---
 
-#### Detailed Analysis
+### Detailed Analysis
 
-##### Overview
+### Overview
 
 **Core Principle:** Allow Organization as a participant type, while maintaining individual auditability through proper use of requester and sender fields.
 
-##### The Problem This Solution Solves
+### The Problem This Solution Solves
 
 The original OZO constraints created an impossible situation:
 - Organizations need to be addressable (pharmacies, clinics want shared inboxes)
@@ -273,9 +271,9 @@ The original OZO constraints created an impossible situation:
 - CareTeam was designed for patient care coordination, not organizational messaging
 - No clear way to reply to an organization without complex workarounds
 
-##### Solution Architecture
+### Solution Architecture
 
-###### Part 1: CommunicationRequest Changes
+### Part 1: CommunicationRequest Changes
 
 **Relax constraints to allow Organization:**
 ```
@@ -289,7 +287,7 @@ CommunicationRequest.recipient: Practitioner | RelatedPerson | CareTeam | Organi
 - `sender` can be Organization (reply-to address for the conversation)
 - `recipient` can be Organization (shared inbox for receiving organization)
 
-###### Part 2: Communication Changes
+### Part 2: Communication Changes
 
 **Relax recipient constraint, keep sender as individual:**
 ```
@@ -302,9 +300,9 @@ Communication.recipient: Practitioner | RelatedPerson | CareTeam | Organization
 - Sender must be an individual (preserves auditability)
 - Clear audit trail: every message has an identifiable person as sender
 
-##### Addressing Flow (How Reply-To Works)
+### Addressing Flow (How Reply-To Works)
 
-###### Scenario: Pharmacy A → Clinic B
+### Scenario: Pharmacy A → Clinic B
 
 **Step 1: Thread Initiation**
 ```fsh
@@ -360,9 +358,9 @@ InstanceOf: Communication
 * payload[0].contentString = "Thank you for the quick response!"
 ```
 
-##### Query Patterns for Applications
+### Query Patterns for Applications
 
-###### For Organization Members: "Show me messages to my organization"
+### For Organization Members: "Show me messages to my organization"
 
 ```
 GET /Communication?recipient=Organization/Pharmacy-A&_include=Communication:based-on
@@ -370,7 +368,7 @@ GET /Communication?recipient=Organization/Pharmacy-A&_include=Communication:base
 
 Returns all Communications where recipient is the organization, plus their parent CommunicationRequests.
 
-###### For Practitioners: "Show me my sent messages"
+### For Practitioners: "Show me my sent messages"
 
 ```
 GET /Communication?sender=Practitioner/A1
@@ -378,7 +376,7 @@ GET /Communication?sender=Practitioner/A1
 
 Returns all Communications sent by this individual.
 
-###### For Thread View: "Show me all messages in a conversation"
+### For Thread View: "Show me all messages in a conversation"
 
 ```
 GET /Communication?based-on=CommunicationRequest/thread-pharmacy-to-clinic
@@ -389,11 +387,11 @@ Returns chronologically sorted thread.
 
 ---
 
-#### Note to Self: Changes Required
+### Note to Self: Changes Required
 
-##### FSH Profile Changes
+### FSH Profile Changes
 
-###### File: `input/fsh/profiles/ozo-communicationrequest.fsh`
+### File: `input/fsh/profiles/ozo-communicationrequest.fsh`
 
 **Current constraints to relax:**
 ```fsh
@@ -414,7 +412,7 @@ Returns chronologically sorted thread.
 - `sender` now allows Organization (provides reply-to address for organizational messaging)
 - `recipient` now allows Organization (enables shared inbox pattern)
 
-###### File: `input/fsh/profiles/ozo-communication.fsh`
+### File: `input/fsh/profiles/ozo-communication.fsh`
 
 **Current constraints to relax:**
 ```fsh
@@ -434,9 +432,9 @@ Returns chronologically sorted thread.
 
 ---
 
-##### Documentation Updates Required
+### Documentation Updates Required
 
-###### File: `input/pagecontent/interaction-messaging.md`
+### File: `input/pagecontent/interaction-messaging.md`
 
 **Add new section:**
 - **Organization-to-Organization Messaging**
@@ -451,7 +449,7 @@ Returns chronologically sorted thread.
   - `recipient` = Organization (addressed to organization)
 - Add example showing `Communication` replies addressed to Organization
 
-###### File: `input/pagecontent/overview.md`
+### File: `input/pagecontent/overview.md`
 
 **Update CommunicationRequest description:**
 ```markdown
@@ -475,9 +473,9 @@ The `Communication` sender must remain an individual, but can be addressed to Or
 
 ---
 
-##### Examples to Add
+### Examples to Add
 
-###### File: `input/fsh/instances/communicationrequest-org-example.fsh` (NEW)
+### File: `input/fsh/instances/communicationrequest-org-example.fsh` (NEW)
 
 ```fsh
 Instance: CommunicationRequest-Pharmacy-to-Clinic
@@ -492,7 +490,7 @@ Description: "Shows a CommunicationRequest from a pharmacy to a clinic using Org
 * payload[0].contentString = "Can you review this patient's medication list for potential interactions?"
 ```
 
-###### File: `input/fsh/instances/communication-org-reply-example.fsh` (NEW)
+### File: `input/fsh/instances/communication-org-reply-example.fsh` (NEW)
 
 ```fsh
 Instance: Communication-Clinic-Reply
@@ -508,7 +506,7 @@ Description: "Shows a Communication reply from clinic practitioner to pharmacy o
 
 ---
 
-##### Migration Notes
+### Migration Notes
 
 - **Backward compatible:** Existing individual-to-individual messaging patterns remain unchanged
 - **New capability:** Organization-level messaging now supported without workarounds
@@ -517,7 +515,7 @@ Description: "Shows a Communication reply from clinic practitioner to pharmacy o
 
 ---
 
-##### Comparison with Original Proposal:
+### Comparison with Original Proposal:
 
 | Aspect | Original Proposal (CareTeam Proxy) | Recommended Solution (Organization Addressing) |
 |--------|-----------------------------------|-----------------------------------------------|

@@ -62,7 +62,7 @@ dependencies:
 
 pages:
   index.md:
-    title: Home
+    title: OZO FHIR Implementation Guide
 
   overview.md:
     title: Overview
@@ -131,7 +131,7 @@ pages:
     title: RFC - Organization Addressing Proposal
 
   fhir-addressing-analysis.md:
-    title: RFC - Organization Addressing Analysis
+    title: FHIR Addressing Analysis for Organization-Level Messaging
 
 #
 #  security-privacy.md:

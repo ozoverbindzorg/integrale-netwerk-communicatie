@@ -1,5 +1,3 @@
-# The OZO network interaction
-
 The network interaction describes how to establish and maintain care networks using FHIR resources. This involves creating person resources (Patient, Practitioner, RelatedPerson), organizing them into care teams, and managing both floating professional teams and patient-specific care teams.
 
 ### Roles
