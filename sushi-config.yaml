@@ -127,6 +127,12 @@ pages:
   auditevent-nen7510.md:
     title: AuditEvent for NEN7510 Compliance
 
+  fhir-addressing-proposal.md:
+    title: RFC - Organization Addressing Proposal
+
+  fhir-addressing-analysis.md:
+    title: RFC - Organization Addressing Analysis
+
 #
 #  security-privacy.md:
 #    title: Security - Privacy
@@ -215,6 +221,8 @@ menu:
     Adding attachments with the dropbox: interaction-dropbox.html
   Compliance:
     AuditEvent for NEN7510: auditevent-nen7510.html
+  RFCs:
+    Organization Addressing: fhir-addressing-analysis.html
   Artifacts: artifacts.html
 #  matrix.org:
 #    OZO on matrix: ozo-on-matrix.html
