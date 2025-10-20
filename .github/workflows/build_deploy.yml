@@ -1,9 +1,9 @@
-name: Build and Deploy static content to Pages with Docker
+name: Build and Deploy FHIR Package
 
 on:
-  # Runs on pushes targeting the default branch
+  # Runs on pushes to all branches
   push:
-    branches: ["main"]
+    branches: ["**"]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -12,7 +12,7 @@ on:
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
   id-token: write
-  contents: read
+  contents: write
   packages: write
   pages: write
 
@@ -24,17 +24,11 @@ concurrency:
 
 
 jobs:
-  # Build Docker image only when Dockerfile or entrypoint changes
-  build-docker-image:
+  build:
+    name: Build FHIR Package and Documentation
     runs-on: ubuntu-latest
-    # Only run if Dockerfile or docker-entrypoint.sh changed
-    if: |
-      github.event_name == 'push' && (
-        contains(github.event.head_commit.modified, 'Dockerfile') ||
-        contains(github.event.head_commit.modified, 'docker-entrypoint.sh') ||
-        contains(github.event.head_commit.added, 'Dockerfile') ||
-        contains(github.event.head_commit.added, 'docker-entrypoint.sh')
-      )
+    outputs:
+      version: ${{ steps.version.outputs.version }}
     services:
       registry:
         image: registry:2
@@ -43,12 +37,22 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Get version
+        id: version
+        run: |
+          VERSION=$(grep '^version:' sushi-config.yaml | sed 's/version: //' | tr -d '[:space:]')
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Version: $VERSION"
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
         with:
           driver-opts: network=host
+
       - name: Build and push to local registry
         uses: docker/build-push-action@v6
         with:
@@ -57,49 +61,191 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-  # Build the Implementation Guide
-  build:
-    needs: [build-docker-image]
-    # Always run, but skip waiting for build-docker-image if it was skipped
-    if: always() && (needs.build-docker-image.result == 'success' || needs.build-docker-image.result == 'skipped')
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    services:
-      registry:
-        image: registry:2
-        ports:
-          - 5000:5000
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-        with:
-          driver-opts: network=host
-      - name: Build and push to local registry (if not already built)
-        uses: docker/build-push-action@v6
-        with:
-          push: true
-          tags: localhost:5000/ozoverbindzorg/publisher:latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-      - name: Build
+      - name: Build FHIR Package
         run: |
           mkdir -p ./output ./public
           # Run with simplified volume mount and override entrypoint to use direct make command
           # The --entrypoint flag prevents conflicts with docker-entrypoint.sh when passing shell commands
           docker run --name=scp --rm --entrypoint make -v "${PWD}:/src" localhost:5000/ozoverbindzorg/publisher:latest build
-      - name: Upload artifact
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: fhir-package
+          path: |
+            ./output/
+            ./sushi-config.yaml
+          retention-days: 7
+
+  deploy-pages:
+    name: Deploy to GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+    permissions: write-all
+    if: github.ref == 'refs/heads/main'
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: fhir-package
+
+      - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # Upload entire repository
           path: './output'
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  publish-npm:
+    name: Publish Package to GitHub Packages
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: fhir-package
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          registry-url: 'https://npm.pkg.github.com'
+
+      - name: Check if version exists and publish
+        id: publish
+        run: |
+          # Extract the package created by build-ig
+          mkdir -p npm-publish
+          tar -xzf ./output/package.tgz -C npm-publish
+          cd npm-publish/package
+
+          # Get the repository owner (org or user)
+          REPO_OWNER=$(echo "${{ github.repository }}" | cut -d'/' -f1)
+
+          # Calculate the publish version
+          PUBLISH_VERSION="${{ needs.build.outputs.version }}"
+          # For non-main branches, append the branch name and short commit hash to make version unique
+          if [ "${{ github.ref_name }}" != "main" ]; then
+            # Sanitize branch name for npm version (replace / with -, remove special chars)
+            BRANCH_NAME=$(echo "${{ github.ref_name }}" | sed 's/[^a-zA-Z0-9._-]/-/g')
+            PUBLISH_VERSION="${PUBLISH_VERSION}-${BRANCH_NAME}-${GITHUB_SHA::7}"
+          fi
+
+          # Update package.json to include GitHub registry info and ensure it's scoped
+          # Also update the version to match what we calculated
+          jq --arg owner "@$REPO_OWNER" --arg version "$PUBLISH_VERSION" '.name = $owner + "/" + .name | .version = $version | .publishConfig = {"registry": "https://npm.pkg.github.com", "access": "restricted"}' package.json > package.json.tmp && mv package.json.tmp package.json
+
+          # Get the package name from package.json
+          PACKAGE_NAME=$(jq -r '.name' package.json)
+
+          # Check if this version already exists on npm
+          if npm view ${PACKAGE_NAME}@${PUBLISH_VERSION} version 2>/dev/null; then
+            echo "Version ${PUBLISH_VERSION} already exists on npm registry, skipping publish"
+            echo "skipped=true" >> $GITHUB_OUTPUT
+          else
+            echo "Publishing version ${PUBLISH_VERSION}"
+            # Publish the package - public for main branch, restricted for others
+            if [ "${{ github.ref_name }}" = "main" ]; then
+              npm publish --access public
+            else
+              npm publish --access restricted
+            fi
+            echo "skipped=false" >> $GITHUB_OUTPUT
+          fi
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  create-release-main:
+    name: Create Release (Main)
+    needs: build
+    runs-on: ubuntu-latest
+    permissions: write-all
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: fhir-package
+          path: ./build
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          draft: false
+          prerelease: false
+          name: ${{ needs.build.outputs.version }}
+          tag_name: v${{ needs.build.outputs.version }}
+          body: |
+            OZO FHIR Implementation Guide Release ${{ needs.build.outputs.version }}
+
+            ## Installation
+
+            Install this package on your FHIR server:
+            ```bash
+            fhir install fhir.ozo-${{ needs.build.outputs.version }}.tgz
+            ```
+
+            ## Documentation
+
+            View the full Implementation Guide at: https://ozo-implementation-guide.headease.nl
+          files: |
+            ./build/output/fhir.ozo-${{ needs.build.outputs.version }}.tgz
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
+  create-release-branch:
+    name: Create Pre-release (Branch)
+    needs: build
+    runs-on: ubuntu-latest
+    permissions: write-all
+    if: github.ref != 'refs/heads/main'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: fhir-package
+          path: ./build
+
+      - name: Create Pre-release
+        uses: softprops/action-gh-release@v1
+        with:
+          draft: false
+          prerelease: true
+          name: ${{ needs.build.outputs.version }}-${{ github.ref_name }}
+          tag_name: v${{ needs.build.outputs.version }}-${{ github.ref_name }}-${{ github.run_number }}
+          body: |
+            OZO FHIR Implementation Guide Pre-release ${{ needs.build.outputs.version }}-${{ github.ref_name }}
+
+            This is a pre-release build from branch `${{ github.ref_name }}`.
+
+            ## Installation
+
+            Install this package on your FHIR server:
+            ```bash
+            fhir install fhir.ozo-${{ needs.build.outputs.version }}.tgz
+            ```
+          files: |
+            ./build/output/fhir.ozo-${{ needs.build.outputs.version }}.tgz
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
+      - name: Summary
+        if: always()
+        run: |
+          echo "## Publish Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- **Triggered by**: ${{ github.event_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Branch**: ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Commit**: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Version**: ${{ needs.build.outputs.version }}" >> $GITHUB_STEP_SUMMARY

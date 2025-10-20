@@ -103,8 +103,19 @@ The build process creates a complete Implementation Guide:
   - Markdown documentation pages
   - QA validation reports
 
+#### FHIR Package
+- **Location**: `output/fhir.ozo-{version}.tgz`
+- **Purpose**: Installable FHIR package for FHIR servers
+- **Usage**: Can be installed on FHIR servers (e.g., HAPI FHIR) using:
+  ```bash
+  # Example with Firely Terminal
+  fhir install output/fhir.ozo-0.1.0.tgz
+  ```
+- **Contents**: All FHIR profiles, examples, ValueSets, CodeSystems, and StructureDefinitions
+
 #### Additional Outputs
 - `output/` - Full IG Publisher output with detailed reports (when mounted)
+- `output/package.tgz` - Generic package file (also copied to versioned filename)
 - `fsh-generated/` - Auto-generated FHIR resources from FSH
 - `temp/` - Temporary build artifacts
 

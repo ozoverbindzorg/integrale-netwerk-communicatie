@@ -27,12 +27,12 @@ build: install-dependencies build-ig
 .PHONY: install-dependencies
 install-dependencies:
 	@echo "Installing dependencies from sushi-config.yaml..."
-	@if ! command -v fhir >/dev/null 2>&1; then \
-		echo "Warning: Firely Terminal (fhir) not found. Skipping dependency installation."; \
-	else \
-		fhir install nictiz.fhir.nl.r4.nl-core 0.11.0-beta.1; \
-		echo "Dependencies installed successfully"; \
-	fi
+	@python3 scripts/get_dependencies.py | while read pkg; do \
+		echo "Installing $$pkg..."; \
+		fhir install $$pkg; \
+		fhir extract-package $$pkg; \
+		fhir inflate --package $$pkg; \
+	done
 
 # Build Implementation Guide using IG Publisher
 .PHONY: build-ig
@@ -47,6 +47,13 @@ build-ig:
 	fi
 	@echo "Running IG Publisher..."
 	@java -jar /usr/local/publisher.jar -ig ig.ini
+	@if [ ! -f ./output/package.tgz ]; then \
+		echo "ERROR: Build did not create ./output/package.tgz"; \
+		exit 1; \
+	fi
+	@echo "Copying package.tgz to: ./output/fhir.ozo-$(VERSION).tgz"
+	@cp ./output/package.tgz ./output/fhir.ozo-$(VERSION).tgz
+	@echo "Successfully created: ./output/fhir.ozo-$(VERSION).tgz"
 	@echo "IG Publisher completed successfully"
 
 # Convert JSON examples to FSH using GoFSH
@@ -108,7 +115,8 @@ help:
 	@echo ""
 	@echo "Building:"
 	@echo "  make build           - Build IG (calls install-dependencies and build-ig)"
-	@echo "  make build-ig        - Build Implementation Guide using IG Publisher"
+	@echo "  make build-ig        - Build Implementation Guide and create installable package"
+	@echo "                         Creates: ./output/fhir.ozo-$(VERSION).tgz"
 	@echo "  make install-dependencies - Install FHIR dependencies"
 	@echo ""
 	@echo "Development:"

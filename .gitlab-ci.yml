@@ -51,13 +51,16 @@ build:
   script:
     - echo "Building OZO Implementation Guide..."
     - make build
+    # Copy FHIR packages before moving output
+    - mkdir -p ./packages
+    - cp ./output/*.tgz ./packages/ 2>/dev/null || true
     # Move output to public directory for GitLab Pages deployment
     - mv ./output ./public
   artifacts:
     name: "ozo-ig-${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHORT_SHA}"
     paths:
-      - output/
       - public/
+      - packages/*.tgz  # FHIR package files
     expire_in: 30 days
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
