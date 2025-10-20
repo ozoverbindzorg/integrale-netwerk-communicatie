@@ -24,17 +24,25 @@ concurrency:
 
 
 jobs:
-  build:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  # Build Docker image only when Dockerfile or entrypoint changes
+  build-docker-image:
+    runs-on: ubuntu-latest
+    # Only run if Dockerfile or docker-entrypoint.sh changed
+    if: |
+      github.event_name == 'push' && (
+        contains(github.event.head_commit.modified, 'Dockerfile') ||
+        contains(github.event.head_commit.modified, 'docker-entrypoint.sh') ||
+        contains(github.event.head_commit.added, 'Dockerfile') ||
+        contains(github.event.head_commit.added, 'docker-entrypoint.sh')
+      )
     services:
       registry:
         image: registry:2
         ports:
           - 5000:5000
-    runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
@@ -46,8 +54,39 @@ jobs:
         with:
           push: true
           tags: localhost:5000/ozoverbindzorg/publisher:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  # Build the Implementation Guide
+  build:
+    needs: [build-docker-image]
+    # Always run, but skip waiting for build-docker-image if it was skipped
+    if: always() && (needs.build-docker-image.result == 'success' || needs.build-docker-image.result == 'skipped')
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    services:
+      registry:
+        image: registry:2
+        ports:
+          - 5000:5000
+    runs-on: ubuntu-latest
+    steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          driver-opts: network=host
+      - name: Build and push to local registry (if not already built)
+        uses: docker/build-push-action@v6
+        with:
+          push: true
+          tags: localhost:5000/ozoverbindzorg/publisher:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Build
