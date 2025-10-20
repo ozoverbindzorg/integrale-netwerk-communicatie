@@ -19,6 +19,8 @@ Description: "Example of an AuditEvent for a REST search operation through OZO A
 * source.observer = Reference(Device/ozo-aaa-proxy-001) "AAA Proxy Instance 001"
 * source.observer.type = "Device"
 * source.type = http://terminology.hl7.org/CodeSystem/security-source-type#4 "Application Server"
-* entity[0].type = http://terminology.hl7.org/CodeSystem/audit-entity-type#2 "System Object"
+* entity[0].what = Reference(CareTeam/example-careteam) "Example CareTeam (search target)"
+* entity[=].what.type = "CareTeam"
+* entity[=].type = http://terminology.hl7.org/CodeSystem/audit-entity-type#2 "System Object"
 * entity[=].role = http://terminology.hl7.org/CodeSystem/object-role#24 "Query"
-* entity[=].query
+* entity[=].query = "c3RhdHVzPWFjdGl2ZQ=="
