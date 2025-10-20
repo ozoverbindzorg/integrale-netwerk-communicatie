@@ -52,8 +52,10 @@ jobs:
         uses: actions/configure-pages@v5
       - name: Build
         run: |
-          mkdir -p ./output
-          docker run --name=scp --rm -v ./ig.ini:/app/ig.ini  -v ./sushi-config.yaml:/app/sushi-config.yaml -v ./input:/app/input -v ./output:/app/output localhost:5000/ozoverbindzorg/publisher:latest
+          mkdir -p ./output ./public
+          # Run with simplified volume mount and override entrypoint to use direct make command
+          # The --entrypoint flag prevents conflicts with docker-entrypoint.sh when passing shell commands
+          docker run --name=scp --rm --entrypoint make -v "${PWD}:/src" localhost:5000/ozoverbindzorg/publisher:latest build
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
