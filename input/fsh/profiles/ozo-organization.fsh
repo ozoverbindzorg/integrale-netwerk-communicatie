@@ -4,6 +4,9 @@ Id: ozo-organization
 Title: "OZO Organization"
 Description: "Organization profile for the OZO platform. Represents healthcare organizations (hospitals, pharmacies, general practices) that employ practitioners in the care network."
 * ^version = "1.0.0"
+* ^url = "http://ozoverbindzorg.nl/fhir/StructureDefinition/OZOOrganization"
+* ^name = "OZO Organization"
+* ^description = "Organization profile for the OZO platform. Represents healthcare organizations (hospitals, pharmacies, general practices) that employ practitioners in the care network."
 * ^status = #active
 * ^publisher = "Headease"
 * ^contact[0].name = "Headease"

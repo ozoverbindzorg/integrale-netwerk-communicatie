@@ -4,6 +4,9 @@ Id: ozo-communicationrequest
 Title: "OZO CommunicationRequest"
 Description: "CommunicationRequest profile for the OZO platform. Represents a message thread or conversation within the care network. Individual messages are Communication resources that reference this thread via partOf."
 * ^version = "1.0.0"
+* ^url = "http://ozoverbindzorg.nl/fhir/StructureDefinition/OZOCommunicationRequest"
+* ^name = "OZO CommunicationRequest"
+* ^description = "CommunicationRequest profile for the OZO platform. Represents a message thread or conversation within the care network. Individual messages are Communication resources that reference this thread via partOf."
 * ^status = #active
 * ^publisher = "Headease"
 * ^contact[0].name = "Headease"

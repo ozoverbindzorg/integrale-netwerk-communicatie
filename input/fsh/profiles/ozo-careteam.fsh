@@ -4,6 +4,9 @@ Id: ozo-careteam
 Title: "OZO CareTeam"
 Description: "CareTeam profile for the OZO platform. Represents a care network consisting of healthcare professionals and informal caregivers coordinating care for a patient."
 * ^version = "1.0.0"
+* ^url = "http://ozoverbindzorg.nl/fhir/StructureDefinition/OZOCareTeam"
+* ^name = "OZO CareTeam"
+* ^description = "CareTeam profile for the OZO platform. Represents a care network consisting of healthcare professionals and informal caregivers coordinating care for a patient."
 * ^status = #active
 * ^publisher = "Headease"
 * ^contact[0].name = "Headease"

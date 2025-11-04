@@ -4,6 +4,9 @@ Id: ozo-auditevent
 Title: "OZO AuditEvent"
 Description: "AuditEvent profile for OZO AAA Proxy to comply with NEN7510 standards"
 * ^version = "1.0.0"
+* ^url = "http://ozoverbindzorg.nl/fhir/StructureDefinition/OZOAuditEvent"
+* ^name = "OZO AuditEvent"
+* ^description = "AuditEvent profile for OZO AAA Proxy to comply with NEN7510 standards"
 * ^status = #active
 * ^publisher = "Headease"
 * ^contact[0].name = "Headease"
