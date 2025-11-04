@@ -142,8 +142,141 @@ You should receive a response containing the OZO ImplementationGuide resource.
 
 Verify that OZO profiles are available:
 ```bash
-curl http://localhost:8080/fhir/StructureDefinition?url=http://headease.gitlab.io/ozo-refererence-impl/ozo-implementation-guide/StructureDefinition/OZOAuditEvent
+curl http://localhost:8080/fhir/StructureDefinition?url=http://ozoverbindzorg.nl/fhir/StructureDefinition/OZOCareTeam
 ```
+
+---
+
+## Creating Resources with OZO Profiles
+
+After installing the OZO package, you can create FHIR resources that conform to OZO profiles. To ensure proper validation, you must set the `meta.profile` element to the canonical URL of the OZO profile.
+
+### Example: Creating an OZO CareTeam Resource
+
+The OZO CareTeam profile has the following canonical URL:
+```
+http://ozoverbindzorg.nl/fhir/StructureDefinition/OZOCareTeam
+```
+
+#### Step 1: Prepare the JSON Resource
+
+Create a JSON file (e.g., `careteam-example.json`) with the `meta.profile` element set to the OZO profile URL:
+
+```json
+{
+  "resourceType": "CareTeam",
+  "meta": {
+    "profile": [
+      "http://ozoverbindzorg.nl/fhir/StructureDefinition/OZOCareTeam"
+    ]
+  },
+  "status": "active",
+  "subject": {
+    "reference": "Patient/example-patient",
+    "type": "Patient",
+    "display": "H. de Boer"
+  },
+  "participant": [
+    {
+      "member": {
+        "reference": "RelatedPerson/example-relatedperson",
+        "type": "RelatedPerson",
+        "display": "Kees Groot"
+      }
+    },
+    {
+      "member": {
+        "reference": "Practitioner/example-practitioner",
+        "type": "Practitioner",
+        "display": "Manu van Weel"
+      },
+      "onBehalfOf": {
+        "reference": "Organization/example-hospital",
+        "type": "Organization",
+        "display": "Ziekenhuis Amsterdam"
+      }
+    }
+  ]
+}
+```
+
+#### Step 2: POST the Resource to HAPI FHIR
+
+Use `curl` to POST the resource to your HAPI FHIR server:
+
+```bash
+curl -X POST http://localhost:8080/fhir/CareTeam \
+  -H "Content-Type: application/fhir+json" \
+  -d @careteam-example.json
+```
+
+#### Step 3: Verify Validation
+
+The HAPI FHIR server will validate the resource against the OZO CareTeam profile. If the resource does not conform to the profile constraints, you will receive an OperationOutcome with validation errors.
+
+**Successful Response:**
+```json
+{
+  "resourceType": "CareTeam",
+  "id": "12345",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2024-12-05T10:30:00.000+00:00",
+    "profile": [
+      "http://ozoverbindzorg.nl/fhir/StructureDefinition/OZOCareTeam"
+    ]
+  },
+  "status": "active",
+  "subject": {
+    "reference": "Patient/example-patient",
+    "type": "Patient",
+    "display": "H. de Boer"
+  },
+  "participant": [...]
+}
+```
+
+**Validation Error Example:**
+```json
+{
+  "resourceType": "OperationOutcome",
+  "issue": [
+    {
+      "severity": "error",
+      "code": "invalid",
+      "diagnostics": "CareTeam.subject: minimum required = 1, but only found 0",
+      "expression": [
+        "CareTeam.subject"
+      ]
+    }
+  ]
+}
+```
+
+### OZO Profile Canonical URLs
+
+The following table lists the canonical URLs for common OZO profiles:
+
+| Profile Name | Canonical URL |
+|--------------|---------------|
+| **OZOCareTeam** | `http://ozoverbindzorg.nl/fhir/StructureDefinition/OZOCareTeam` |
+| **OZOAuditEvent** | `http://ozoverbindzorg.nl/fhir/StructureDefinition/OZOAuditEvent` |
+| **OZOPatient** | `http://ozoverbindzorg.nl/fhir/StructureDefinition/OZOPatient` |
+| **OZOPractitioner** | `http://ozoverbindzorg.nl/fhir/StructureDefinition/OZOPractitioner` |
+| **OZORelatedPerson** | `http://ozoverbindzorg.nl/fhir/StructureDefinition/OZORelatedPerson` |
+| **OZOOrganization** | `http://ozoverbindzorg.nl/fhir/StructureDefinition/OZOOrganization` |
+| **OZOCommunication** | `http://ozoverbindzorg.nl/fhir/StructureDefinition/OZOCommunication` |
+| **OZOTask** | `http://ozoverbindzorg.nl/fhir/StructureDefinition/OZOTask` |
+
+### Important Notes
+
+1. **Always set meta.profile**: The `meta.profile` element tells the HAPI FHIR server which profile to validate against.
+
+2. **Profile constraints**: Each OZO profile has specific constraints (cardinality, required elements, value sets). Review the profile definition in the [Artifacts](artifacts.html) section.
+
+3. **Referenced resources**: OZO profiles often reference other OZO profiles (e.g., OZOCareTeam references OZOPatient, OZOPractitioner). Ensure all referenced resources also conform to their respective OZO profiles.
+
+4. **Validation mode**: The HAPI server's `enable_repository_validating_interceptor` setting determines whether validation is enforced. If set to `true`, invalid resources will be rejected.
 
 ---
 
