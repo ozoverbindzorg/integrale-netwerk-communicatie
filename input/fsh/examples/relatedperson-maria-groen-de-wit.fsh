@@ -1,6 +1,7 @@
 Instance: RelatedPerson-Maria-Groen-de-Wit
-InstanceOf: RelatedPerson
+InstanceOf: OZORelatedPerson
 Usage: #example
+* meta.profile = "http://ozoverbindzorg.nl/fhir/StructureDefinition/OZORelatedPerson"
 * id = "1501"
 * meta.versionId = "1"
 * meta.lastUpdated = "2025-06-19T10:18:00.000+00:00"

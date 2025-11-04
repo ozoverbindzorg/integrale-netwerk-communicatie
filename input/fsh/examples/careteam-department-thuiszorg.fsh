@@ -1,6 +1,7 @@
 Instance: CareTeam-Department-Thuiszorg
-InstanceOf: CareTeam
+InstanceOf: OZOCareTeam
 Usage: #example
+* meta.profile = "http://ozoverbindzorg.nl/fhir/StructureDefinition/OZOCareTeam"
 * id = "1473"
 * meta.versionId = "1"
 * meta.lastUpdated = "2025-06-19T11:00:00.000+00:00"

@@ -3,6 +3,7 @@ InstanceOf: OZOAuditEvent
 Usage: #example
 Title: "AuditEvent - Practitioner Mark Access"
 Description: "Example of an AuditEvent for Practitioner Mark Benson accessing Communication resources"
+* meta.profile = "http://ozoverbindzorg.nl/fhir/StructureDefinition/OZOAuditEvent"
 * meta.versionId = "1"
 * meta.lastUpdated = "2024-12-05T16:25:00.608+00:00"
 * meta.source = "#vosr9Nat7LLHv1yY"

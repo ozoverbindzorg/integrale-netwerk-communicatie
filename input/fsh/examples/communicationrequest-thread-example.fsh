@@ -1,6 +1,7 @@
 Instance: CommunicationRequest-Thread-Example
-InstanceOf: CommunicationRequest
+InstanceOf: OZOCommunicationRequest
 Usage: #example
+* meta.profile = "http://ozoverbindzorg.nl/fhir/StructureDefinition/OZOCommunicationRequest"
 * meta.versionId = "1"
 * meta.lastUpdated = "2024-12-05T16:24:58.341+00:00"
 * meta.source = "#uOG9GfeYXfVhTJFw"

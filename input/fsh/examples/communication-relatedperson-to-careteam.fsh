@@ -1,6 +1,7 @@
 Instance: Communication-RelatedPerson-to-CareTeam
-InstanceOf: Communication
+InstanceOf: OZOCommunication
 Usage: #example
+* meta.profile = "http://ozoverbindzorg.nl/fhir/StructureDefinition/OZOCommunication"
 * meta.versionId = "1"
 * meta.lastUpdated = "2024-12-05T16:24:59.480+00:00"
 * meta.source = "#WrQmGkFS9t2VMX1A"

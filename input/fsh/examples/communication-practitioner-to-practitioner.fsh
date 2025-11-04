@@ -1,6 +1,7 @@
 Instance: Communication-Practitioner-to-Practitioner
-InstanceOf: Communication
+InstanceOf: OZOCommunication
 Usage: #example
+* meta.profile = "http://ozoverbindzorg.nl/fhir/StructureDefinition/OZOCommunication"
 * meta.versionId = "1"
 * meta.lastUpdated = "2024-12-05T16:25:01.145+00:00"
 * meta.source = "#2eQJh4Y67kwAcNXr"

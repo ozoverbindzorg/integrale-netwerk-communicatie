@@ -5,7 +5,7 @@ Title: "OZO RelatedPerson"
 Description: "RelatedPerson profile for the OZO platform. Represents informal caregivers (family members, friends) who are part of the patient's care network."
 * ^version = "1.0.0"
 * ^url = "http://ozoverbindzorg.nl/fhir/StructureDefinition/OZORelatedPerson"
-* ^name = "OZO RelatedPerson"
+* ^name = "OZORelatedPerson"
 * ^description = "RelatedPerson profile for the OZO platform. Represents informal caregivers (family members, friends) who are part of the patient's care network."
 * ^status = #active
 * ^publisher = "Headease"

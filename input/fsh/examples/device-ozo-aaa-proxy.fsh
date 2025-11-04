@@ -5,6 +5,7 @@ Title: "OZO AAA Proxy Device"
 Description: "Device representing the OZO AAA Proxy instance"
 * meta.versionId = "1"
 * meta.lastUpdated = "2025-01-08T09:00:00.000+01:00"
+* url = "http://ozoverbindzorg.nl/fhir/Device/ozo-aaa-proxy-001"
 * identifier[0].system = "http://headease.nl/ozo/device-identifier"
 * identifier[=].value = "aaa-proxy-001"
 * status = #active

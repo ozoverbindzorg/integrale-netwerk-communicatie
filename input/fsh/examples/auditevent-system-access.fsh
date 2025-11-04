@@ -1,8 +1,9 @@
 Instance: AuditEvent-System-Access
-InstanceOf: OZOAuditEvent  
+InstanceOf: OZOAuditEvent
 Usage: #example
 Title: "AuditEvent - System Access"
 Description: "Example of an AuditEvent for a system-to-system access through OZO AAA Proxy"
+* meta.profile = "http://ozoverbindzorg.nl/fhir/StructureDefinition/OZOAuditEvent"
 * meta.versionId = "1"
 * meta.lastUpdated = "2025-01-08T10:45:00.000+01:00"
 * meta.source = "#ozo-aaa-proxy"

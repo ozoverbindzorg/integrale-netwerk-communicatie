@@ -5,7 +5,7 @@ Title: "OZO Task"
 Description: "Task profile for the OZO platform. Represents work assignments, referrals, or action items within the care network. Tasks can be linked to message threads via basedOn."
 * ^version = "1.0.0"
 * ^url = "http://ozoverbindzorg.nl/fhir/StructureDefinition/OZOTask"
-* ^name = "OZO Task"
+* ^name = "OZOTask"
 * ^description = "Task profile for the OZO platform. Represents work assignments, referrals, or action items within the care network. Tasks can be linked to message threads via basedOn."
 * ^status = #active
 * ^publisher = "Headease"

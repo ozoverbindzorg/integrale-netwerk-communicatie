@@ -5,7 +5,7 @@ Title: "OZO Practitioner"
 Description: "Practitioner profile for the OZO platform. Represents healthcare professionals who are part of the patient's care team."
 * ^version = "1.0.0"
 * ^url = "http://ozoverbindzorg.nl/fhir/StructureDefinition/OZOPractitioner"
-* ^name = "OZO Practitioner"
+* ^name = "OZOPractitioner"
 * ^description = "Practitioner profile for the OZO platform. Represents healthcare professionals who are part of the patient's care team."
 * ^status = #active
 * ^publisher = "Headease"

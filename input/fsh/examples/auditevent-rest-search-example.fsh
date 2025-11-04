@@ -3,6 +3,7 @@ InstanceOf: OZOAuditEvent
 Usage: #example
 Title: "AuditEvent - REST Search Operation"
 Description: "Example of an AuditEvent for a REST search operation through OZO AAA Proxy"
+* meta.profile = "http://ozoverbindzorg.nl/fhir/StructureDefinition/OZOAuditEvent"
 * meta.versionId = "1"
 * meta.lastUpdated = "2025-01-08T10:35:00.000+01:00"
 * meta.source = "#ozo-aaa-proxy"

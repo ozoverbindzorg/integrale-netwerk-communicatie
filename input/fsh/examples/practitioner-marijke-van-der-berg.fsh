@@ -1,6 +1,7 @@
 Instance: Practitioner-Marijke-van-der-Berg
-InstanceOf: Practitioner
+InstanceOf: OZOPractitioner
 Usage: #example
+* meta.profile = "http://ozoverbindzorg.nl/fhir/StructureDefinition/OZOPractitioner"
 * id = "1208"
 * meta.versionId = "1"
 * meta.lastUpdated = "2025-05-28T11:24:32.833+00:00"
