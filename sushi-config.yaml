@@ -133,6 +133,9 @@ pages:
   fhir-addressing-analysis.md:
     title: FHIR Addressing Analysis for Organization-Level Messaging
 
+  hapi-installation.md:
+    title: Installing OZO Package in HAPI FHIR Server
+
 #
 #  security-privacy.md:
 #    title: Security - Privacy
@@ -209,6 +212,7 @@ menu:
     Practitioner: ozo-authorization-practitioner.html
     Related Person: ozo-authorization-related-person.html
   Technical Walkthrough:
+    Installing OZO Package in HAPI FHIR: hapi-installation.html
     Setup Mutual TLS for OZO: technical-walkthrough-mtls.html
     Validate Access Tokens and DPoP headers: technical-walkthrough-validate-access-token.html
     W3C Trace Context Support: w3c-trace-context.html
