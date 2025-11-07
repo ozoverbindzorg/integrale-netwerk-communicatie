@@ -11,7 +11,9 @@ Usage: #example
 * identifier[1].system = "email"
 * identifier[1].value = "delisa.jutstra@zozijn.nl"
 * name = "Zorgteam Jan de Hoop"
+* status = #active
 * subject.reference = "Patient/747"
+* subject.type = "Patient"
 * subject.display = "Jan de Hoop"
 * participant[0].member.type = #Practitioner
 * participant[0].member.reference = "Practitioner/1208"

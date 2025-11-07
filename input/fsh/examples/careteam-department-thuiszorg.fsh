@@ -11,6 +11,9 @@ Usage: #example
 * identifier[1].value = "thuiszorg.oost@zorgorganisatie.nl"
 * name = "Afdeling Thuiszorg Oost"
 * status = #active
+* subject.reference = "Patient/example-unassigned"
+* subject.type = "Patient"
+* subject.display = "Organizational team - no specific patient"
 * category.coding.system = "http://snomed.info/sct"
 * category.coding.code = #394730007
 * category.coding.display = "Healthcare related organization"

@@ -5,7 +5,10 @@ Usage: #example
 * id = "1501"
 * meta.versionId = "1"
 * meta.lastUpdated = "2025-06-19T10:18:00.000+00:00"
+* identifier[ozoPersonId].system = "OZO/Person"
+* identifier[ozoPersonId].value = "RP-1501"
 * patient.reference = "Patient/747"
+* patient.type = "Patient"
 * patient.display = "Jan de Hoop"
 * relationship.coding.system = "http://terminology.hl7.org/CodeSystem/v3-RoleCode"
 * relationship.coding.code = #SPS
