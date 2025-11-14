@@ -7,8 +7,8 @@ Usage: #example
 * meta.source = "#wXk63usSROLkNN1z"
 * identifier[ozoPersonId].system = "OZO/Person"
 * identifier[ozoPersonId].value = "48898909439"
-* identifier[networkRelationId].system = "OZO/NetworkRelation"
-* identifier[networkRelationId].value = "0987654321"
+* identifier[ozoNetworkRelationId].system = "OZO/NetworkRelation"
+* identifier[ozoNetworkRelationId].value = "0987654321"
 * identifier[email].system = "email"
 * identifier[email].value = "info@example.com"
 * active = true

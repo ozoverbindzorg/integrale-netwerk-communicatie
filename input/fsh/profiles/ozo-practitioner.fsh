@@ -3,7 +3,7 @@ Parent: Practitioner
 Id: ozo-practitioner
 Title: "OZO Practitioner"
 Description: "Practitioner profile for the OZO platform. Represents healthcare professionals who are part of the patient's care team."
-* ^version = "1.0.0"
+* ^version = "0.2.1"
 * ^url = "http://ozoverbindzorg.nl/fhir/StructureDefinition/OZOPractitioner"
 * ^name = "OZOPractitioner"
 * ^description = "Practitioner profile for the OZO platform. Represents healthcare professionals who are part of the patient's care team."
@@ -15,26 +15,36 @@ Description: "Practitioner profile for the OZO platform. Represents healthcare p
 
 // Identifiers - OZO Professional and email
 * identifier 1..* MS
-* identifier ^slicing.discriminator.type = #value
+* identifier ^slicing.discriminator.type = #pattern
 * identifier ^slicing.discriminator.path = "system"
 * identifier ^slicing.rules = #open
-* identifier ^slicing.description = "Slice based on identifier system"
+* identifier ^slicing.description = "Slice based on identifier system pattern. Additional OZO-* systems (e.g., OZO-MOBILE, OZO-WEB) are supported through open slicing."
 
 * identifier contains
-    ozoProfessionalId 1..1 MS and
+    ozoProfessionalId 0..1 MS and
+    ozoConnectProfessionalId 0..1 MS and
     email 0..1 MS
 
 * identifier[ozoProfessionalId].system 1..1
-* identifier[ozoProfessionalId].system = "OZO-CONNECT/Professional" (exactly)
+* identifier[ozoProfessionalId].system = "OZO/Professional" (exactly)
 * identifier[ozoProfessionalId].value 1..1
 * identifier[ozoProfessionalId] ^short = "OZO Professional identifier"
-* identifier[ozoProfessionalId] ^definition = "Unique identifier for the practitioner within the OZO Connect system"
+* identifier[ozoProfessionalId] ^definition = "Unique identifier for the practitioner within the OZO system"
+
+* identifier[ozoConnectProfessionalId].system 1..1
+* identifier[ozoConnectProfessionalId].system = "OZO-CONNECT/Professional" (exactly)
+* identifier[ozoConnectProfessionalId].value 1..1
+* identifier[ozoConnectProfessionalId] ^short = "OZO-CONNECT Professional identifier"
+* identifier[ozoConnectProfessionalId] ^definition = "Unique identifier for the practitioner within the OZO-CONNECT system"
 
 * identifier[email].system 1..1
 * identifier[email].system = "email" (exactly)
 * identifier[email].value 1..1
 * identifier[email] ^short = "Email identifier"
 * identifier[email] ^definition = "Email address of the practitioner"
+
+// Require at least one OZO Professional identifier
+* obeys ozo-practitioner-has-professional-id
 
 // Active status is required
 * active 1..1 MS
@@ -48,3 +58,9 @@ Description: "Practitioner profile for the OZO platform. Represents healthcare p
 * name.text 0..1 MS
 * name.family 1..1 MS
 * name.given 0..* MS
+
+// Invariant definition (must be outside the profile)
+Invariant: ozo-practitioner-has-professional-id
+Description: "Practitioner must have at least one OZO Professional identifier (matching pattern OZO*/Professional)"
+Expression: "identifier.where(system.matches('^OZO[^/]*/Professional$')).exists()"
+Severity: #error

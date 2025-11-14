@@ -5,6 +5,25 @@ All notable changes to the OZO FHIR Implementation Guide will be documented in t
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.1] - 2025-01-14
+
+### Changed
+
+#### Profiles
+- **Enhanced identifier system flexibility** for `OZOPatient`, `OZOPractitioner`, and `OZORelatedPerson` profiles:
+  - Updated invariant expressions to use regex pattern matching (`^OZO[^/]*/ResourceType$`) instead of explicit system enumeration
+  - Now supports any OZO-prefixed identifier system (e.g., `OZO/Person`, `OZO-CONNECT/Person`, `OZO-MOBILE/Person`, `OZO-WEB/Person`)
+  - Enhanced slicing descriptions to clarify that additional OZO-* systems are supported through open slicing
+  - Maintains validation requirement for at least one OZO identifier while allowing future system extensions
+
+#### Examples
+- Fixed identifier slice names in 9 Practitioner example instances:
+  - Changed from `ozoProfessionalId` to `ozoConnectProfessionalId` for identifiers using the `OZO-CONNECT/Professional` system
+  - Affected examples: A.P. Otheeker, Annemiek Jansen, Johan van den Berg, Lars Hendriks, Manu van Weel, Marijke van der Berg, Mark Benson, Pieter de Vries, Sophie de Boer
+
+#### Technical
+- Moved invariant definitions outside profile blocks to comply with FSH syntax requirements
+
 ## [0.2.0] - 2025-11-04
 
 ### Added
@@ -61,5 +80,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `aliases.fsh` with common system and profile aliases
 - Established FSH-first authoring workflow
 
+[0.2.1]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/releases/tag/v0.1.0
