@@ -25,7 +25,7 @@ concurrency:
 
 jobs:
   build:
-    name: Build FHIR Package and Documentation
+    name: Build FHIR Packages (Full and Minimal)
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.version.outputs.version }}
@@ -56,24 +56,35 @@ jobs:
       - name: Build and push to local registry
         uses: docker/build-push-action@v6
         with:
+          context: .
           push: true
           tags: localhost:5000/ozoverbindzorg/publisher:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Build FHIR Package
+      - name: Build FHIR Packages
+        env:
+          FHIR_EMAIL: ${{ secrets.FHIR_EMAIL }}
+          FHIR_PASSWORD: ${{ secrets.FHIR_PASSWORD }}
         run: |
-          mkdir -p ./output ./public
-          # Run with simplified volume mount and override entrypoint to use direct make command
-          # The --entrypoint flag prevents conflicts with docker-entrypoint.sh when passing shell commands
-          docker run --name=scp --rm --entrypoint make -v "${PWD}:/src" localhost:5000/ozoverbindzorg/publisher:latest build
+          # Run build-minimal which produces both full (./output) and minimal (./output-minimal) packages
+          docker run -v ${PWD}:/src -e FHIR_EMAIL=${FHIR_EMAIL} -e FHIR_PASSWORD=${FHIR_PASSWORD} localhost:5000/ozoverbindzorg/publisher:latest build-minimal
 
-      - name: Upload build artifacts
+      - name: Upload full build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: fhir-package
+          name: fhir-package-full
           path: |
             ./output/
+            ./sushi-config.yaml
+          retention-days: 7
+
+      - name: Upload minimal build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: fhir-package-minimal
+          path: |
+            ./output-minimal/
             ./sushi-config.yaml
           retention-days: 7
 
@@ -87,10 +98,10 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Download build artifacts
+      - name: Download full build artifacts
         uses: actions/download-artifact@v4
         with:
-          name: fhir-package
+          name: fhir-package-full
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
@@ -101,15 +112,15 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
 
-  publish-npm:
-    name: Publish Package to GitHub Packages
+  publish-npm-full:
+    name: Publish Full Package to GitHub Packages
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Download build artifacts
+      - name: Download full build artifacts
         uses: actions/download-artifact@v4
         with:
-          name: fhir-package
+          name: fhir-package-full
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -161,8 +172,68 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+  publish-npm-minimal:
+    name: Publish Minimal Package to GitHub Packages
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download minimal build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: fhir-package-minimal
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          registry-url: 'https://npm.pkg.github.com'
+
+      - name: Check if version exists and publish
+        id: publish
+        run: |
+          # Extract the package created by build-ig-minimal
+          mkdir -p npm-publish
+          tar -xzf ./output-minimal/package.tgz -C npm-publish
+          cd npm-publish/package
+
+          # Get the repository owner (org or user)
+          REPO_OWNER=$(echo "${{ github.repository }}" | cut -d'/' -f1)
+
+          # Calculate the publish version
+          PUBLISH_VERSION="${{ needs.build.outputs.version }}-minimal"
+          # For non-main branches, append the branch name and short commit hash to make version unique
+          if [ "${{ github.ref_name }}" != "main" ]; then
+            # Sanitize branch name for npm version (replace / with -, remove special chars)
+            BRANCH_NAME=$(echo "${{ github.ref_name }}" | sed 's/[^a-zA-Z0-9._-]/-/g')
+            PUBLISH_VERSION="${PUBLISH_VERSION}-${BRANCH_NAME}-${GITHUB_SHA::7}"
+          fi
+
+          # Update package.json to include GitHub registry info and ensure it's scoped
+          # Also update the version to match what we calculated
+          jq --arg owner "@$REPO_OWNER" --arg version "$PUBLISH_VERSION" '.name = $owner + "/" + .name + "-minimal" | .version = $version | .publishConfig = {"registry": "https://npm.pkg.github.com", "access": "restricted"}' package.json > package.json.tmp && mv package.json.tmp package.json
+
+          # Get the package name from package.json
+          PACKAGE_NAME=$(jq -r '.name' package.json)
+
+          # Check if this version already exists on npm
+          if npm view ${PACKAGE_NAME}@${PUBLISH_VERSION} version 2>/dev/null; then
+            echo "Version ${PUBLISH_VERSION} already exists on npm registry, skipping publish"
+            echo "skipped=true" >> $GITHUB_OUTPUT
+          else
+            echo "Publishing version ${PUBLISH_VERSION}"
+            # Publish the package - public for main branch, restricted for others
+            if [ "${{ github.ref_name }}" = "main" ]; then
+              npm publish --access public
+            else
+              npm publish --access restricted
+            fi
+            echo "skipped=false" >> $GITHUB_OUTPUT
+          fi
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   create-release-main:
-    name: Create Release (Main)
+    name: Create Release (Main/Development)
     needs: build
     runs-on: ubuntu-latest
     permissions: write-all
@@ -171,17 +242,23 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Download build artifacts
+      - name: Download full build artifacts
         uses: actions/download-artifact@v4
         with:
-          name: fhir-package
-          path: ./build
+          name: fhir-package-full
+          path: ./full-build
+
+      - name: Download minimal build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: fhir-package-minimal
+          path: ./minimal-build
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
           draft: false
-          prerelease: false
+          prerelease: ${{ github.ref != 'refs/heads/main' }}
           name: ${{ needs.build.outputs.version }}
           tag_name: v${{ needs.build.outputs.version }}
           body: |
@@ -189,16 +266,22 @@ jobs:
 
             ## Installation
 
-            Install this package on your FHIR server:
+            ### Full Package (with documentation)
             ```bash
             fhir install fhir.ozo-${{ needs.build.outputs.version }}.tgz
+            ```
+
+            ### Minimal Package (optimized for FHIR servers)
+            ```bash
+            fhir install fhir.ozo-${{ needs.build.outputs.version }}-minimal.tgz
             ```
 
             ## Documentation
 
             View the full Implementation Guide at: https://ozo-implementation-guide.headease.nl
           files: |
-            ./build/output/fhir.ozo-${{ needs.build.outputs.version }}.tgz
+            ./full-build/output/fhir.ozo-${{ needs.build.outputs.version }}.tgz
+            ./minimal-build/output-minimal/fhir.ozo-${{ needs.build.outputs.version }}-minimal.tgz
         env:
           GITHUB_TOKEN: ${{ github.token }}
 
@@ -212,13 +295,40 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Download build artifacts
+      - name: Download full build artifacts
         uses: actions/download-artifact@v4
         with:
-          name: fhir-package
-          path: ./build
+          name: fhir-package-full
+          path: ./full-build
 
-      - name: Create Pre-release
+      - name: Download minimal build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: fhir-package-minimal
+          path: ./minimal-build
+
+      - name: Create Pre-release (Minimal Package)
+        uses: softprops/action-gh-release@v1
+        with:
+          draft: false
+          prerelease: true
+          name: ${{ needs.build.outputs.version }}-minimal-${{ github.ref_name }}
+          tag_name: v${{ needs.build.outputs.version }}-minimal-${{ github.ref_name }}-${{ github.run_number }}
+          body: |
+            OZO FHIR Implementation Guide Pre-release ${{ needs.build.outputs.version }}-minimal-${{ github.ref_name }}
+
+            This is a pre-release minimal package build from branch `${{ github.ref_name }}`.
+
+            ## Installation
+
+            Install this package on your FHIR server:
+            ```bash
+            fhir install fhir.ozo-${{ needs.build.outputs.version }}-minimal.tgz
+            ```
+          files: |
+            ./minimal-build/output-minimal/fhir.ozo-${{ needs.build.outputs.version }}-minimal.tgz
+
+      - name: Create Pre-release (Full Package)
         uses: softprops/action-gh-release@v1
         with:
           draft: false
@@ -228,7 +338,7 @@ jobs:
           body: |
             OZO FHIR Implementation Guide Pre-release ${{ needs.build.outputs.version }}-${{ github.ref_name }}
 
-            This is a pre-release build from branch `${{ github.ref_name }}`.
+            This is a pre-release full package build from branch `${{ github.ref_name }}`.
 
             ## Installation
 
@@ -237,7 +347,7 @@ jobs:
             fhir install fhir.ozo-${{ needs.build.outputs.version }}.tgz
             ```
           files: |
-            ./build/output/fhir.ozo-${{ needs.build.outputs.version }}.tgz
+            ./full-build/output/fhir.ozo-${{ needs.build.outputs.version }}.tgz
         env:
           GITHUB_TOKEN: ${{ github.token }}
 

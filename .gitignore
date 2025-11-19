@@ -1,0 +1,24 @@
+# Build outputs and generated files
+public
+/output/
+/output-minimal/
+/temp/
+/fsh-generated/
+
+# FHIR IG Publisher cache
+/input-cache/
+
+# Package files
+*.tgz
+/packages/
+
+# Dependency and lock files
+fhirpkg.lock.json
+package-lock.json
+
+# OS generated files
+.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]

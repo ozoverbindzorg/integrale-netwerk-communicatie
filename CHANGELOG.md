@@ -5,6 +5,34 @@ All notable changes to the OZO FHIR Implementation Guide will be documented in t
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.2] - 2025-01-19
+
+### Added
+
+#### Build Infrastructure
+- **Minimal package generation** - Added support for building optimized FHIR packages for server deployment:
+  - New `build-minimal` and `build-ig-minimal` Makefile targets
+  - Minimal packages retain snapshots for faster FHIR server installation
+  - Strips narratives, mappings, and documentation to reduce package size
+  - Creates both full (with documentation) and minimal (server-optimized) packages
+
+#### Scripts
+- Added `scripts/convert_ig_to_package.py` - Converts ImplementationGuide to package.json format
+- Added `scripts/create_index.py` - Creates .index.json for FHIR package structure
+- Added `scripts/strip_narratives.py` - Strips narratives and mappings while preserving snapshots
+
+### Changed
+
+#### CI/CD Pipeline
+- **GitHub Actions workflow** updated to build and publish both package types:
+  - Builds full and minimal packages in parallel
+  - Publishes both packages to GitHub Packages (minimal with `-minimal` suffix)
+  - Creates GitHub releases with both package variants
+  - Separate artifacts for full (`fhir-package-full`) and minimal (`fhir-package-minimal`) builds
+
+#### Repository
+- Updated `.gitignore` to exclude `/output-minimal/` and additional build artifacts
+
 ## [0.2.1] - 2025-01-14
 
 ### Changed
@@ -80,6 +108,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `aliases.fsh` with common system and profile aliases
 - Established FSH-first authoring workflow
 
+[0.2.2]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.2.1...v0.2.2
 [0.2.1]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/releases/tag/v0.1.0
