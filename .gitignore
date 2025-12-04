@@ -22,3 +22,6 @@ package-lock.json
 # Python
 __pycache__/
 *.py[cod]
+.claude
+/template
+/package.json
