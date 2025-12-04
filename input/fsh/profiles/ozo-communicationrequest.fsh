@@ -40,13 +40,21 @@ Description: "CommunicationRequest profile for the OZO platform. Represents a me
 * payload.contentAttachment.title 0..1 MS
 * payload.contentAttachment.creation 0..1 MS
 
-// Requester - who created the thread
+// Requester - who created the thread (individual for auditability)
 * requester 1..1 MS
 * requester only Reference(OZOPractitioner or OZORelatedPerson)
 * requester ^short = "Who created the thread"
-* requester ^definition = "The entity (practitioner or related person) who initiated the thread"
+* requester ^definition = "The individual (practitioner or related person) who initiated the thread. Must be an individual for auditability purposes."
 * requester.reference 1..1
 * requester.type 1..1
+
+// Sender - reply-to address for the thread (can be team for team-level messaging)
+* sender 0..1 MS
+* sender only Reference(OZOPractitioner or OZORelatedPerson or OZOCareTeam)
+* sender ^short = "Reply-to address"
+* sender ^definition = "The entity to reply to. Can be a CareTeam for team-level messaging, providing the reply-to address and team-level authorization for message management."
+* sender.reference 1..1
+* sender.type 1..1
 
 // Recipients - who should receive the thread
 * recipient 1..* MS

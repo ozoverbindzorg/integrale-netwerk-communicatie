@@ -5,6 +5,20 @@ All notable changes to the OZO FHIR Implementation Guide will be documented in t
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.3] - 2025-12-04
+
+### Changed
+
+#### Profiles
+- **OZOCommunicationRequest** - Added support for team-level messaging:
+  - Added `sender` field constraint allowing `OZOPractitioner`, `OZORelatedPerson`, or `OZOCareTeam`
+  - `sender` serves as the reply-to address for team-level messaging and provides team-level authorization
+  - `requester` remains restricted to individuals (`OZOPractitioner` or `OZORelatedPerson`) to preserve auditability
+  - Enables "shared inbox" pattern where teams (e.g., pharmacies, clinics) can send and receive messages as a unit
+
+#### Documentation
+- See [FHIR Addressing Analysis](fhir-addressing-analysis.html) for the complete rationale and message flow examples
+
 ## [0.2.2] - 2025-01-19
 
 ### Added
@@ -108,6 +122,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `aliases.fsh` with common system and profile aliases
 - Established FSH-first authoring workflow
 
+[0.2.3]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.2.2...v0.2.3
 [0.2.2]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.2.1...v0.2.2
 [0.2.1]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.1.0...v0.2.0

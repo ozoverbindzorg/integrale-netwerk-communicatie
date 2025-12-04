@@ -177,12 +177,26 @@ The `CommunicationRequest` Resource is used to:
 |-----------|-------------|----------------------------------------------------------------------|
 | status    | 1..1        | draft  \| active \| completed                                        |
 | subject   | 1..1        | Reference to a `Patient`                                             |
-| requester | 1..1        | a reference to a `RelatedPerson` or `Practitioner`                   |
+| requester | 1..1        | a reference to a `RelatedPerson` or `Practitioner` (individual who initiated - for auditability) |
+| sender    | 0..1        | a reference to a `RelatedPerson`, `Practitioner` or `CareTeam` (reply-to address, enables team-level messaging) |
 | recipient | 1..*        | a reference to a `RelatedPerson`, `Practitioner` or `CareTeam`       |
 | payload   | 1..*        | Message or attachment, one of `contentString` or `contentAttachment` |
 
+##### Team-Level Messaging
+
+The `CommunicationRequest` supports team-level messaging through the `sender` field:
+
+* **`requester`**: Always an individual (`Practitioner` or `RelatedPerson`) - tracks who initiated the conversation for auditability
+* **`sender`**: Can be a `CareTeam` to enable team-level messaging:
+  * Provides the **reply-to address** for the conversation thread
+  * Grants **team-level authorization** for message management (archive, delete)
+  * Enables the **shared inbox pattern** where all team members can see and respond to messages
+
+When replying to a team-level thread, read the `CareTeam` from `CommunicationRequest.sender` to determine the reply recipient.
+
 ##### Examples
-* [CommunicationRequest-Thread-Example](CommunicationRequest-Thread-Example.html)
+* [CommunicationRequest-Thread-Example](CommunicationRequest-Thread-Example.html) - Individual-to-CareTeam messaging
+* [CommunicationRequest-Pharmacy-to-Clinic](CommunicationRequest-Pharmacy-to-Clinic.html) - Team-to-team messaging
 
 #### Communication
 
@@ -194,17 +208,25 @@ The `Communication` resource is used to:
 
 ##### Fields
 
-| field     | Cardinality | description                                                                                               |
-|-----------|-------------|-----------------------------------------------------------------------------------------------------------|
-| status    | 1..1        | preparation \| in-progress  \| not-done \| on-hold \| stopped \| completed \| entered-in-error \| unknown |
-| partOf    | 1..1        | Reference to a `CommunicationRequest`                                                                     |
-| sender    | 1..1        | a reference to a `RelatedPerson` or `Practitioner`                                                        |
-| recipient | 1..*        | a reference to a `RelatedPerson`, `Practitioner` or `CareTeam`                                            |
-| payload   | 1..*        | Message or attachment, one of `contentString` or `contentAttachment`                                      |
+| field        | Cardinality | description                                                                                               |
+|--------------|-------------|-----------------------------------------------------------------------------------------------------------|
+| status       | 1..1        | preparation \| in-progress  \| not-done \| on-hold \| stopped \| completed \| entered-in-error \| unknown |
+| partOf       | 1..1        | Reference to a `CommunicationRequest`                                                                     |
+| inResponseTo | 0..1        | Reference to a previous `Communication` in the thread                                                     |
+| sender       | 1..1        | a reference to a `RelatedPerson` or `Practitioner` (must be individual for auditability)                  |
+| recipient    | 1..*        | a reference to a `RelatedPerson`, `Practitioner` or `CareTeam`                                            |
+| payload      | 1..*        | Message or attachment, one of `contentString` or `contentAttachment`                                      |
+
+##### Auditability
+
+The `Communication.sender` must always be an individual (`Practitioner` or `RelatedPerson`) to ensure auditability. Every message in the system must have an identifiable person as the sender. This applies even in team-level messaging scenarios - while the thread may be owned by a CareTeam, each individual message is sent by a specific person.
 
 ##### Examples
 
-* [Communication-RelatedPerson-to-CareTeam](Communication-RelatedPerson-to-CareTeam.html)
+* [Communication-RelatedPerson-to-CareTeam](Communication-RelatedPerson-to-CareTeam.html) - Individual to team
+* [Communication-Team-Reply-1-Initial-Message](Communication-Team-Reply-1-Initial-Message.html) - Team messaging: initial message
+* [Communication-Team-Reply-2-Clinic-Response](Communication-Team-Reply-2-Clinic-Response.html) - Team messaging: reply
+* [Communication-Team-Reply-3-Pharmacy-Followup](Communication-Team-Reply-3-Pharmacy-Followup.html) - Team messaging: different team member follows up
 
 ##### Attachment
 

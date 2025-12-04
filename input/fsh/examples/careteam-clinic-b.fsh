@@ -1,0 +1,46 @@
+Instance: CareTeam-Clinic-B
+InstanceOf: OZOCareTeam
+Usage: #example
+Title: "CareTeam Clinic B - Huisarts Amsterdam"
+Description: "Example of a clinic team used for team-level messaging. This CareTeam represents the clinic as a whole for shared inbox functionality."
+* meta.profile = "http://ozoverbindzorg.nl/fhir/StructureDefinition/OZOCareTeam"
+* meta.versionId = "1"
+* meta.lastUpdated = "2025-12-04T10:00:00.000+00:00"
+* identifier[0].system = "OZO-CONNECT/Team"
+* identifier[0].value = "clinic-b-team"
+* identifier[1].system = "email"
+* identifier[1].value = "huisarts@amsterdam.nl"
+* name = "Huisarts Amsterdam - Team"
+* status = #active
+* subject.reference = "Patient/example-unassigned"
+* subject.type = "Patient"
+* subject.display = "Organizational team - no specific patient"
+* category.coding.system = "http://snomed.info/sct"
+* category.coding.code = #394802001
+* category.coding.display = "General medicine"
+* category.text = "Huisarts Team"
+* participant[0].member.type = #Practitioner
+* participant[0].member = Reference(Practitioner-Manu-van-Weel)
+* participant[0].member.display = "Manu van Weel"
+* participant[0].role.coding.system = "http://snomed.info/sct"
+* participant[0].role.coding.code = #62247001
+* participant[0].role.coding.display = "General practitioner"
+* participant[0].role.text = "Huisarts"
+* participant[1].member.type = #Practitioner
+* participant[1].member = Reference(Practitioner-Mark-Benson)
+* participant[1].member.display = "Mark Benson"
+* participant[1].role.coding.system = "http://snomed.info/sct"
+* participant[1].role.coding.code = #62247001
+* participant[1].role.coding.display = "General practitioner"
+* participant[1].role.text = "Huisarts"
+* participant[2].member.type = #Practitioner
+* participant[2].member = Reference(Practitioner-Johan-van-den-Berg)
+* participant[2].member.display = "Johan van den Berg"
+* participant[2].role.coding.system = "http://snomed.info/sct"
+* participant[2].role.coding.code = #224535009
+* participant[2].role.coding.display = "Registered nurse"
+* participant[2].role.text = "Praktijkondersteuner"
+* managingOrganization.type = #Organization
+* managingOrganization = Reference(Organization-Huisarts-Amsterdam)
+* managingOrganization.display = "Huisarts Amsterdam"
+* note.text = "Team voor Huisarts Amsterdam - gebruikt voor team-level messaging"
