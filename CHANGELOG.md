@@ -5,6 +5,21 @@ All notable changes to the OZO FHIR Implementation Guide will be documented in t
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.4] - 2025-12-11
+
+### Changed
+
+#### Profiles
+- **OZOCommunicationRequest** - Fixed CareTeam sender support using extension:
+  - FHIR R4 `CommunicationRequest.sender` does not allow CareTeam references
+  - Added `OZOSenderCareTeam` extension to support team-level messaging where a CareTeam needs to be the reply-to address
+  - Updated team-to-team example to use the new extension pattern
+
+#### Build Infrastructure
+- Added changelog to implementation guide:
+  - New `copy-changelog` Makefile target copies CHANGELOG.md to history.md during build
+  - Changelog now accessible via "Changelog" menu item in the published guide
+
 ## [0.2.3] - 2025-12-04
 
 ### Changed
@@ -122,6 +137,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `aliases.fsh` with common system and profile aliases
 - Established FSH-first authoring workflow
 
+[0.2.4]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.2.3...v0.2.4
 [0.2.3]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.2.2...v0.2.3
 [0.2.2]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.2.1...v0.2.2
 [0.2.1]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.2.0...v0.2.1
