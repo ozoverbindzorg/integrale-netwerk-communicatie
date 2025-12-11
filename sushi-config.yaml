@@ -136,6 +136,9 @@ pages:
   hapi-installation.md:
     title: Installing OZO Package in HAPI FHIR Server
 
+  history.md:
+    title: Changelog
+
 #
 #  security-privacy.md:
 #    title: Security - Privacy
@@ -228,6 +231,7 @@ menu:
   RFCs:
     Organization Addressing: fhir-addressing-analysis.html
   Artifacts: artifacts.html
+  Changelog: history.html
 #  matrix.org:
 #    OZO on matrix: ozo-on-matrix.html
 #    Get data for home care: usecase-view-all-data.html

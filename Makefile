@@ -38,9 +38,15 @@ install-dependencies:
 		fhir inflate --package $$pkg; \
 	done
 
+# Copy changelog to pagecontent for IG inclusion
+.PHONY: copy-changelog
+copy-changelog:
+	@echo "Copying CHANGELOG.md to input/pagecontent/history.md..."
+	@cp CHANGELOG.md input/pagecontent/history.md
+
 # Build Implementation Guide using IG Publisher
 .PHONY: build-ig
-build-ig:
+build-ig: copy-changelog
 	@echo "Building OZO Implementation Guide with version $(VERSION)..."
 	@echo "Running SUSHI to compile FSH files..."
 	@sushi .

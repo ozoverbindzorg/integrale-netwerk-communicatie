@@ -4,6 +4,7 @@ public
 /output-minimal/
 /temp/
 /fsh-generated/
+input/pagecontent/history.md
 
 # FHIR IG Publisher cache
 /input-cache/
