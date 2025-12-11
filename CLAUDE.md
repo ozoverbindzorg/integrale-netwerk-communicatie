@@ -167,3 +167,4 @@ The profile is in `input/fsh/input/fsh/profiles/ozo-auditevent.fsh`. It includes
 
 The IG is published to GitLab Pages. The `.gitlab-ci.yml` configuration automates building and deployment. The canonical URL is `http://headease.gitlab.io/ozo-refererence-impl/ozo-implementation-guide`.
 - Allways push with `git push all`
+- If stuff changes in input/fsh, this should trigger a version bump at @sushi-config.yaml and entries in the @CHANGELOG.md file.
