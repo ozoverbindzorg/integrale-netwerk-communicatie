@@ -48,13 +48,16 @@ Description: "CommunicationRequest profile for the OZO platform. Represents a me
 * requester.reference 1..1
 * requester.type 1..1
 
-// Sender - reply-to address for the thread (can be team for team-level messaging)
+// Sender - reply-to address for the thread (individual sender)
 * sender 0..1 MS
-* sender only Reference(OZOPractitioner or OZORelatedPerson or OZOCareTeam)
-* sender ^short = "Reply-to address"
-* sender ^definition = "The entity to reply to. Can be a CareTeam for team-level messaging, providing the reply-to address and team-level authorization for message management."
+* sender only Reference(OZOPractitioner or OZORelatedPerson)
+* sender ^short = "Individual reply-to address"
+* sender ^definition = "The individual entity to reply to. For team-level messaging, use the senderCareTeam extension instead."
 * sender.reference 1..1
 * sender.type 1..1
+
+// Extension for CareTeam as sender (for team-level messaging)
+* extension contains OZOSenderCareTeam named senderCareTeam 0..1 MS
 
 // Recipients - who should receive the thread
 * recipient 1..* MS
@@ -63,3 +66,15 @@ Description: "CommunicationRequest profile for the OZO platform. Represents a me
 * recipient ^definition = "The intended recipients of the thread (practitioners, related persons, or care teams)"
 * recipient.reference 1..1
 * recipient.type 1..1
+
+// Extension definition for CareTeam as sender
+Extension: OZOSenderCareTeam
+Id: ozo-sender-careteam
+Title: "OZO Sender CareTeam"
+Description: "Extension to specify a CareTeam as the sender/reply-to address for team-level messaging. This extension is needed because CommunicationRequest.sender does not allow CareTeam references in FHIR R4."
+* ^url = "http://ozoverbindzorg.nl/fhir/StructureDefinition/ozo-sender-careteam"
+* ^status = #active
+* value[x] only Reference(CareTeam)
+* valueReference 1..1
+* valueReference ^short = "CareTeam as sender"
+* valueReference ^definition = "Reference to the CareTeam acting as the sender/reply-to address for team-level messaging"
