@@ -166,5 +166,4 @@ The profile is in `input/fsh/input/fsh/profiles/ozo-auditevent.fsh`. It includes
 ## Publishing
 
 The IG is published to GitHub Pages via GitHub Actions. The `.github/workflows/build_deploy.yml` configuration automates building and deployment. The canonical URL is `https://ozo-implementation-guide.headease.nl`.
-- Always push with `git push all`
 - If stuff changes in input/fsh, this should trigger a version bump at @sushi-config.yaml and entries in the @CHANGELOG.md file.
