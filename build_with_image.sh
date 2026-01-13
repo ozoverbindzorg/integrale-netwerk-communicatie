@@ -6,7 +6,7 @@ set -e
 echo "Building OZO Implementation Guide using Docker..."
 
 # Configuration
-IMAGE_NAME=${IMAGE_NAME:-registry.gitlab.com/headease/ozo-refererence-impl/ozo-implementation-guide/main:latest}
+IMAGE_NAME=${IMAGE_NAME:-ghcr.io/ozoverbindzorg/integrale-netwerk-communicatie/publisher:latest}
 
 # Pull latest image
 echo "Pulling Docker image: $IMAGE_NAME"

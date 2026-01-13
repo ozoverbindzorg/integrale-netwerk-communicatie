@@ -25,13 +25,13 @@ Description: "Patient profile for the OZO platform. Represents the client/patien
     ozoConnectPersonId 0..1 MS
 
 * identifier[ozoPersonId].system 1..1
-* identifier[ozoPersonId].system = "OZO/Person" (exactly)
+* identifier[ozoPersonId].system = "https://www.ozoverbindzorg.nl/namingsystem/ozo/person" (exactly)
 * identifier[ozoPersonId].value 1..1
 * identifier[ozoPersonId] ^short = "OZO Person identifier"
 * identifier[ozoPersonId] ^definition = "Unique identifier for the patient within the OZO system"
 
 * identifier[ozoConnectPersonId].system 1..1
-* identifier[ozoConnectPersonId].system = "OZO-CONNECT/Person" (exactly)
+* identifier[ozoConnectPersonId].system = "https://www.ozoverbindzorg.nl/namingsystem/ozo-connect/person" (exactly)
 * identifier[ozoConnectPersonId].value 1..1
 * identifier[ozoConnectPersonId] ^short = "OZO-CONNECT Person identifier"
 * identifier[ozoConnectPersonId] ^definition = "Unique identifier for the patient within the OZO-CONNECT system"
@@ -70,6 +70,6 @@ Description: "Patient profile for the OZO platform. Represents the client/patien
 
 // Invariant definition (must be outside the profile)
 Invariant: ozo-patient-has-person-id
-Description: "Patient must have at least one OZO Person identifier (matching pattern OZO*/Person)"
-Expression: "identifier.where(system.matches('^OZO[^/]*/Person$')).exists()"
+Description: "Patient must have at least one OZO Person identifier (matching pattern https://www.ozoverbindzorg.nl/namingsystem/ozo*/person)"
+Expression: "identifier.where(system.startsWith('https://www.ozoverbindzorg.nl/namingsystem/ozo') and system.endsWith('/person')).exists()"
 Severity: #error

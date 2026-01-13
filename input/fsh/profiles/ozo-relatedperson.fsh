@@ -28,34 +28,34 @@ Description: "RelatedPerson profile for the OZO platform. Represents informal ca
     email 0..1 MS
 
 * identifier[ozoPersonId].system 1..1
-* identifier[ozoPersonId].system = "OZO/Person" (exactly)
+* identifier[ozoPersonId].system = "https://www.ozoverbindzorg.nl/namingsystem/ozo/person" (exactly)
 * identifier[ozoPersonId].value 1..1
 * identifier[ozoPersonId] ^short = "OZO Person identifier"
 * identifier[ozoPersonId] ^definition = "Unique identifier for the related person within the OZO system"
 
 * identifier[ozoConnectPersonId].system 1..1
-* identifier[ozoConnectPersonId].system = "OZO-CONNECT/Person" (exactly)
+* identifier[ozoConnectPersonId].system = "https://www.ozoverbindzorg.nl/namingsystem/ozo-connect/person" (exactly)
 * identifier[ozoConnectPersonId].value 1..1
 * identifier[ozoConnectPersonId] ^short = "OZO-CONNECT Person identifier"
 * identifier[ozoConnectPersonId] ^definition = "Unique identifier for the related person within the OZO-CONNECT system"
 
 * identifier[ozoNetworkRelationId].system 1..1
-* identifier[ozoNetworkRelationId].system = "OZO/NetworkRelation" (exactly)
+* identifier[ozoNetworkRelationId].system = "https://www.ozoverbindzorg.nl/namingsystem/ozo/network-relation" (exactly)
 * identifier[ozoNetworkRelationId].value 1..1
 * identifier[ozoNetworkRelationId] ^short = "OZO Network Relation identifier"
 * identifier[ozoNetworkRelationId] ^definition = "Identifier for the network relationship between the related person and patient"
 
 * identifier[ozoConnectNetworkRelationId].system 1..1
-* identifier[ozoConnectNetworkRelationId].system = "OZO-CONNECT/NetworkRelation" (exactly)
+* identifier[ozoConnectNetworkRelationId].system = "https://www.ozoverbindzorg.nl/namingsystem/ozo-connect/network-relation" (exactly)
 * identifier[ozoConnectNetworkRelationId].value 1..1
 * identifier[ozoConnectNetworkRelationId] ^short = "OZO-CONNECT Network Relation identifier"
 * identifier[ozoConnectNetworkRelationId] ^definition = "Identifier for the network relationship between the related person and patient in OZO-CONNECT"
 
 * identifier[email].system 1..1
-* identifier[email].system = "email" (exactly)
+* identifier[email].system = "https://www.ozoverbindzorg.nl/namingsystem/email" (exactly)
 * identifier[email].value 1..1
 * identifier[email] ^short = "Email identifier"
-* identifier[email] ^definition = "Email address of the related person"
+* identifier[email] ^definition = "Email address of the related person (temporary - should migrate to telecom)"
 
 // Require at least one OZO Person identifier
 * obeys ozo-relatedperson-has-person-id
@@ -93,6 +93,6 @@ Description: "RelatedPerson profile for the OZO platform. Represents informal ca
 
 // Invariant definition (must be outside the profile)
 Invariant: ozo-relatedperson-has-person-id
-Description: "RelatedPerson must have at least one OZO Person identifier (matching pattern OZO*/Person)"
-Expression: "identifier.where(system.matches('^OZO[^/]*/Person$')).exists()"
+Description: "RelatedPerson must have at least one OZO Person identifier (matching pattern https://www.ozoverbindzorg.nl/namingsystem/ozo*/person)"
+Expression: "identifier.where(system.startsWith('https://www.ozoverbindzorg.nl/namingsystem/ozo') and system.endsWith('/person')).exists()"
 Severity: #error

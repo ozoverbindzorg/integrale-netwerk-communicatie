@@ -2,9 +2,7 @@
 
 FHIR Implementation Guide for the OZO platform - connecting care professionals with informal caregivers.
 
-**Published URLs:**
-- **Primary (GitHub Pages)**: `https://ozo-implementation-guide.headease.nl`
-- **GitLab Pages**: `https://ozo-implementation-guide-405d2b.gitlab.io`
+**Published URL:** `https://ozo-implementation-guide.headease.nl`
 
 ----
 
@@ -41,7 +39,7 @@ sh build_with_image.sh
 ```
 
 This script will:
-1. Pull the latest Docker image from GitLab registry
+1. Pull the latest Docker image from GitHub Container Registry
 2. Run the build inside the container
 3. Open the result in your browser
 
@@ -49,7 +47,7 @@ This script will:
 
 ```bash
 # Set the image name (or use default)
-IMAGE_NAME=registry.gitlab.com/headease/ozo-refererence-impl/ozo-implementation-guide/main:latest
+IMAGE_NAME=ghcr.io/ozoverbindzorg/integrale-netwerk-communicatie/publisher:latest
 
 # Pull the latest image
 docker pull $IMAGE_NAME
@@ -199,7 +197,7 @@ The Makefile is designed to run inside the Docker container. To get an interacti
 ```bash
 docker run -it --entrypoint /bin/bash \
   -v "${PWD}:/src" \
-  registry.gitlab.com/headease/ozo-refererence-impl/ozo-implementation-guide/main:latest
+  ghcr.io/ozoverbindzorg/integrale-netwerk-communicatie/publisher:latest
 ```
 
 Inside the container, you can use:
@@ -291,7 +289,7 @@ For faster iteration, you can work inside an interactive container session:
 # Start interactive session
 docker run -it --entrypoint /bin/bash \
   -v "${PWD}:/src" \
-  registry.gitlab.com/headease/ozo-refererence-impl/ozo-implementation-guide/main:latest
+  ghcr.io/ozoverbindzorg/integrale-netwerk-communicatie/publisher:latest
 
 # Inside container: make changes and build
 vim input/fsh/profiles/ozo-patient.fsh
@@ -351,36 +349,27 @@ The Implementation Guide includes comprehensive documentation:
   - W3C Trace Context integration
   - Privacy and security considerations
 
-## GitLab CI/CD
+## CI/CD
 
-This repository uses GitLab CI/CD for continuous integration and deployment to GitLab Pages.
+This repository uses GitHub Actions for continuous integration and deployment.
 
 ### Automated Builds
 
 - **Triggers**: Automatically on push to any branch
 - **Build Process**:
-  1. Pulls the latest builder Docker image
+  1. Builds the Docker image and pushes to GitHub Container Registry
   2. Runs `make build` inside the container
   3. SUSHI compiles FSH files
   4. PlantUML generates diagrams
   5. IG Publisher creates the documentation
-  6. Publishes to GitLab Pages (main branch only)
+  6. Publishes to GitHub Pages (main branch only)
 
 ### Deployment
 
-This project is deployed to two locations:
-
-#### GitHub Pages (Primary)
 - **URL**: `https://ozo-implementation-guide.headease.nl`
 - **Workflow**: `.github/workflows/build_deploy.yml`
 - **Trigger**: Automatic on push to `main` branch
 - **DNS**: Custom domain pointing to `ozoverbindzorg.github.io`
-
-#### GitLab Pages (Secondary)
-- **URL**: `https://ozo-implementation-guide-405d2b.gitlab.io`
-- **Workflow**: `.gitlab-ci.yml`
-- **Trigger**: Automatic on push to `main` branch
-- **Purpose**: Alternative deployment and CI/CD testing
 
 ## Troubleshooting
 
@@ -394,7 +383,7 @@ This project is deployed to two locations:
 docker build --no-cache -t ozo-ig-builder .
 
 # Or pull latest pre-built image
-docker pull registry.gitlab.com/headease/ozo-refererence-impl/ozo-implementation-guide/main:latest
+docker pull ghcr.io/ozoverbindzorg/integrale-netwerk-communicatie/publisher:latest
 ```
 
 ### FSH Validation Errors
@@ -406,7 +395,7 @@ docker pull registry.gitlab.com/headease/ozo-refererence-impl/ozo-implementation
 # Inside container, run validation
 docker run -it --entrypoint /bin/bash \
   -v "${PWD}:/src" \
-  registry.gitlab.com/headease/ozo-refererence-impl/ozo-implementation-guide/main:latest
+  ghcr.io/ozoverbindzorg/integrale-netwerk-communicatie/publisher:latest
 
 # Then inside container
 make validate
@@ -429,7 +418,7 @@ make validate
 ```bash
 # Increase Docker memory limits
 docker run --memory="4g" --rm -v "${PWD}:/src" \
-  registry.gitlab.com/headease/ozo-refererence-impl/ozo-implementation-guide/main:latest
+  ghcr.io/ozoverbindzorg/integrale-netwerk-communicatie/publisher:latest
 ```
 
 ### Volume Mounting Issues
@@ -451,7 +440,7 @@ When contributing to this project:
 3. Update documentation pages when adding new features
 4. Ensure all examples validate against profiles
 5. Run the full build before committing changes
-6. Test locally with Docker before pushing to GitLab
+6. Test locally with Docker before pushing
 
 For detailed development guidelines, see [CLAUDE.md](CLAUDE.md).
 
@@ -467,7 +456,7 @@ The Docker image includes all required tools:
 - **PlantUML** for sequence diagrams
 - **Saxon HE** and XML Resolver for XSLT processing
 
-The image is automatically built and published to the GitLab Container Registry.
+The image is automatically built and published to GitHub Container Registry (ghcr.io).
 
 ## Technical Details
 
@@ -476,7 +465,7 @@ The image is automatically built and published to the GitLab Container Registry.
 - **Diagram Support**: PlantUML for sequence and class diagrams
 - **Static Site**: Jekyll generates human-readable HTML documentation
 - **Version Control**: Semantic versioning in `sushi-config.yaml`
-- **CI/CD**: Automated builds and deployments via GitLab CI
+- **CI/CD**: Automated builds and deployments via GitHub Actions
 - **Makefile**: All build commands run inside the container
 
 ## License

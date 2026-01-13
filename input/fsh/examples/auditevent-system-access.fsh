@@ -13,7 +13,7 @@ Description: "Example of an AuditEvent for a system-to-system access through OZO
 * recorded = "2025-01-08T10:45:00.000+01:00"
 * outcome = #0
 * agent[0].type = http://dicom.nema.org/resources/ontology/DCM#110150 "Application"
-* agent[=].who.identifier.system = "did_web"
+* agent[=].who.identifier.system = "urn:ietf:rfc:3986"
 * agent[=].who.identifier.value = "did:web:example.org:system:hospital-system-001"
 * agent[=].who.display = "Hospital System 001"
 * agent[=].who.type = "Device"

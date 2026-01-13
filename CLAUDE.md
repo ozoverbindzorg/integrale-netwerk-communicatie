@@ -122,7 +122,7 @@ Sequence and class diagrams use PlantUML syntax. The build process (via Jekyll/I
 
 ### Docker Build Environment
 
-The custom Docker image includes all required tools (Java, Node.js, Ruby, Jekyll, SUSHI, IG Publisher, Graphviz). If you modify Dockerfile, rebuild the image and push to the GitLab registry referenced in the Makefile.
+The custom Docker image includes all required tools (Java, Node.js, Ruby, Jekyll, SUSHI, IG Publisher, Graphviz). If you modify Dockerfile, the image will be automatically rebuilt and pushed to GitHub Container Registry (ghcr.io) by GitHub Actions.
 
 ### Output Directories
 
@@ -165,6 +165,6 @@ The profile is in `input/fsh/input/fsh/profiles/ozo-auditevent.fsh`. It includes
 
 ## Publishing
 
-The IG is published to GitLab Pages. The `.gitlab-ci.yml` configuration automates building and deployment. The canonical URL is `http://headease.gitlab.io/ozo-refererence-impl/ozo-implementation-guide`.
-- Allways push with `git push all`
+The IG is published to GitHub Pages via GitHub Actions. The `.github/workflows/build_deploy.yml` configuration automates building and deployment. The canonical URL is `https://ozo-implementation-guide.headease.nl`.
+- Always push with `git push all`
 - If stuff changes in input/fsh, this should trigger a version bump at @sushi-config.yaml and entries in the @CHANGELOG.md file.

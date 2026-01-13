@@ -5,9 +5,9 @@ Usage: #example
 * meta.versionId = "1"
 * meta.lastUpdated = "2024-12-05T16:24:56.583+00:00"
 * meta.source = "#3BXUq4cav1bNYSUb"
-* identifier[ozoConnectProfessionalId].system = "OZO-CONNECT/Professional"
+* identifier[ozoConnectProfessionalId].system = "https://www.ozoverbindzorg.nl/namingsystem/ozo-connect/professional"
 * identifier[ozoConnectProfessionalId].value = "743227"
-* identifier[email].system = "email"
+* identifier[email].system = "https://www.ozoverbindzorg.nl/namingsystem/email"
 * identifier[email].value = "info@example.com"
 * active = true
 * name.text = "Mark Benson"

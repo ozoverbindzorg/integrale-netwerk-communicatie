@@ -5,9 +5,9 @@ Usage: #example
 * id = "1473"
 * meta.versionId = "1"
 * meta.lastUpdated = "2025-06-19T11:00:00.000+00:00"
-* identifier[0].system = "OZO-CONNECT/Team"
+* identifier[0].system = "https://www.ozoverbindzorg.nl/namingsystem/ozo-connect/team"
 * identifier[0].value = "40"
-* identifier[1].system = "email"
+* identifier[1].system = "https://www.ozoverbindzorg.nl/namingsystem/email"
 * identifier[1].value = "thuiszorg.oost@zorgorganisatie.nl"
 * name = "Afdeling Thuiszorg Oost"
 * status = #active

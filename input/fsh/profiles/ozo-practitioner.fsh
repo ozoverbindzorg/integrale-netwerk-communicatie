@@ -26,22 +26,22 @@ Description: "Practitioner profile for the OZO platform. Represents healthcare p
     email 0..1 MS
 
 * identifier[ozoProfessionalId].system 1..1
-* identifier[ozoProfessionalId].system = "OZO/Professional" (exactly)
+* identifier[ozoProfessionalId].system = "https://www.ozoverbindzorg.nl/namingsystem/ozo/professional" (exactly)
 * identifier[ozoProfessionalId].value 1..1
 * identifier[ozoProfessionalId] ^short = "OZO Professional identifier"
 * identifier[ozoProfessionalId] ^definition = "Unique identifier for the practitioner within the OZO system"
 
 * identifier[ozoConnectProfessionalId].system 1..1
-* identifier[ozoConnectProfessionalId].system = "OZO-CONNECT/Professional" (exactly)
+* identifier[ozoConnectProfessionalId].system = "https://www.ozoverbindzorg.nl/namingsystem/ozo-connect/professional" (exactly)
 * identifier[ozoConnectProfessionalId].value 1..1
 * identifier[ozoConnectProfessionalId] ^short = "OZO-CONNECT Professional identifier"
 * identifier[ozoConnectProfessionalId] ^definition = "Unique identifier for the practitioner within the OZO-CONNECT system"
 
 * identifier[email].system 1..1
-* identifier[email].system = "email" (exactly)
+* identifier[email].system = "https://www.ozoverbindzorg.nl/namingsystem/email" (exactly)
 * identifier[email].value 1..1
 * identifier[email] ^short = "Email identifier"
-* identifier[email] ^definition = "Email address of the practitioner"
+* identifier[email] ^definition = "Email address of the practitioner (temporary - should migrate to telecom)"
 
 // Require at least one OZO Professional identifier
 * obeys ozo-practitioner-has-professional-id
@@ -61,6 +61,6 @@ Description: "Practitioner profile for the OZO platform. Represents healthcare p
 
 // Invariant definition (must be outside the profile)
 Invariant: ozo-practitioner-has-professional-id
-Description: "Practitioner must have at least one OZO Professional identifier (matching pattern OZO*/Professional)"
-Expression: "identifier.where(system.matches('^OZO[^/]*/Professional$')).exists()"
+Description: "Practitioner must have at least one OZO Professional identifier (matching pattern https://www.ozoverbindzorg.nl/namingsystem/ozo*/professional)"
+Expression: "identifier.where(system.startsWith('https://www.ozoverbindzorg.nl/namingsystem/ozo') and system.endsWith('/professional')).exists()"
 Severity: #error

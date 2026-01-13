@@ -23,7 +23,7 @@ Description: "Organization profile for the OZO platform. Represents healthcare o
 * identifier contains uraId 0..1 MS
 
 * identifier[uraId].system 1..1
-* identifier[uraId].system = "ura" (exactly)
+* identifier[uraId].system = "http://fhir.nl/fhir/NamingSystem/ura" (exactly)
 * identifier[uraId].value 1..1
 * identifier[uraId] ^short = "URA identifier"
 * identifier[uraId] ^definition = "URA (Unieke Registratie Apothekers) or similar Dutch healthcare organization identifier"

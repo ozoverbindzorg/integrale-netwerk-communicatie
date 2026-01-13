@@ -5,7 +5,7 @@ Usage: #example
 * id = "1500"
 * meta.versionId = "1"
 * meta.lastUpdated = "2025-06-19T10:00:00.000+00:00"
-* identifier[ozoPersonId].system = "OZO/Person"
+* identifier[ozoPersonId].system = "https://www.ozoverbindzorg.nl/namingsystem/ozo/person"
 * identifier[ozoPersonId].value = "RP-1500"
 * patient.reference = "Patient/747"
 * patient.type = "Patient"
