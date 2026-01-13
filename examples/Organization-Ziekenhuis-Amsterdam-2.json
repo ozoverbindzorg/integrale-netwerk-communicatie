@@ -7,7 +7,7 @@
     "source": "#jRZdYk5ZuRbbFy50"
   },
   "identifier": [ {
-    "system": "ura",
+    "system": "http://fhir.nl/fhir/NamingSystem/ura",
     "value": "23123123123"
   } ],
   "name": "Ziekenhuis de Amsterdam"

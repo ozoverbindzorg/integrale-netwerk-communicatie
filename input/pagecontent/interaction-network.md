@@ -8,8 +8,12 @@ This IG distinguishes the following roles when establishing care networks:
 
 ### Identifier Requirements
 All resources must include two types of identifiers:
-* An **email identifier** with system "email" for communication purposes
-* An **origin identifier** with system "{ORIGIN}/Person", "{ORIGIN}/Professional", or "{ORIGIN}/Team" to distinguish which system created the resource (typically using database IDs)
+* An **email identifier** with system `https://www.ozoverbindzorg.nl/namingsystem/email` for communication purposes (temporary - should migrate to telecom)
+* An **origin identifier** using the OZO naming system pattern to distinguish which system created the resource:
+  * `https://www.ozoverbindzorg.nl/namingsystem/ozo/person` or `ozo-connect/person` for Patient and RelatedPerson
+  * `https://www.ozoverbindzorg.nl/namingsystem/ozo/professional` or `ozo-connect/professional` for Practitioner
+  * `https://www.ozoverbindzorg.nl/namingsystem/ozo/team` or `ozo-connect/team` for CareTeam
+  * `https://www.ozoverbindzorg.nl/namingsystem/ozo/network-relation` for RelatedPerson network relationships
 
 ### Creating the Care Network - Order of Operations
 

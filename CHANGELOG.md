@@ -5,6 +5,36 @@ All notable changes to the OZO FHIR Implementation Guide will be documented in t
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.5] - 2026-01-13
+
+### Changed
+
+#### Profiles
+- **All profiles** - Converted identifier systems to valid FHIR URIs:
+  - `OZO/Person` → `https://www.ozoverbindzorg.nl/namingsystem/ozo/person`
+  - `OZO-CONNECT/Person` → `https://www.ozoverbindzorg.nl/namingsystem/ozo-connect/person`
+  - `OZO/Professional` → `https://www.ozoverbindzorg.nl/namingsystem/ozo/professional`
+  - `OZO-CONNECT/Professional` → `https://www.ozoverbindzorg.nl/namingsystem/ozo-connect/professional`
+  - `OZO/Team` → `https://www.ozoverbindzorg.nl/namingsystem/ozo/team`
+  - `OZO-CONNECT/Team` → `https://www.ozoverbindzorg.nl/namingsystem/ozo-connect/team`
+  - `OZO/NetworkRelation` → `https://www.ozoverbindzorg.nl/namingsystem/ozo/network-relation`
+  - `email` → `https://www.ozoverbindzorg.nl/namingsystem/email` (temporary - should migrate to telecom)
+  - `ura` → `http://fhir.nl/fhir/NamingSystem/ura` (Nictiz standard)
+  - `did_web` → `urn:ietf:rfc:3986` (value is itself a URI)
+- Updated invariant expressions to match new URI patterns
+
+#### Build Infrastructure
+- Migrated Docker image from GitLab Container Registry to GitHub Container Registry (ghcr.io)
+- Updated `build_with_image.sh` to use ghcr.io image
+- Added GHCR push step to GitHub Actions workflow
+
+#### Documentation
+- Updated `overview.md` and `interaction-network.md` with new identifier URI patterns
+- Removed outdated GitLab references from README.md and CLAUDE.md
+
+#### Examples
+- Updated all FSH and JSON example files with new identifier system URIs
+
 ## [0.2.4] - 2025-12-11
 
 ### Changed
@@ -137,6 +167,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `aliases.fsh` with common system and profile aliases
 - Established FSH-first authoring workflow
 
+[0.2.5]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.2.4...v0.2.5
 [0.2.4]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.2.3...v0.2.4
 [0.2.3]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.2.2...v0.2.3
 [0.2.2]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.2.1...v0.2.2

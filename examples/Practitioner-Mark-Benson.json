@@ -7,10 +7,10 @@
     "source": "#3BXUq4cav1bNYSUb"
   },
   "identifier": [ {
-    "system": "OZO-CONNECT/Professional",
+    "system": "https://www.ozoverbindzorg.nl/namingsystem/ozo-connect/professional",
     "value": "743227"
   }, {
-    "system": "email",
+    "system": "https://www.ozoverbindzorg.nl/namingsystem/email",
     "value": "info@example.com"
   } ],
   "active": true,

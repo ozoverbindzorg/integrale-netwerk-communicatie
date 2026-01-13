@@ -7,7 +7,7 @@
     "source": "#IgkosdvWJSUud8sZ"
   },
   "identifier": [ {
-    "system": "ura",
+    "system": "http://fhir.nl/fhir/NamingSystem/ura",
     "value": "312132312"
   } ],
   "name": "Huisarts van Amsterdam"

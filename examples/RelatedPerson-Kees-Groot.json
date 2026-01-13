@@ -7,13 +7,13 @@
     "source": "#wXk63usSROLkNN1z"
   },
   "identifier": [ {
-    "system": "OZO/Person",
+    "system": "https://www.ozoverbindzorg.nl/namingsystem/ozo/person",
     "value": "48898909439"
   }, {
-    "system": "OZO/NetworkRelation",
+    "system": "https://www.ozoverbindzorg.nl/namingsystem/ozo/network-relation",
     "value": "0987654321"
   }, {
-    "system": "email",
+    "system": "https://www.ozoverbindzorg.nl/namingsystem/email",
     "value": "info@example.com"
   } ],
   "active": true,
