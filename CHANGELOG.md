@@ -5,6 +5,43 @@ All notable changes to the OZO FHIR Implementation Guide will be documented in t
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+
+## [0.3.0] - 2026-02-17
+
+### Added
+
+#### Dependencies
+- **NL Generic Functions IG** (`fhir.nl.gf` v0.3.0) - Added as a dependency to support care services directory compliance and IHE mCSD alignment
+
+#### Documentation
+- **Care Services Directory** - New documentation page explaining OZO's participation in the Dutch care services directory ecosystem, including directory roles (Admin Client, Update Client, Query Client), identifier requirements, and NL-GF profile references
+- Added care services directory architecture diagram (`care-services-directory.plantuml`)
+- Added "Care Services Directory" bullet to Key Features on the home page
+
+### Changed
+
+#### Profiles
+- **OZOOrganization** - **BREAKING**: Rebased from `Organization` to `NlGfOrganization` (`nl-gf-organization`):
+  - Now extends the NL Generic Functions Organization profile for mCSD care services directory compliance
+  - Removed custom URA identifier slice (now inherited from `nl-gf-organization` via `nl-core-HealthcareProvider-Organization`)
+  - Inherits `AssignedId` identifier requirement (1..1) with assigner pattern
+  - Inherits `ura-identifier-or-partof` invariant: organizations must have a URA identifier or be `partOf` another organization
+  - Profile version bumped to 2.0.0
+
+#### Examples
+- Updated all 4 Organization examples for NL-GF compliance:
+  - **Organization-Ziekenhuis-Amsterdam** - Added `AssignedId` identifier, `type` (V4 Ziekenhuis), updated URA system to canonical URL
+  - **Organization-Ziekenhuis-Amsterdam-2** - Added `AssignedId` identifier, `type` (V4 Ziekenhuis), updated URA system to canonical URL
+  - **Organization-Huisarts-Amsterdam** - Added `AssignedId` identifier, `type` (Z3 Huisartspraktijk), updated URA system to canonical URL
+  - **Organization-Apotheek-de-Pil** - Added `AssignedId` identifier, `type` (G2 Apotheek), updated URA system to canonical URL
+
+#### Documentation
+- Updated Organization section in Overview page with new profile information, field table, and link to Care Services Directory page
+
+#### Build Infrastructure
+- Added `install-nl-gf` Makefile target to download `fhir.nl.gf` package from CI build (package is not published on FHIR registry)
+- Added `scripts/get_dependencies.py` to parse `sushi-config.yaml` dependencies for automated installation
+
 ## [0.2.5] - 2026-01-13
 
 ### Changed
@@ -167,6 +204,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `aliases.fsh` with common system and profile aliases
 - Established FSH-first authoring workflow
 
+[0.3.0]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.2.5...v0.3.0
 [0.2.5]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.2.4...v0.2.5
 [0.2.4]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.2.3...v0.2.4
 [0.2.3]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.2.2...v0.2.3

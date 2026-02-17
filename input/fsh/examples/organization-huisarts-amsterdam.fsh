@@ -5,6 +5,13 @@ Usage: #example
 * meta.versionId = "1"
 * meta.lastUpdated = "2024-12-05T16:24:53.893+00:00"
 * meta.source = "#IgkosdvWJSUud8sZ"
-* identifier.system = "http://fhir.nl/fhir/NamingSystem/ura"
-* identifier.value = "312132312"
+* identifier[ura].system = $ura
+* identifier[ura].value = "312132312"
+* identifier[AssignedId].system = "https://ozo.headease.nl/organizations"
+* identifier[AssignedId].value = "org-huisarts-amsterdam"
+* identifier[AssignedId].assigner.identifier.type.coding.system = $provenance-participant-type
+* identifier[AssignedId].assigner.identifier.type.coding.code = #author
+* identifier[AssignedId].assigner.identifier.system = $ura
+* identifier[AssignedId].assigner.identifier.value = "312132312"
+* type = $organization-type#Z3 "Huisartspraktijk (zelfstandig of groepspraktijk)"
 * name = "Huisarts van Amsterdam"

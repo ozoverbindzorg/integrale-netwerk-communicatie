@@ -24,6 +24,7 @@ For the latest releases and version history, see the [GitHub Releases](https://g
 - **Decentralized Authentication**: Integration with the Nuts protocol for Dutch healthcare
 - **FHIR-based Communication**: Structured messaging between practitioners and caregivers
 - **NEN7510 Compliance**: Comprehensive audit logging with W3C Trace Context support
+- **Care Services Directory**: Organization profiles compliant with NL Generic Functions (mCSD) for directory participation
 - **Dutch Healthcare Standards**: Built on NL-core profiles for national interoperability
 
 ### Quick Links

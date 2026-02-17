@@ -123,19 +123,16 @@ the `Patient` to different `Organization`s
 
 **Profile:** [OZOOrganization](StructureDefinition-ozo-organization.html)
 
-The `Organization` resource represents the different organizations in the network. The relation between the Patient and
-Organization is managed by the participant in the care team. Each member of type Practitioner has an onBehalfOf
-reference to the Organization.
+The `Organization` resource represents the different organizations in the network. `OZOOrganization` extends the [NL Generic Functions Organization profile](https://build.fhir.org/ig/nuts-foundation/nl-generic-functions-ig/StructureDefinition-nl-gf-organization.html) (`nl-gf-organization`), providing compliance with the Dutch care services directory and IHE mCSD alignment. The relation between the Patient and Organization is managed by the participant in the care team. Each member of type Practitioner has an onBehalfOf reference to the Organization.
 
-| field                  | Cardinality | description                    |
-|------------------------|-------------|--------------------------------|
-| identifier (URA)       | 1..1        | System: `http://fhir.nl/fhir/NamingSystem/ura` |
-| name                   | 1..1        | The name of the `Organization` |
+| field                    | Cardinality | description                                                        |
+|--------------------------|-------------|--------------------------------------------------------------------|
+| identifier[ura]          | 0..*        | URA identifier (required unless `partOf` is set)                   |
+| identifier[AssignedId]   | 1..1        | Platform-assigned identifier with assigner (required by NL-GF)     |
+| type                     | 1..*        | Organization type from Nictiz organization-type code system        |
+| name                     | 1..1        | The name of the `Organization`                                     |
 
-#### Identity mapping
-
-The identifier of the `Organization` _must_ be unique and _should_ the internal identifier of the patient in the OZO
-system.
+For details on directory participation and identifier requirements, see the [Care Services Directory](care-services-directory.html) page.
 
 ##### Examples
 

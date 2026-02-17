@@ -1,0 +1,37 @@
+@startuml
+!define RECTANGLE class
+
+title Care Services Directory - OZO Integration
+
+actor "Healthcare\nOrganization" as org
+participant "OZO Platform" as ozo
+database "Care Services\nDirectory" as dir
+actor "Other\nSystems" as other
+
+== Organization Registration (Admin Client) ==
+
+org -> ozo : Joins OZO platform
+ozo -> dir : PUT Organization\n(nl-gf-organization)
+ozo -> dir : PUT Endpoint\n(nl-gf-endpoint)
+ozo -> dir : PUT HealthcareService\n(nl-gf-healthcareservice)
+dir --> ozo : 200 OK
+
+== Directory Maintenance (Update Client) ==
+
+org -> ozo : Updates contact info
+ozo -> dir : PUT Organization\n(updated fields)
+dir --> ozo : 200 OK
+
+== Organization Discovery (Query Client) ==
+
+ozo -> dir : GET Organization\n?type=V4&_include=endpoint
+dir --> ozo : Bundle(Organization,\nEndpoint)
+ozo -> ozo : Resolve organization\nfor CareTeam
+
+== External Discovery ==
+
+other -> dir : GET Organization\n?identifier=ura|23123123123
+dir --> other : Bundle(Organization)
+other -> ozo : FHIR API request\n(via discovered endpoint)
+
+@enduml

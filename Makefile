@@ -29,14 +29,24 @@ build-minimal: install-dependencies build-ig-minimal
 
 # Install FHIR dependencies
 .PHONY: install-dependencies
-install-dependencies:
+install-dependencies: install-nl-gf
 	@echo "Installing dependencies from sushi-config.yaml..."
 	@python3 scripts/get_dependencies.py | while read pkg; do \
 		echo "Installing $$pkg..."; \
-		fhir install $$pkg; \
-		fhir extract-package $$pkg; \
-		fhir inflate --package $$pkg; \
+		fhir install $$pkg || echo "Skipping $$pkg (not on registry or already installed)"; \
 	done
+
+# Install fhir.nl.gf package (not published on FHIR registry, only available as CI build)
+.PHONY: install-nl-gf
+install-nl-gf:
+	@if [ ! -d "$(HOME)/.fhir/packages/fhir.nl.gf#0.3.0/package" ]; then \
+		echo "Installing fhir.nl.gf#0.3.0 from CI build..."; \
+		mkdir -p $(HOME)/.fhir/packages/fhir.nl.gf#0.3.0; \
+		curl -L https://build.fhir.org/ig/nuts-foundation/nl-generic-functions-ig/package.tgz | \
+			tar -xzf - -C $(HOME)/.fhir/packages/fhir.nl.gf#0.3.0; \
+	else \
+		echo "fhir.nl.gf#0.3.0 already installed"; \
+	fi
 
 # Copy changelog to pagecontent for IG inclusion
 .PHONY: copy-changelog
