@@ -81,17 +81,19 @@ The OZO FHIR `RelatedPerson` uses two identities to identify the RelatedPerson e
 **Profile:** [OZOPractitioner](StructureDefinition-ozo-practitioner.html)
 
 The `Practitioner` represents a health care professional that has a relationship with one or more patients. The
-practitioner is linked to the patient by the care team.
+practitioner is linked to the patient by the care team. `OZOPractitioner` extends the [NL Generic Functions Practitioner profile](https://build.fhir.org/ig/nuts-foundation/nl-generic-functions-ig/StructureDefinition-nl-gf-practitioner.html) (`nl-gf-practitioner`), providing compliance with the Dutch care services directory and IHE mCSD alignment.
 
-| field                       | cardinality | description         |
-|-----------------------------|-------------|---------------------|
-| identifier[system=UZI\|BIG] | 1..1        |                     |
-| name                        | 1..1        | The name field, ZIB |
-| active                      | 1..1        | true                |
+| field                    | Cardinality | description                                                        |
+|--------------------------|-------------|--------------------------------------------------------------------|
+| identifier[AssignedId]   | 1..1        | Platform-assigned identifier with assigner (required by NL-GF)     |
+| name                     | 1..*        | The name field, ZIB                                                |
+| active                   | 1..1        | true                                                               |
+
+For details on directory participation and identifier requirements, see the [Care Services Directory](care-services-directory.html) page.
 
 #### Identity mapping
 
-The identifier of the `Practitioner` _must_ be unique and _should_ the internal identifier of the patient in the OZO
+The identifier of the `Practitioner` _must_ be unique and _should_ be the internal identifier of the practitioner in the OZO
 system.
 
 ##### Examples

@@ -5,10 +5,16 @@ Usage: #example
 * id = "1221"
 * meta.versionId = "1"
 * meta.lastUpdated = "2025-06-19T11:02:00.000+00:00"
-* identifier[ozoConnectProfessionalId].system = "https://www.ozoverbindzorg.nl/namingsystem/ozo-connect/professional"
-* identifier[ozoConnectProfessionalId].value = "1151"
-* identifier[email].system = "https://www.ozoverbindzorg.nl/namingsystem/email"
-* identifier[email].value = "l.hendriks@thuiszorg.nl"
+* identifier[AssignedId].system = "https://ozo.headease.nl/practitioners"
+* identifier[AssignedId].value = "practitioner-lars-hendriks"
+* identifier[AssignedId].assigner.identifier.type.coding.system = $provenance-participant-type
+* identifier[AssignedId].assigner.identifier.type.coding.code = #author
+* identifier[AssignedId].assigner.identifier.system = $ura
+* identifier[AssignedId].assigner.identifier.value = "23123123123"
+* identifier[+].system = "https://www.ozoverbindzorg.nl/namingsystem/ozo-connect/professional"
+* identifier[=].value = "1151"
+* identifier[+].system = "https://www.ozoverbindzorg.nl/namingsystem/email"
+* identifier[=].value = "l.hendriks@thuiszorg.nl"
 * name.text = "Lars Hendriks"
 * name.given = "Lars"
 * name.family = "Hendriks"

@@ -6,6 +6,27 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [0.4.0] - 2026-02-18
+
+### Changed
+
+#### Profiles
+- **OZOPractitioner** - **BREAKING**: Rebased from `Practitioner` to `NlGfPractitioner` (`nl-gf-practitioner`):
+  - Now extends the NL Generic Functions Practitioner profile for mCSD care services directory compliance
+  - Inherits from `nl-core-HealthProfessional-Practitioner` via `nl-gf-practitioner`
+  - Inherits `AssignedId` identifier requirement (1..1) with assigner pattern linking practitioners to their employing organization
+  - Removed custom identifier slices (ozoProfessionalId, ozoConnectProfessionalId, email) — incompatible with NL-GF `value:$this` slicing discriminator. OZO identifiers are still validated via `ozo-practitioner-has-professional-id` invariant and supported through open slicing
+  - Profile version bumped to 2.0.0
+
+#### Examples
+- Updated all 9 Practitioner examples for NL-GF compliance:
+  - Added `AssignedId` identifier with `https://ozo.headease.nl/practitioners` system, practitioner slug as value, and employing organization's URA as assigner
+  - Affected: Manu van Weel, Mark Benson, A.P. Otheeker, Pieter de Vries, Johan van den Berg, Annemiek Jansen, Lars Hendriks, Marijke van der Berg, Sophie de Boer
+
+#### Documentation
+- Updated Practitioner section in Overview page with NL-GF parent profile information and AssignedId requirement
+- Updated Care Services Directory page with OZOPractitioner profile hierarchy and practitioner identifier requirements
+
 ## [0.3.0] - 2026-02-17
 
 ### Added
@@ -204,6 +225,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `aliases.fsh` with common system and profile aliases
 - Established FSH-first authoring workflow
 
+[0.4.0]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.2.5...v0.3.0
 [0.2.5]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.2.4...v0.2.5
 [0.2.4]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.2.3...v0.2.4
