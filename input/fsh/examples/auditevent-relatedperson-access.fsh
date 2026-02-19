@@ -1,4 +1,4 @@
-Instance: AuditEvent-RelatedPerson-Access
+Instance: AE-RelatedPerson-Access
 InstanceOf: OZOAuditEvent
 Usage: #example
 Title: "AuditEvent - RelatedPerson Access"
@@ -13,18 +13,18 @@ Description: "Example of an AuditEvent for RelatedPerson accessing Communication
 * recorded = "2024-12-05T17:25:01.713+01:00"
 * outcome = #0
 * agent[0].type = http://dicom.nema.org/resources/ontology/DCM#110153 "Source Role ID"
-* agent[=].who = Reference(RelatedPerson-Kees-Groot)
+* agent[=].who = Reference(Kees-Groot)
 * agent[=].who.type = "RelatedPerson"
 * agent[=].requestor = true
 * source.site = "OZO Client"
 * source.observer = Reference(Device/ozo-aaa-proxy-001) "AAA Proxy Instance 001"
 * source.observer.type = "Device"
 * source.type = http://terminology.hl7.org/CodeSystem/security-source-type#4 "Application Server"
-* entity[0].what = Reference(CommunicationRequest-Thread-Example)
+* entity[0].what = Reference(Thread-Example)
 * entity[=].what.type = "CommunicationRequest"
 * entity[=].type = http://hl7.org/fhir/resource-types#CommunicationRequest "CommunicationRequest"
 * entity[=].role = http://terminology.hl7.org/CodeSystem/object-role#4 "Domain Resource"
-* entity[+].what = Reference(Communication-Practitioner-to-Practitioner)
+* entity[+].what = Reference(Msg-Practitioner-to-Practitioner)
 * entity[=].what.type = "Communication"
 * entity[=].type = http://hl7.org/fhir/resource-types#Communication "Communication"
 * entity[=].role = http://terminology.hl7.org/CodeSystem/object-role#4 "Domain Resource"

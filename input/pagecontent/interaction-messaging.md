@@ -183,12 +183,12 @@ GET /Communication?sender=Practitioner/my-id
 
 #### Examples
 
-* [CareTeam-Pharmacy-A](CareTeam-Pharmacy-A.html) - Pharmacy team for team-level messaging
-* [CareTeam-Clinic-B](CareTeam-Clinic-B.html) - Clinic team for team-level messaging
-* [CommunicationRequest-Pharmacy-to-Clinic](CommunicationRequest-Pharmacy-to-Clinic.html) - Team-to-team thread
-* [Communication-Team-Reply-1-Initial-Message](Communication-Team-Reply-1-Initial-Message.html) - Initial message
-* [Communication-Team-Reply-2-Clinic-Response](Communication-Team-Reply-2-Clinic-Response.html) - Clinic reply
-* [Communication-Team-Reply-3-Pharmacy-Followup](Communication-Team-Reply-3-Pharmacy-Followup.html) - Follow-up from different team member
+* [CT-Pharmacy-A](CareTeam-CT-Pharmacy-A.html) - Pharmacy team for team-level messaging
+* [CT-Clinic-B](CareTeam-CT-Clinic-B.html) - Clinic team for team-level messaging
+* [Pharmacy-to-Clinic](CommunicationRequest-Pharmacy-to-Clinic.html) - Team-to-team thread
+* [Msg-Team-Reply-1-Initial-Message](Communication-Msg-Team-Reply-1-Initial-Message.html) - Initial message
+* [Msg-Team-Reply-2-Clinic-Response](Communication-Msg-Team-Reply-2-Clinic-Response.html) - Clinic reply
+* [Msg-Team-Reply-3-Pharmacy-Followup](Communication-Msg-Team-Reply-3-Pharmacy-Followup.html) - Follow-up from different team member
 
 For detailed analysis of the addressing solution, see [FHIR Addressing Analysis](fhir-addressing-analysis.html).
 

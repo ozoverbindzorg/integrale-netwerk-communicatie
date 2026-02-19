@@ -6,6 +6,29 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [0.5.0] - 2026-02-19
+
+### Changed
+
+#### Examples
+- **All example instances** - Removed resource type prefix from FSH Instance names to fix broken example page links:
+  - The IG Publisher generates pages as `{ResourceType}-{id}.html`. Previously, Instance names like `Patient-H-de-Boer` produced page URLs like `Patient-Patient-H-de-Boer.html` (doubled prefix), causing 404 errors from documentation links
+  - Patient instances: removed `Patient-` prefix (e.g., `Patient-H-de-Boer` → `H-de-Boer`)
+  - Practitioner instances: removed `Practitioner-` prefix (e.g., `Practitioner-Manu-van-Weel` → `Manu-van-Weel`)
+  - RelatedPerson instances: removed `RelatedPerson-` prefix (e.g., `RelatedPerson-Kees-Groot` → `Kees-Groot`)
+  - Organization instances: removed `Organization-` prefix (e.g., `Organization-Ziekenhuis-Amsterdam` → `Ziekenhuis-Amsterdam`)
+  - CareTeam instances: replaced `CareTeam-` with `CT-` prefix (e.g., `CareTeam-H-de-Boer` → `CT-H-de-Boer`)
+  - CommunicationRequest instances: removed `CommunicationRequest-` prefix (e.g., `CommunicationRequest-Thread-Example` → `Thread-Example`)
+  - Communication instances: replaced `Communication-` with `Msg-` prefix (e.g., `Communication-RelatedPerson-to-CareTeam` → `Msg-RelatedPerson-to-CareTeam`)
+  - Task instances: replaced `Task-` with `Tsk-` prefix (e.g., `Task-RelatedPerson-Example` → `Tsk-RelatedPerson-Example`)
+  - AuditEvent instances: replaced `AuditEvent-` with `AE-` prefix (e.g., `AuditEvent-System-Access` → `AE-System-Access`)
+- Removed explicit `* id` overrides from 13 instances that had numeric IDs (e.g., `* id = "1209"`) — the Instance name now serves as the id
+- Converted string-based references with numeric IDs (e.g., `"Practitioner/1208"`) to FSH `Reference()` syntax (e.g., `Reference(Marijke-van-der-Berg)`) in CareTeam and RelatedPerson examples
+- Updated all cross-references across 43 example files to use new Instance names
+
+#### Documentation
+- Updated example links in `overview.md`, `interaction-network.md`, `interaction-messaging.md`, and `auditevent-nen7510.md` to match new Instance names and generated page URLs
+
 ## [0.4.0] - 2026-02-18
 
 ### Changed
@@ -225,6 +248,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `aliases.fsh` with common system and profile aliases
 - Established FSH-first authoring workflow
 
+[0.5.0]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.2.5...v0.3.0
 [0.2.5]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.2.4...v0.2.5

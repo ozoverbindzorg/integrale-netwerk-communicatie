@@ -21,27 +21,27 @@ All resources must include two types of identifiers:
 Person resources must be created first as they form the foundation of care teams:
 
 ##### Patient Resource
-The Patient resource represents the care recipient. See example: [Patient-Jan-de-Hoop](Patient-Jan-de-Hoop.html)
+The Patient resource represents the care recipient. See example: [Jan-de-Hoop](Patient-Jan-de-Hoop.html)
 
 ##### Practitioner Resources
 Practitioners represent healthcare professionals. Examples include:
-- [Practitioner-Marijke-van-der-Berg](Practitioner-Marijke-van-der-Berg.html) (POH)
-- [Practitioner-Pieter-de-Vries](Practitioner-Pieter-de-Vries.html) (Huisarts)
-- [Practitioner-Annemiek-Jansen](Practitioner-Annemiek-Jansen.html) (Verpleegkundige)
-- [Practitioner-Johan-van-den-Berg](Practitioner-Johan-van-den-Berg.html) (Fysiotherapeut)
+- [Marijke-van-der-Berg](Practitioner-Marijke-van-der-Berg.html) (POH)
+- [Pieter-de-Vries](Practitioner-Pieter-de-Vries.html) (Huisarts)
+- [Annemiek-Jansen](Practitioner-Annemiek-Jansen.html) (Verpleegkundige)
+- [Johan-van-den-Berg](Practitioner-Johan-van-den-Berg.html) (Fysiotherapeut)
 
 ##### RelatedPerson Resources
 RelatedPersons represent family members, friends, or informal caregivers. Examples include:
-- [RelatedPerson-Maria-Groen-de-Wit](RelatedPerson-Maria-Groen-de-Wit.html) (Spouse)
-- [RelatedPerson-Thomas-Groen](RelatedPerson-Thomas-Groen.html) (Son)
-- [RelatedPerson-Jane-Groen](RelatedPerson-Jane-Groen.html) (Family member)
-- [RelatedPerson-Willem-Bakker](RelatedPerson-Willem-Bakker.html) (Friend/Informal caregiver)
+- [Maria-Groen-de-Wit](RelatedPerson-Maria-Groen-de-Wit.html) (Spouse)
+- [Thomas-Groen](RelatedPerson-Thomas-Groen.html) (Son)
+- [Jane-Groen](RelatedPerson-Jane-Groen.html) (Family member)
+- [Willem-Bakker](RelatedPerson-Willem-Bakker.html) (Friend/Informal caregiver)
 
 #### 2. Create Floating Care Teams (Optional)
-Floating care teams represent organizational units or departments without specific patient assignment. See example: [CareTeam-Department-Thuiszorg](CareTeam-Department-Thuiszorg.html)
+Floating care teams represent organizational units or departments without specific patient assignment. See example: [CT-Department-Thuiszorg](CareTeam-CT-Department-Thuiszorg.html)
 
 #### 3. Create Patient Care Teams
-Patient-specific care teams include a subject (the patient) and can include practitioners, related persons, and even other care teams. See example: [CareTeam-Jan-de-Hoop](CareTeam-Jan-de-Hoop.html)
+Patient-specific care teams include a subject (the patient) and can include practitioners, related persons, and even other care teams. See example: [CT-Jan-de-Hoop](CareTeam-CT-Jan-de-Hoop.html)
 
 ### Key Principles
 

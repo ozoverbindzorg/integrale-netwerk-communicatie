@@ -1,4 +1,4 @@
-Instance: AuditEvent-REST-Create-Example
+Instance: AE-REST-Create-Example
 InstanceOf: OZOAuditEvent
 Usage: #example
 Title: "AuditEvent - REST Create Operation"
@@ -13,7 +13,7 @@ Description: "Example of an AuditEvent for a successful REST create operation th
 * recorded = "2025-01-08T10:30:00.000+01:00"
 * outcome = #0
 * agent[0].type = http://dicom.nema.org/resources/ontology/DCM#110153 "Source Role ID"
-* agent[=].who = Reference(Practitioner-Manu-van-Weel) "Manu van Weel"
+* agent[=].who = Reference(Manu-van-Weel) "Manu van Weel"
 * agent[=].who.type = "Practitioner"
 * agent[=].requestor = true
 * source.site = "OZO AAA Proxy"

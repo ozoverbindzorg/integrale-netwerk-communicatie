@@ -1,4 +1,4 @@
-Instance: CareTeam-Pharmacy-A
+Instance: CT-Pharmacy-A
 InstanceOf: OZOCareTeam
 Usage: #example
 Title: "CareTeam Pharmacy A - Apotheek de Pil"
@@ -20,20 +20,20 @@ Description: "Example of a pharmacy team used for team-level messaging. This Car
 * category.coding.display = "Pharmacy service"
 * category.text = "Apotheek Team"
 * participant[0].member.type = #Practitioner
-* participant[0].member = Reference(Practitioner-A-P-Otheeker)
+* participant[0].member = Reference(A-P-Otheeker)
 * participant[0].member.display = "A.P. Otheeker"
 * participant[0].role.coding.system = "http://snomed.info/sct"
 * participant[0].role.coding.code = #46255001
 * participant[0].role.coding.display = "Pharmacist"
 * participant[0].role.text = "Apotheker"
 * participant[1].member.type = #Practitioner
-* participant[1].member = Reference(Practitioner-Pieter-de-Vries)
+* participant[1].member = Reference(Pieter-de-Vries)
 * participant[1].member.display = "Pieter de Vries"
 * participant[1].role.coding.system = "http://snomed.info/sct"
 * participant[1].role.coding.code = #46255001
 * participant[1].role.coding.display = "Pharmacist"
 * participant[1].role.text = "Apotheker"
 * managingOrganization.type = #Organization
-* managingOrganization = Reference(Organization-Apotheek-de-Pil)
+* managingOrganization = Reference(Apotheek-de-Pil)
 * managingOrganization.display = "Apotheek de Pil"
 * note.text = "Team voor apotheek de Pil - gebruikt voor team-level messaging"

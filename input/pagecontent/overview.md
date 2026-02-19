@@ -41,7 +41,7 @@ is primary identified by the BSN. Required fields:
 The identifier of the `Patient` _must_ be unique and _should_ the internal identifier of the patient in the OZO system.
 
 ##### Examples
-* [Patient-H-de-Boer](Patient-H-de-Boer.html)
+* [H-de-Boer](Patient-H-de-Boer.html)
 
 #### Related Person
 
@@ -74,7 +74,7 @@ The OZO FHIR `RelatedPerson` uses two identities to identify the RelatedPerson e
    and the patient.
 
 ##### Examples
-* [RelatedPerson-Kees-Groot](RelatedPerson-Kees-Groot.html)
+* [Kees-Groot](RelatedPerson-Kees-Groot.html)
 
 #### Practitioner
 
@@ -97,9 +97,9 @@ The identifier of the `Practitioner` _must_ be unique and _should_ be the intern
 system.
 
 ##### Examples
-* [Practitioner-Manu-van-Weel](Practitioner-Manu-van-Weel.html)
-* [Practitioner-Mark-Benson](Practitioner-Mark-Benson.html)
-* [Practitioner-A-P-Otheeker](Practitioner-A-P-Otheeker.html)
+* [Manu-van-Weel](Practitioner-Manu-van-Weel.html)
+* [Mark-Benson](Practitioner-Mark-Benson.html)
+* [A-P-Otheeker](Practitioner-A-P-Otheeker.html)
 
 #### CareTeam
 
@@ -119,7 +119,7 @@ the `Patient` to different `Organization`s
 
 
 ##### Examples
-* [CareTeam-H-de-Boer](CareTeam-H-de-Boer.html)
+* [CT-H-de-Boer](CareTeam-CT-H-de-Boer.html)
 
 #### Organization
 
@@ -138,10 +138,10 @@ For details on directory participation and identifier requirements, see the [Car
 
 ##### Examples
 
-* [Organization-Ziekenhuis-Amsterdam](Organization-Ziekenhuis-Amsterdam.html)
-* [Organization-Ziekenhuis-Amsterdam-2](Organization-Ziekenhuis-Amsterdam-2.html)
-* [Organization-Huisarts-Amsterdam](Organization-Huisarts-Amsterdam.html)
-* [Organization-Apotheek-de-Pil](Organization-Apotheek-de-Pil.html)
+* [Ziekenhuis-Amsterdam](Organization-Ziekenhuis-Amsterdam.html)
+* [Ziekenhuis-Amsterdam-2](Organization-Ziekenhuis-Amsterdam-2.html)
+* [Huisarts-Amsterdam](Organization-Huisarts-Amsterdam.html)
+* [Apotheek-de-Pil](Organization-Apotheek-de-Pil.html)
 
 ### Diagram
 {::nomarkdown}
@@ -194,8 +194,8 @@ The `CommunicationRequest` supports team-level messaging through the `sender` fi
 When replying to a team-level thread, read the `CareTeam` from `CommunicationRequest.sender` to determine the reply recipient.
 
 ##### Examples
-* [CommunicationRequest-Thread-Example](CommunicationRequest-Thread-Example.html) - Individual-to-CareTeam messaging
-* [CommunicationRequest-Pharmacy-to-Clinic](CommunicationRequest-Pharmacy-to-Clinic.html) - Team-to-team messaging
+* [Thread-Example](CommunicationRequest-Thread-Example.html) - Individual-to-CareTeam messaging
+* [Pharmacy-to-Clinic](CommunicationRequest-Pharmacy-to-Clinic.html) - Team-to-team messaging
 
 #### Communication
 
@@ -222,10 +222,10 @@ The `Communication.sender` must always be an individual (`Practitioner` or `Rela
 
 ##### Examples
 
-* [Communication-RelatedPerson-to-CareTeam](Communication-RelatedPerson-to-CareTeam.html) - Individual to team
-* [Communication-Team-Reply-1-Initial-Message](Communication-Team-Reply-1-Initial-Message.html) - Team messaging: initial message
-* [Communication-Team-Reply-2-Clinic-Response](Communication-Team-Reply-2-Clinic-Response.html) - Team messaging: reply
-* [Communication-Team-Reply-3-Pharmacy-Followup](Communication-Team-Reply-3-Pharmacy-Followup.html) - Team messaging: different team member follows up
+* [Msg-RelatedPerson-to-CareTeam](Communication-Msg-RelatedPerson-to-CareTeam.html) - Individual to team
+* [Msg-Team-Reply-1-Initial-Message](Communication-Msg-Team-Reply-1-Initial-Message.html) - Team messaging: initial message
+* [Msg-Team-Reply-2-Clinic-Response](Communication-Msg-Team-Reply-2-Clinic-Response.html) - Team messaging: reply
+* [Msg-Team-Reply-3-Pharmacy-Followup](Communication-Msg-Team-Reply-3-Pharmacy-Followup.html) - Team messaging: different team member follows up
 
 ##### Attachment
 
@@ -252,9 +252,9 @@ The `Task` resource is used to:
 | owner   | 1..1        | a reference to a `RelatedPerson` or `Practitioner` |
 
 ##### Examples
-* [Task-RelatedPerson-Example](Task-RelatedPerson-Example.html)
-* [Task-Practitioner-Manu-Example](Task-Practitioner-Manu-Example.html)
-* [Task-Practitioner-Mark-Example](Task-Practitioner-Mark-Example.html)
+* [Tsk-RelatedPerson-Example](Task-Tsk-RelatedPerson-Example.html)
+* [Tsk-Practitioner-Manu-Example](Task-Tsk-Practitioner-Manu-Example.html)
+* [Tsk-Practitioner-Mark-Example](Task-Tsk-Practitioner-Mark-Example.html)
 
 #### AuditEvent
 
@@ -267,13 +267,13 @@ The `AuditEvent` is used to:
 For detailed information about NEN7510 compliance and audit logging, see [AuditEvent for NEN7510 Compliance](auditevent-nen7510.html).
 
 ##### Examples
-* [AuditEvent-Practitioner-Manu-Access](AuditEvent-Practitioner-Manu-Access.html)
-* [AuditEvent-Practitioner-Mark-Access](AuditEvent-Practitioner-Mark-Access.html)
-* [AuditEvent-RelatedPerson-Access](AuditEvent-RelatedPerson-Access.html)
-* [AuditEvent-REST-Create-Example](AuditEvent-REST-Create-Example.html)
-* [AuditEvent-REST-Search-Example](AuditEvent-REST-Search-Example.html)
-* [AuditEvent-REST-Update-Failure](AuditEvent-REST-Update-Failure.html)
-* [AuditEvent-System-Access](AuditEvent-System-Access.html)
+* [AE-Practitioner-Manu-Access](AuditEvent-AE-Practitioner-Manu-Access.html)
+* [AE-Practitioner-Mark-Access](AuditEvent-AE-Practitioner-Mark-Access.html)
+* [AE-RelatedPerson-Access](AuditEvent-AE-RelatedPerson-Access.html)
+* [AE-REST-Create-Example](AuditEvent-AE-REST-Create-Example.html)
+* [AE-REST-Search-Example](AuditEvent-AE-REST-Search-Example.html)
+* [AE-REST-Update-Failure](AuditEvent-AE-REST-Update-Failure.html)
+* [AE-System-Access](AuditEvent-AE-System-Access.html)
 
 ### Subscriptions
 

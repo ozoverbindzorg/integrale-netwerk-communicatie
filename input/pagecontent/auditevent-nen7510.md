@@ -65,19 +65,19 @@ The OZO AuditEvent profile extends the base FHIR AuditEvent with specific constr
 The following examples demonstrate various AuditEvent scenarios in the OZO AAA Proxy:
 
 #### Practitioner Access Events
-* [AuditEvent-Practitioner-Manu-Access](AuditEvent-Practitioner-Manu-Access.html) - Practitioner accessing Communication resources
-* [AuditEvent-Practitioner-Mark-Access](AuditEvent-Practitioner-Mark-Access.html) - Another Practitioner access example
+* [AE-Practitioner-Manu-Access](AuditEvent-AE-Practitioner-Manu-Access.html) - Practitioner accessing Communication resources
+* [AE-Practitioner-Mark-Access](AuditEvent-AE-Practitioner-Mark-Access.html) - Another Practitioner access example
 
 #### RelatedPerson Access Events
-* [AuditEvent-RelatedPerson-Access](AuditEvent-RelatedPerson-Access.html) - RelatedPerson accessing Communication resources
+* [AE-RelatedPerson-Access](AuditEvent-AE-RelatedPerson-Access.html) - RelatedPerson accessing Communication resources
 
 #### REST Operation Events
-* [AuditEvent-REST-Create-Example](AuditEvent-REST-Create-Example.html) - Successful REST create operation
-* [AuditEvent-REST-Search-Example](AuditEvent-REST-Search-Example.html) - REST search operation
-* [AuditEvent-REST-Update-Failure](AuditEvent-REST-Update-Failure.html) - Failed update operation with authorization error
+* [AE-REST-Create-Example](AuditEvent-AE-REST-Create-Example.html) - Successful REST create operation
+* [AE-REST-Search-Example](AuditEvent-AE-REST-Search-Example.html) - REST search operation
+* [AE-REST-Update-Failure](AuditEvent-AE-REST-Update-Failure.html) - Failed update operation with authorization error
 
 #### System Access Events
-* [AuditEvent-System-Access](AuditEvent-System-Access.html) - System-to-system access using DID identifiers
+* [AE-System-Access](AuditEvent-AE-System-Access.html) - System-to-system access using DID identifiers
 
 ### Implementation Details
 

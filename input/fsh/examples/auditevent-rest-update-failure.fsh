@@ -1,4 +1,4 @@
-Instance: AuditEvent-REST-Update-Failure
+Instance: AE-REST-Update-Failure
 InstanceOf: OZOAuditEvent
 Usage: #example
 Title: "AuditEvent - REST Update Operation Failure"
@@ -14,7 +14,7 @@ Description: "Example of an AuditEvent for a failed REST update operation throug
 * outcome = #4
 * outcomeDesc = "HTTP 403 Forbidden - User not authorized to update this resource"
 * agent[0].type = http://dicom.nema.org/resources/ontology/DCM#110153 "Source Role ID"
-* agent[=].who = Reference(RelatedPerson-Kees-Groot) "Kees Groot"
+* agent[=].who = Reference(Kees-Groot) "Kees Groot"
 * agent[=].who.type = "RelatedPerson"
 * agent[=].requestor = true
 * source.site = "OZO AAA Proxy"

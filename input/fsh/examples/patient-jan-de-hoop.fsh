@@ -1,8 +1,7 @@
-Instance: Patient-Jan-de-Hoop
+Instance: Jan-de-Hoop
 InstanceOf: OZOPatient
 Usage: #example
 * meta.profile = "http://ozoverbindzorg.nl/fhir/StructureDefinition/OZOPatient"
-* id = "747"
 * meta.versionId = "1"
 * meta.lastUpdated = "2025-04-17T07:45:03.488+00:00"
 * identifier[ozoPersonId].system = "https://www.ozoverbindzorg.nl/namingsystem/ozo/person"

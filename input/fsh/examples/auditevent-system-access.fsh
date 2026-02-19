@@ -1,4 +1,4 @@
-Instance: AuditEvent-System-Access
+Instance: AE-System-Access
 InstanceOf: OZOAuditEvent
 Usage: #example
 Title: "AuditEvent - System Access"

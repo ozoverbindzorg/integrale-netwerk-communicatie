@@ -1,4 +1,4 @@
-Instance: CareTeam-Clinic-B
+Instance: CT-Clinic-B
 InstanceOf: OZOCareTeam
 Usage: #example
 Title: "CareTeam Clinic B - Huisarts Amsterdam"
@@ -20,27 +20,27 @@ Description: "Example of a clinic team used for team-level messaging. This CareT
 * category.coding.display = "General medicine"
 * category.text = "Huisarts Team"
 * participant[0].member.type = #Practitioner
-* participant[0].member = Reference(Practitioner-Manu-van-Weel)
+* participant[0].member = Reference(Manu-van-Weel)
 * participant[0].member.display = "Manu van Weel"
 * participant[0].role.coding.system = "http://snomed.info/sct"
 * participant[0].role.coding.code = #62247001
 * participant[0].role.coding.display = "General practitioner"
 * participant[0].role.text = "Huisarts"
 * participant[1].member.type = #Practitioner
-* participant[1].member = Reference(Practitioner-Mark-Benson)
+* participant[1].member = Reference(Mark-Benson)
 * participant[1].member.display = "Mark Benson"
 * participant[1].role.coding.system = "http://snomed.info/sct"
 * participant[1].role.coding.code = #62247001
 * participant[1].role.coding.display = "General practitioner"
 * participant[1].role.text = "Huisarts"
 * participant[2].member.type = #Practitioner
-* participant[2].member = Reference(Practitioner-Johan-van-den-Berg)
+* participant[2].member = Reference(Johan-van-den-Berg)
 * participant[2].member.display = "Johan van den Berg"
 * participant[2].role.coding.system = "http://snomed.info/sct"
 * participant[2].role.coding.code = #224535009
 * participant[2].role.coding.display = "Registered nurse"
 * participant[2].role.text = "Praktijkondersteuner"
 * managingOrganization.type = #Organization
-* managingOrganization = Reference(Organization-Huisarts-Amsterdam)
+* managingOrganization = Reference(Huisarts-Amsterdam)
 * managingOrganization.display = "Huisarts Amsterdam"
 * note.text = "Team voor Huisarts Amsterdam - gebruikt voor team-level messaging"

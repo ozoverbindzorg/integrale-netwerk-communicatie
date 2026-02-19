@@ -1,4 +1,4 @@
-Instance: Communication-Team-Reply-1-Initial-Message
+Instance: Msg-Team-Reply-1-Initial-Message
 InstanceOf: OZOCommunication
 Usage: #example
 Title: "Team Messaging: Initial Message from Pharmacy"
@@ -6,13 +6,13 @@ Description: "First message in the thread - the initial question from the pharma
 * meta.profile = "http://ozoverbindzorg.nl/fhir/StructureDefinition/OZOCommunication"
 * meta.versionId = "1"
 * meta.lastUpdated = "2025-12-04T09:00:00.000+00:00"
-* partOf = Reference(CommunicationRequest-Pharmacy-to-Clinic)
+* partOf = Reference(Pharmacy-to-Clinic)
 * partOf.type = "CommunicationRequest"
 * status = #completed
-* sender = Reference(Practitioner-A-P-Otheeker)
+* sender = Reference(A-P-Otheeker)
 * sender.type = "Practitioner"
 * sender.display = "A.P. Otheeker"
-* recipient = Reference(CareTeam-Clinic-B)
+* recipient = Reference(CT-Clinic-B)
 * recipient.type = "CareTeam"
 * recipient.display = "Huisarts Amsterdam - Team"
 * payload.contentString = "Beste collega's, kunnen jullie de medicatielijst van deze patiënt controleren op mogelijke interacties? We hebben een nieuw recept ontvangen voor bloedverdunners."

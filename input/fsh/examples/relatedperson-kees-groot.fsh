@@ -1,4 +1,4 @@
-Instance: RelatedPerson-Kees-Groot
+Instance: Kees-Groot
 InstanceOf: OZORelatedPerson
 Usage: #example
 * meta.profile = "http://ozoverbindzorg.nl/fhir/StructureDefinition/OZORelatedPerson"
@@ -12,7 +12,7 @@ Usage: #example
 * identifier[email].system = "https://www.ozoverbindzorg.nl/namingsystem/email"
 * identifier[email].value = "info@example.com"
 * active = true
-* patient = Reference(Patient-H-de-Boer) "H. de Boer"
+* patient = Reference(H-de-Boer) "H. de Boer"
 * patient.type = "Patient"
 * relationship = urn:oid:2.16.840.1.113883.5.111#SONC "Son"
 * name.text = "Kees Groot"

@@ -1,4 +1,4 @@
-Instance: AuditEvent-REST-Search-Example
+Instance: AE-REST-Search-Example
 InstanceOf: OZOAuditEvent
 Usage: #example
 Title: "AuditEvent - REST Search Operation"
@@ -13,7 +13,7 @@ Description: "Example of an AuditEvent for a REST search operation through OZO A
 * recorded = "2025-01-08T10:35:00.000+01:00"
 * outcome = #0
 * agent[0].type = http://dicom.nema.org/resources/ontology/DCM#110153 "Source Role ID"
-* agent[=].who = Reference(RelatedPerson-Kees-Groot) "Kees Groot"
+* agent[=].who = Reference(Kees-Groot) "Kees Groot"
 * agent[=].who.type = "RelatedPerson"
 * agent[=].requestor = true
 * source.site = "OZO AAA Proxy"

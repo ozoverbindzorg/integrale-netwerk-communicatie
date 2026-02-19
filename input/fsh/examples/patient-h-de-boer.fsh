@@ -1,4 +1,4 @@
-Instance: Patient-H-de-Boer
+Instance: H-de-Boer
 InstanceOf: OZOPatient
 Usage: #example
 * meta.profile = "http://ozoverbindzorg.nl/fhir/StructureDefinition/OZOPatient"

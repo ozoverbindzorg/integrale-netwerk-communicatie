@@ -1,4 +1,4 @@
-Instance: CommunicationRequest-Pharmacy-to-Clinic
+Instance: Pharmacy-to-Clinic
 InstanceOf: OZOCommunicationRequest
 Usage: #example
 Title: "Team-to-Team CommunicationRequest: Pharmacy to Clinic"
@@ -7,11 +7,11 @@ Description: "Example of a team-to-team CommunicationRequest where a pharmacy se
 * meta.versionId = "1"
 * meta.lastUpdated = "2025-12-04T09:00:00.000+00:00"
 * status = #active
-* subject = Reference(Patient-H-de-Boer) "H. de Boer"
+* subject = Reference(H-de-Boer) "H. de Boer"
 * subject.type = "Patient"
-* requester = Reference(Practitioner-A-P-Otheeker)
+* requester = Reference(A-P-Otheeker)
 * requester.type = "Practitioner"
-* extension[senderCareTeam].valueReference = Reference(CareTeam-Pharmacy-A)
-* recipient = Reference(CareTeam-Clinic-B)
+* extension[senderCareTeam].valueReference = Reference(CT-Pharmacy-A)
+* recipient = Reference(CT-Clinic-B)
 * recipient.type = "CareTeam"
 * payload[0].contentString = "Beste collega's, kunnen jullie de medicatielijst van deze patiënt controleren op mogelijke interacties? We hebben een nieuw recept ontvangen voor bloedverdunners."
