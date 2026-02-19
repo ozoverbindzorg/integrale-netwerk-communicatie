@@ -8,9 +8,13 @@ echo "Building OZO Implementation Guide using Docker..."
 # Configuration
 IMAGE_NAME=${IMAGE_NAME:-ozoverbindzorg/publisher:latest}
 
-# Pull latest image
-echo "Pulling Docker image: $IMAGE_NAME"
-docker pull "$IMAGE_NAME"
+# Build the Docker image if it doesn't exist or if --build is passed
+if [[ "$1" == "--build" ]] || ! docker image inspect "$IMAGE_NAME" &>/dev/null; then
+  echo "Building Docker image: $IMAGE_NAME"
+  docker build -t "$IMAGE_NAME" .
+else
+  echo "Using existing Docker image: $IMAGE_NAME"
+fi
 
 # Create output directories
 mkdir -p ./public ./output
