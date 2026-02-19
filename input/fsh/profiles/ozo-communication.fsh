@@ -3,7 +3,6 @@ Parent: Communication
 Id: ozo-communication
 Title: "OZO Communication"
 Description: "Communication profile for the OZO platform. Represents messages exchanged within the care network, linking to threads via CommunicationRequest."
-* ^version = "1.0.0"
 * ^url = "http://ozoverbindzorg.nl/fhir/StructureDefinition/OZOCommunication"
 * ^name = "OZOCommunication"
 * ^description = "Communication profile for the OZO platform. Represents messages exchanged within the care network, linking to threads via CommunicationRequest."

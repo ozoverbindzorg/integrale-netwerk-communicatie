@@ -6,6 +6,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [0.5.1] - 2026-02-19
+
+### Changed
+
+#### Profiles
+- **All 9 OZO profiles** - Removed individual `^version` overrides (values like "0.2.1", "1.0.0", "2.0.0") that were misleading. The IG Publisher sets `StructureDefinition.version` to the IG package version from `sushi-config.yaml`, making per-profile version overrides redundant. All profiles now consistently report the IG version.
+
+#### Documentation
+- **HAPI Installation Guide** - Major update:
+  - Added **Version Discovery** section documenting how to find the active OZO IG version on a HAPI FHIR server via StructureDefinition queries and ImplementationGuide resource
+  - Updated all version references from v0.1.0 to v0.5.1
+  - Added `fhir.nl.gf` v0.3.0 to the package dependencies table with manual installation note
+  - Added `ImplementationGuide` and `StructureDefinition` to the recommended `supported_resource_types` configuration
+  - Documented known HAPI limitation: CapabilityStatement does not auto-populate `implementationGuide` field
+
 ## [0.5.0] - 2026-02-19
 
 ### Changed
@@ -248,6 +263,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `aliases.fsh` with common system and profile aliases
 - Established FSH-first authoring workflow
 
+[0.5.1]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.5.0...v0.5.1
 [0.5.0]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.2.5...v0.3.0

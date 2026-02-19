@@ -3,7 +3,6 @@ Parent: Patient
 Id: ozo-patient
 Title: "OZO Patient"
 Description: "Patient profile for the OZO platform. Represents the client/patient who is the subject of care coordination between healthcare professionals and informal caregivers."
-* ^version = "0.2.1"
 * ^url = "http://ozoverbindzorg.nl/fhir/StructureDefinition/OZOPatient"
 * ^name = "OZOPatient"
 * ^description = "Patient profile for the OZO platform. Represents the client/patient who is the subject of care coordination between healthcare professionals and informal caregivers."

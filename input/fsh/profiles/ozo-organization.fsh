@@ -3,7 +3,6 @@ Parent: NlGfOrganization
 Id: ozo-organization
 Title: "OZO Organization"
 Description: "Organization profile for the OZO platform. Extends the NL Generic Functions Organization profile (nl-gf-organization) for mCSD care services directory compliance. Represents healthcare organizations (hospitals, pharmacies, general practices) that employ practitioners in the care network."
-* ^version = "2.0.0"
 * ^url = "http://ozoverbindzorg.nl/fhir/StructureDefinition/OZOOrganization"
 * ^name = "OZOOrganization"
 * ^description = "Organization profile for the OZO platform. Extends the NL Generic Functions Organization profile (nl-gf-organization) for mCSD care services directory compliance. Represents healthcare organizations (hospitals, pharmacies, general practices) that employ practitioners in the care network."

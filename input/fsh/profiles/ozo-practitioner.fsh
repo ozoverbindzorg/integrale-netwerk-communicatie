@@ -3,7 +3,6 @@ Parent: NlGfPractitioner
 Id: ozo-practitioner
 Title: "OZO Practitioner"
 Description: "Practitioner profile for the OZO platform. Extends the NL Generic Functions Practitioner profile for care services directory compliance. Represents healthcare professionals who are part of the patient's care team."
-* ^version = "2.0.0"
 * ^url = "http://ozoverbindzorg.nl/fhir/StructureDefinition/OZOPractitioner"
 * ^name = "OZOPractitioner"
 * ^description = "Practitioner profile for the OZO platform. Extends the NL Generic Functions Practitioner profile for care services directory compliance. Represents healthcare professionals who are part of the patient's care team."
