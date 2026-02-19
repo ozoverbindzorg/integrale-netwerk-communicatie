@@ -47,7 +47,7 @@ This script will:
 
 ```bash
 # Set the image name (or use default)
-IMAGE_NAME=ghcr.io/ozoverbindzorg/integrale-netwerk-communicatie/publisher:latest
+IMAGE_NAME=ozoverbindzorg/publisher:latest
 
 # Pull the latest image
 docker pull $IMAGE_NAME
@@ -107,7 +107,7 @@ The build process creates a complete Implementation Guide:
 - **Usage**: Can be installed on FHIR servers (e.g., HAPI FHIR) using:
   ```bash
   # Example with Firely Terminal
-  fhir install output/fhir.ozo-0.1.0.tgz
+  fhir install output/fhir.ozo-0.5.1.tgz
   ```
 - **Contents**: All FHIR profiles, examples, ValueSets, CodeSystems, and StructureDefinitions
 
@@ -148,7 +148,7 @@ ozo-implementation-guide/
 │   │   │   ├── ozo-communicationrequest.fsh
 │   │   │   ├── ozo-task.fsh
 │   │   │   └── ozo-auditevent.fsh
-│   │   ├── instances/         # Example resources
+│   │   ├── examples/          # Example resource instances
 │   │   └── aliases.fsh        # Common aliases
 │   ├── pagecontent/           # Markdown documentation pages
 │   │   ├── index.md
@@ -197,7 +197,7 @@ The Makefile is designed to run inside the Docker container. To get an interacti
 ```bash
 docker run -it --entrypoint /bin/bash \
   -v "${PWD}:/src" \
-  ghcr.io/ozoverbindzorg/integrale-netwerk-communicatie/publisher:latest
+  ozoverbindzorg/publisher:latest
 ```
 
 Inside the container, you can use:
@@ -253,7 +253,7 @@ gofsh --useFHIRVersion=4.0.1 examples/ --out input/fsh/
 2. **Add example instances**:
    - Create JSON in `examples/` directory
    - Run `make update-examples` (inside container) to convert to FSH
-   - Review and edit generated FSH in `input/fsh/instances/`
+   - Review and edit generated FSH in `input/fsh/examples/`
    - Build to validate
 
 3. **Add documentation pages**:
@@ -289,7 +289,7 @@ For faster iteration, you can work inside an interactive container session:
 # Start interactive session
 docker run -it --entrypoint /bin/bash \
   -v "${PWD}:/src" \
-  ghcr.io/ozoverbindzorg/integrale-netwerk-communicatie/publisher:latest
+  ozoverbindzorg/publisher:latest
 
 # Inside container: make changes and build
 vim input/fsh/profiles/ozo-patient.fsh
@@ -303,7 +303,8 @@ make build     # Full build
 - **FHIR R4** (4.0.1)
 
 ### Dependencies
-- **NL-core profiles** v0.11.0-beta.1 - Dutch healthcare localization (Nictiz)
+- **NL-core profiles** v0.12.0-beta.4 - Dutch healthcare localization (Nictiz)
+- **NL Generic Functions** v0.3.0 - Care services directory (Nuts Foundation)
 - **HL7 FHIR Core** - Base FHIR R4 specification
 
 ### Security & Compliance Standards
@@ -383,7 +384,7 @@ This repository uses GitHub Actions for continuous integration and deployment.
 docker build --no-cache -t ozo-ig-builder .
 
 # Or pull latest pre-built image
-docker pull ghcr.io/ozoverbindzorg/integrale-netwerk-communicatie/publisher:latest
+docker pull ozoverbindzorg/publisher:latest
 ```
 
 ### FSH Validation Errors
@@ -395,7 +396,7 @@ docker pull ghcr.io/ozoverbindzorg/integrale-netwerk-communicatie/publisher:late
 # Inside container, run validation
 docker run -it --entrypoint /bin/bash \
   -v "${PWD}:/src" \
-  ghcr.io/ozoverbindzorg/integrale-netwerk-communicatie/publisher:latest
+  ozoverbindzorg/publisher:latest
 
 # Then inside container
 make validate
@@ -418,7 +419,7 @@ make validate
 ```bash
 # Increase Docker memory limits
 docker run --memory="4g" --rm -v "${PWD}:/src" \
-  ghcr.io/ozoverbindzorg/integrale-netwerk-communicatie/publisher:latest
+  ozoverbindzorg/publisher:latest
 ```
 
 ### Volume Mounting Issues

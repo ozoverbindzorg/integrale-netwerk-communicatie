@@ -55,9 +55,9 @@ plantuml -o ../images/ -tsvg ./input/images-source/*.plantuml
 
 ### Content Organization
 
-**input/fsh/input/fsh/**: FHIR Shorthand definitions
+**input/fsh/**: FHIR Shorthand definitions
 - `profiles/`: FHIR profile definitions (e.g., OZOAuditEvent for NEN7510 compliance)
-- `instances/`: Example resources (patients, practitioners, organizations, care teams, communications, tasks, audit events)
+- `examples/`: Example resource instances (patients, practitioners, organizations, care teams, communications, tasks, audit events)
 - `aliases.fsh`: Common aliases for code systems and profiles
 
 **input/pagecontent/**: Markdown documentation pages (automatically included in the IG)
@@ -98,7 +98,8 @@ The IG extensively documents:
 ### Dependencies
 
 - **FHIR Version**: 4.0.1
-- **NL-core profiles**: nictiz.fhir.nl.r4.nl-core v0.11.0-beta.1 (Dutch localization)
+- **NL-core profiles**: nictiz.fhir.nl.r4.nl-core v0.12.0-beta.4 (Dutch localization)
+- **NL Generic Functions**: fhir.nl.gf v0.3.0 (care services directory, Nuts Foundation)
 - **Nuts**: Dutch healthcare authentication/authorization network
 
 ## Development Notes
@@ -139,7 +140,7 @@ Do not commit these directories to version control (they are in .gitignore).
 
 1. Create JSON in `examples/` directory following existing patterns
 2. Run `make update-examples` to generate FSH
-3. Review and edit the generated FSH in `input/fsh/input/fsh/instances/`
+3. Review and edit the generated FSH in `input/fsh/examples/`
 4. Build the IG to validate
 
 ### Adding a New Documentation Page
@@ -151,11 +152,11 @@ Do not commit these directories to version control (they are in .gitignore).
 
 ### Modifying the OZOAuditEvent Profile
 
-The profile is in `input/fsh/input/fsh/profiles/ozo-auditevent.fsh`. It includes:
+The profile is in `input/fsh/profiles/ozo-auditevent.fsh`. It includes:
 - Custom extensions for W3C Trace Context (trace-id, span-id)
 - Resource origin tracking
 - ValueSets for audit event types aligned with NEN7510
-- Examples in `input/fsh/input/fsh/instances/auditevent-*.fsh`
+- Examples in `input/fsh/examples/auditevent-*.fsh`
 
 ### Creating Diagrams
 
