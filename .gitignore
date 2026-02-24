@@ -26,3 +26,4 @@ __pycache__/
 .claude
 /template
 /package.json
+/input/images/*.svg
