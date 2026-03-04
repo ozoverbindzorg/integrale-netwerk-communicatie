@@ -6,6 +6,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [0.5.2] - 2026-03-04
+
+### Added
+
+#### Documentation
+- **mTLS Walkthrough** - Added "Using mTLS with a browser" section covering:
+  - PKCS#12 certificate conversion from PEM files (with macOS LibreSSL workaround)
+  - Browser import instructions for macOS (Safari/Chrome/Edge, Firefox), Windows (Chrome/Edge, Firefox), and Linux (Chrome, Firefox)
+  - CA trust configuration for untrusted certificates
+  - Command-line import via `security` tool on macOS
+  - curl alternatives for direct endpoint access (including Homebrew curl and PKCS#12 usage on macOS)
+
+### Fixed
+
+#### Documentation
+- **mTLS Walkthrough** - Removed stray backticks at the start of the file
+
 ## [0.5.1] - 2026-02-19
 
 ### Changed
@@ -263,6 +280,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `aliases.fsh` with common system and profile aliases
 - Established FSH-first authoring workflow
 
+[0.5.2]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.5.1...v0.5.2
 [0.5.1]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.5.0...v0.5.1
 [0.5.0]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.3.0...v0.4.0

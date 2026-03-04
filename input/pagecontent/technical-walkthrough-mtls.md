@@ -184,3 +184,104 @@ Explanation:
 * `f.ssl.client_cert` in `f.ssl.client_key`: Set the client certificate and private key required for mTLS authentication.
 * `f.ssl.ca_file`: Sets the CA certificate to authenticate the server.
 * Error handling: There are specific errors for SSL authentication (Faraday::SSLError) and connection problems (Faraday::ConnectionFailed), so you can quickly identify problems.
+
+### Using mTLS with a browser
+
+To access mTLS-protected endpoints (such as Swagger UI or FHIR API docs) from a browser, you need to import the client certificate as a PKCS#12 (.p12) file.
+
+#### Step 1: Convert your certificate to PKCS#12
+
+Combine the signed client certificate, the private key, and optionally the CA certificate into a single `.p12` file.
+
+**Linux / Windows:**
+```bash
+openssl pkcs12 -export -out client.p12 -inkey client.key -in client.crt -certfile ca.crt
+```
+
+**macOS:** The default macOS `openssl` (LibreSSL) produces PKCS#12 files that Keychain Access may not recognise. Use the `-legacy` flag or install OpenSSL via Homebrew:
+
+```bash
+# Option A: use the -legacy flag (works with OpenSSL 3.x installed via Homebrew)
+openssl pkcs12 -export -legacy -out client.p12 -inkey client.key -in client.crt -certfile ca.crt
+
+# Option B: if you only have the built-in LibreSSL, -legacy is not needed
+/usr/bin/openssl pkcs12 -export -out client.p12 -inkey client.key -in client.crt -certfile ca.crt
+```
+
+You will be prompted to set an export password. Remember this password for the import step.
+
+#### Step 2: Import into your browser
+
+##### macOS (Safari / Chrome / Edge)
+
+Chrome, Safari, and Edge on macOS all use the system Keychain. You only need to import the certificate once.
+
+1. Double-click the `client.p12` file — this opens **Keychain Access**
+2. Enter your macOS account password if prompted to allow the modification
+3. Enter the export password you set in Step 1
+4. The certificate will appear under **login > My Certificates**
+5. Verify the import: in Keychain Access, select **My Certificates** in the sidebar and confirm the certificate shows a disclosure triangle with a private key attached
+
+If the certificate shows as "untrusted", you can optionally trust the CA:
+1. Also import the `ca.crt` file into Keychain Access (drag and drop or **File > Import Items**)
+2. Double-click the imported CA certificate
+3. Expand **Trust** and set **When using this certificate** to **Always Trust**
+4. Close the dialog and enter your macOS password to confirm
+
+Alternatively, import via the command line:
+```bash
+security import client.p12 -k ~/Library/Keychains/login.keychain-db -P "your-export-password" -T /usr/bin/security
+```
+
+##### macOS — Firefox
+
+Firefox on macOS has its **own** certificate store and does not use the system Keychain:
+1. Go to `about:preferences#privacy`
+2. Scroll down to **Certificates** and click **View Certificates**
+3. Go to the **Your Certificates** tab
+4. Click **Import**, select the `client.p12` file, and enter the export password
+
+##### Windows — Chrome / Edge
+
+1. Go to `chrome://settings/certificates` (or **Settings > Privacy and Security > Security > Manage certificates**)
+2. Click **Import**
+3. Select the `client.p12` file and enter the export password
+4. The certificate will appear under **Your certificates**
+
+##### Windows — Firefox
+
+Same as macOS Firefox: `about:preferences#privacy` > **View Certificates** > **Your Certificates** > **Import**.
+
+##### Linux — Chrome
+
+1. Go to `chrome://settings/certificates`
+2. Go to the **Your certificates** tab
+3. Click **Import**, select the `client.p12` file, and enter the export password
+
+##### Linux — Firefox
+
+Same as macOS Firefox: `about:preferences#privacy` > **View Certificates** > **Your Certificates** > **Import**.
+
+#### Step 3: Browse to the mTLS-protected endpoint
+
+Navigate to the mTLS-protected URL (e.g., `https://fhir.staging.ozo.headease.nl/swagger-ui/index.html`). The browser will prompt you to select a client certificate. Choose the certificate you just imported.
+
+**macOS tip:** If the browser does not prompt for a certificate, try restarting the browser after importing. Safari sometimes requires a full restart to pick up newly added client certificates from the Keychain.
+
+#### Using curl as an alternative
+
+If browser configuration is not practical, you can use `curl` to access the endpoints directly:
+
+```bash
+curl --cert client.crt --key client.key https://fhir.staging.ozo.headease.nl/swagger-ui/index.html
+```
+
+**macOS note:** The built-in `/usr/bin/curl` uses Apple's Secure Transport and may not support PEM files directly. Use Homebrew's curl or specify a `.p12` file instead:
+
+```bash
+# Using Homebrew curl (recommended)
+/opt/homebrew/opt/curl/bin/curl --cert client.crt --key client.key https://fhir.staging.ozo.headease.nl/swagger-ui/index.html
+
+# Using built-in curl with PKCS#12
+curl --cert client.p12:export-password https://fhir.staging.ozo.headease.nl/swagger-ui/index.html
+```
