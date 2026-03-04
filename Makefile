@@ -96,8 +96,6 @@ convert-ig-minimal:
 pack-minimal:
 	@echo "Creating minimal FHIR package with snapshots retained..."
 	@mkdir -p output-minimal
-	@echo "Restoring package dependencies..."
-	$(FHIR) restore
 	@echo "Copying FHIR resources from output to output-minimal..."
 	@find output -name "*.json" -type f -not -name "*usage-stats*" -not -name "*qa*" -not -name "*manifest*" -not -name "*fragment*" -not -name "*canonicals*" -not -name "*list*" -not -name "*expansions*" -exec cp {} output-minimal/ \;
 	@echo "Stripping narratives and mappings from FHIR resources (keeping snapshots)..."
