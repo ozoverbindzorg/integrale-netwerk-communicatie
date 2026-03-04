@@ -1,7 +1,9 @@
-| Version | Date | Changes |
-|---------|------|---------|
-| 1.1 | 2026-03-04 | Migrated to Google CA Service (HSM-backed), switched from RSA-4096 to EC prime256v1, added environment-specific endpoints and configuration, fixed code examples |
-| 1.0 | 2024-12-01 | Initial version |
+### Changelog
+
+| Version | Date       | Changes                                                                                                                                                          |
+|---------|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 1.1     | 2026-03-04 | Migrated to Google CA Service (HSM-backed), switched from RSA-4096 to EC prime256v1, added environment-specific endpoints and configuration, fixed code examples |
+| 1.0     | 2024-12-01 | Initial version                                                                                                                                                  |
 
 ### Introduction
 
