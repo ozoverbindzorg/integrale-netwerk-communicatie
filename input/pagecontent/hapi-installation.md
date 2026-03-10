@@ -491,6 +491,20 @@ WHERE contype = 'c' AND conrelid::regclass::text LIKE 'trm_%';
 
 Drop any that restrict columns to old value ranges (e.g., `trm_concept_property_prop_type_check`).
 
+### Issue: Background Reindexing Errors for Unsupported Resource Types (e.g. `Flag`)
+
+**Cause:** The Nictiz NL-core packages include SearchParameter definitions that reference resource types not in your `supported_resource_types` list. HAPI's background reindexing jobs fail when they encounter these types.
+
+**Solution:** Add the missing resource types to `supported_resource_types`. For NL-core compatibility, add at least `Flag`:
+
+```yaml
+supported_resource_types:
+  # ... existing types ...
+  - Flag
+```
+
+Alternatively, remove the `supported_resource_types` setting entirely to allow all R4 resource types (may increase memory usage).
+
 ### Issue: Dependencies Not Installed
 
 **Solution:** Ensure all required packages are listed explicitly in `implementationguides`. The server needs internet access to download packages from the FHIR package registry.
@@ -594,6 +608,7 @@ hapi:
       - CareTeam
       - Communication
       - CommunicationRequest
+      - Flag               # Required by NL-core SearchParameter definitions
       - ImplementationGuide  # Enables version discovery via /fhir/ImplementationGuide
       - Organization
       - Patient
