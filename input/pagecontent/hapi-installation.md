@@ -8,8 +8,8 @@ The OZO FHIR Implementation Guide is distributed as a packaged release that can 
 
 ## Prerequisites
 
-- HAPI FHIR Server (version compatible with FHIR R4)
-- Java 11 or higher
+- HAPI FHIR Server v8.6.0 or later (FHIR R4)
+- Java 17 or higher
 - PostgreSQL database (or another supported database)
 - Access to the HAPI FHIR server configuration files
 
@@ -30,16 +30,16 @@ This method involves configuring the HAPI FHIR server's `application.yaml` file 
 
 Visit the OZO FHIR Implementation Guide releases page:
 - **Repository:** [https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/releases](https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/releases)
-- **Latest Release:** [v0.5.1](https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/releases/tag/v0.5.1)
+- **Latest Release:** [v0.5.2](https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/releases/tag/v0.5.2)
 
-From the release page, copy the URL of the `.tgz` package file. For example:
+From the release page, copy the URL of the `.tgz` package file. For production servers, use the **minimal** package (smaller, optimized for server deployment):
 ```
-fhir.ozo-0.5.1.tgz
+fhir.ozo-0.5.2-minimal.tgz
 ```
 
 The full download URL will be:
 ```
-https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/releases/download/v0.5.1/fhir.ozo-0.5.1.tgz
+https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/releases/download/v0.5.2/fhir.ozo-0.5.2-minimal.tgz
 ```
 
 ### Step 2: Configure the HAPI FHIR Server
@@ -56,6 +56,12 @@ hapi:
   fhir:
     # ... other HAPI configuration ...
 
+    # Do NOT enable fetchDependencies or install_transitive_ig_dependencies.
+    # Transitive dependencies include hl7.fhir.r4.core and hl7.fhir.uv.extensions.r4
+    # which contain SearchParameter resources referencing R5-only types (e.g. DeviceUsage,
+    # DomainResource) that crash HAPI R4 during installation.
+    install_transitive_ig_dependencies: false
+
     # Disable validation during package installation to bypass snapshot generation issues
     iginstaller_validationenabled: false
 
@@ -63,23 +69,44 @@ hapi:
     validate_resource_status_for_package_upload: false
 
     implementationguides:
-      # IMPORTANT: fhir.nl.gf must be listed BEFORE ozo, because the OZO package
-      # depends on it and HAPI installs guides in order. This package is not
-      # published on the FHIR package registry, so it must be installed via URL.
+      # Store the R4 extensions package without installing — it contains SearchParameter
+      # resources that reference R5-only types (DeviceUsage) which crash HAPI R4
+      r4-extensions:
+        name: hl7.fhir.uv.extensions.r4
+        version: 1.0.0
+        installMode: STORE_ONLY
+
+      # Dutch ZIB 2020 profiles (dependency of NL-core)
+      zib2020:
+        name: nictiz.fhir.nl.r4.zib2020
+        version: 0.12.0-beta.4
+        installMode: STORE_AND_INSTALL
+
+      # Dutch NL-core profiles (dependency of NL-GF and OZO)
+      nl-core:
+        name: nictiz.fhir.nl.r4.nl-core
+        version: 0.12.0-beta.4
+        installMode: STORE_AND_INSTALL
+
+      # NL Generic Functions — not on FHIR registry, must use direct URL
       nl-gf:
         name: fhir.nl.gf
         version: 0.3.0
         packageUrl: https://build.fhir.org/ig/nuts-foundation/nl-generic-functions-ig/package.tgz
         installMode: STORE_AND_INSTALL
+
+      # OZO FHIR Implementation Guide
       ozo:
         name: fhir.ozo
-        version: 0.5.1
-        packageUrl: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/releases/download/v0.5.1/fhir.ozo-0.5.1.tgz
-        fetchDependencies: true
+        version: 0.5.2
+        packageUrl: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/releases/download/v0.5.2/fhir.ozo-0.5.2-minimal.tgz
         installMode: STORE_AND_INSTALL
 ```
 
-> **Important:** The `fhir.nl.gf` package is not published on the FHIR package registry (`packages.fhir.org`). It **must** be listed as a separate implementation guide entry with a direct `packageUrl` and **must** appear before the OZO entry. If omitted, the server will crash with `ResourceNotFoundException: HAPI-1301: Unable to locate package fhir.nl.gf#0.3.0` during startup.
+> **Important:** Do **not** use `fetchDependencies: true` or `install_transitive_ig_dependencies: true`. These settings cause HAPI to pull in `hl7.fhir.r4.core` and `hl7.fhir.uv.extensions.r4` which contain SearchParameter resources referencing R5-only types (`DeviceUsage`, `DomainResource`), crashing the server. Instead, list all required dependencies explicitly as shown above.
+{:.stu-note}
+
+> **Important:** The `fhir.nl.gf` package is not published on the FHIR package registry (`packages.fhir.org`). It **must** be listed as a separate implementation guide entry with a direct `packageUrl`. If omitted, the server will crash with `ResourceNotFoundException: HAPI-1301: Unable to locate package fhir.nl.gf#0.3.0` during startup.
 {:.stu-note}
 
 #### Configuration Parameters Explained
@@ -87,9 +114,8 @@ hapi:
 | Parameter | Description | Recommended Value |
 |-----------|-------------|-------------------|
 | **name** | The package identifier (must match the package ID) | `fhir.ozo` |
-| **version** | The version of the package to install | `0.5.1` |
+| **version** | The version of the package to install | `0.5.2` |
 | **packageUrl** | Direct URL to the `.tgz` package file | Release download URL |
-| **fetchDependencies** | Whether to automatically fetch and install dependencies (NL-core profiles, etc.) | `true` |
 | **installMode** | How to handle the package installation | `STORE_AND_INSTALL` |
 
 #### Install Modes
@@ -366,17 +392,21 @@ Follow the same verification steps as in Method 1.
 
 ## Package Dependencies
 
-The OZO FHIR Implementation Guide depends on the following packages, which will be automatically installed if `fetchDependencies: true` is configured:
+The OZO FHIR Implementation Guide depends on the following packages. All dependencies **must** be listed explicitly in `application.yaml` (see [Step 2](#step-2-configure-the-hapi-fhir-server)):
 
-| Package                       | Version       | Description                                    |
-|-------------------------------|---------------|------------------------------------------------|
-| **nictiz.fhir.nl.r4.zib2020** | 0.12.0-beta.4 | Dutch Health and Care Information models (ZIB) |
-| **nictiz.fhir.nl.r4.nl-core** | 0.12.0-beta.4 | Dutch national core profiles                   |
-| **fhir.nl.gf**                | 0.3.0         | NL Generic Functions (care services directory) |
+| Package                          | Version       | Install Mode        | Description                                    |
+|----------------------------------|---------------|---------------------|------------------------------------------------|
+| **hl7.fhir.uv.extensions.r4**   | 1.0.0         | `STORE_ONLY`        | FHIR R4 extensions (store only — see warning below) |
+| **nictiz.fhir.nl.r4.zib2020**   | 0.12.0-beta.4 | `STORE_AND_INSTALL` | Dutch Health and Care Information models (ZIB) |
+| **nictiz.fhir.nl.r4.nl-core**   | 0.12.0-beta.4 | `STORE_AND_INSTALL` | Dutch national core profiles                   |
+| **fhir.nl.gf**                   | 0.3.0         | `STORE_AND_INSTALL` | NL Generic Functions (care services directory) |
 
 These dependencies are required for proper validation of Dutch healthcare resources used in the OZO platform.
 
-> **Important:** The `fhir.nl.gf` package is **not** published on the FHIR package registry and cannot be resolved by HAPI automatically. You **must** add it as a separate implementation guide entry with a direct `packageUrl` before the OZO entry. See [Step 2](#step-2-configure-the-hapi-fhir-server) for the required configuration. Without this, the server will crash on startup with `HAPI-1301: Unable to locate package fhir.nl.gf#0.3.0`.
+> **Important:** The `hl7.fhir.uv.extensions.r4` package **must** use `STORE_ONLY` install mode. This package contains SearchParameter resources that reference FHIR R5-only types (`DeviceUsage`, `DomainResource`) which are not valid in R4. Using `STORE_AND_INSTALL` will crash the server with `HAPI-1684: Unknown resource name "DeviceUsage"`.
+{:.stu-note}
+
+> **Important:** The `fhir.nl.gf` package is **not** published on the FHIR package registry and cannot be resolved by HAPI automatically. It **must** be listed with a direct `packageUrl`. If omitted, the server will crash on startup with `HAPI-1301: Unable to locate package fhir.nl.gf#0.3.0`.
 {:.stu-note}
 
 ---
@@ -398,9 +428,9 @@ hapi:
 
 ### Issue: Server Crashes with `HAPI-1301: Unable to locate package fhir.nl.gf#0.3.0`
 
-**Cause:** The `fhir.nl.gf` package is not published on the FHIR package registry. When HAPI tries to resolve OZO's dependencies, it cannot find this package.
+**Cause:** The `fhir.nl.gf` package is not published on the FHIR package registry.
 
-**Solution:** Add `fhir.nl.gf` as a separate implementation guide entry **before** the OZO entry in your `application.yaml`, with a direct `packageUrl` pointing to the CI build:
+**Solution:** Add `fhir.nl.gf` as a separate implementation guide entry with a direct `packageUrl`:
 
 ```yaml
 implementationguides:
@@ -409,15 +439,61 @@ implementationguides:
     version: 0.3.0
     packageUrl: https://build.fhir.org/ig/nuts-foundation/nl-generic-functions-ig/package.tgz
     installMode: STORE_AND_INSTALL
-  ozo:
-    # ... OZO configuration ...
 ```
 
-See the [configuration example](#method-1-configuration-based-installation-recommended) above for the full setup.
+### Issue: Server Crashes with `HAPI-1684: Unknown resource name "DeviceUsage"` or `"DomainResource"`
+
+**Cause:** The `hl7.fhir.uv.extensions.r4` or `hl7.fhir.r4.core` packages contain SearchParameter resources that reference FHIR R5-only types. This happens when `fetchDependencies: true` or `install_transitive_ig_dependencies: true` causes HAPI to pull in and install these packages.
+
+**Solution:** Do **not** use `fetchDependencies` or `install_transitive_ig_dependencies`. Instead, list all dependencies explicitly and use `STORE_ONLY` for the extensions package:
+
+```yaml
+install_transitive_ig_dependencies: false
+
+implementationguides:
+  r4-extensions:
+    name: hl7.fhir.uv.extensions.r4
+    version: 1.0.0
+    installMode: STORE_ONLY
+  # ... other dependencies listed explicitly ...
+```
+
+See the [complete configuration example](#complete-configuration-example) for the full setup.
+
+### Issue: Database Schema Errors After Upgrading HAPI (NOT NULL constraint violations)
+
+**Cause:** When upgrading HAPI across major versions (e.g., 7.x to 8.x), the database migration tool may not update all column constraints. Columns like `trm_concept_desig.val`, `trm_concept_map_grp_elm_tgt.target_code`, and others may retain stale `NOT NULL` constraints that conflict with newer HAPI code.
+
+**Solution:** Run the HAPI migration tool before starting the upgraded server:
+
+```bash
+./hapi-fhir-cli migrate-database \
+  -d POSTGRES_9_4 \
+  -u "jdbc:postgresql://<host>:<port>/<db>" \
+  -n "<username>" \
+  -p "<password>"
+```
+
+If errors persist, the cleanest approach for a non-production database is to drop and recreate the schema so HAPI creates it fresh:
+
+```sql
+DROP SCHEMA public CASCADE;
+CREATE SCHEMA public;
+```
+
+For PostgreSQL, also check for stale CHECK constraints that block newer enum values:
+
+```sql
+SELECT conname, conrelid::regclass, pg_get_constraintdef(oid)
+FROM pg_constraint
+WHERE contype = 'c' AND conrelid::regclass::text LIKE 'trm_%';
+```
+
+Drop any that restrict columns to old value ranges (e.g., `trm_concept_property_prop_type_check`).
 
 ### Issue: Dependencies Not Installed
 
-**Solution:** Verify that `fetchDependencies: true` is set in the implementation guide configuration. You may also need to ensure the server has internet access to download dependencies from package registries.
+**Solution:** Ensure all required packages are listed explicitly in `implementationguides`. The server needs internet access to download packages from the FHIR package registry.
 
 ### Issue: Out of Memory Errors During Installation
 
@@ -466,6 +542,10 @@ hapi:
     fhir_version: R4
     server_address: http://localhost:8080/fhir/
 
+    # IMPORTANT: Do NOT enable these — transitive dependencies include packages
+    # with R5-only SearchParameters that crash HAPI R4
+    install_transitive_ig_dependencies: false
+
     # Enable repository validation
     enable_repository_validating_interceptor: true
 
@@ -473,9 +553,28 @@ hapi:
     iginstaller_validationenabled: false
     validate_resource_status_for_package_upload: false
 
-    # Implementation Guides
+    # Implementation Guides — all dependencies listed explicitly
     implementationguides:
-      # NL Generic Functions (not on FHIR registry — must be installed via URL BEFORE ozo)
+      # Store extensions only — contains R5-only SearchParameters (DeviceUsage,
+      # DomainResource) that crash HAPI R4 if installed
+      r4-extensions:
+        name: hl7.fhir.uv.extensions.r4
+        version: 1.0.0
+        installMode: STORE_ONLY
+
+      # Dutch ZIB 2020 profiles (dependency of NL-core)
+      zib2020:
+        name: nictiz.fhir.nl.r4.zib2020
+        version: 0.12.0-beta.4
+        installMode: STORE_AND_INSTALL
+
+      # Dutch NL-core profiles (dependency of NL-GF and OZO)
+      nl-core:
+        name: nictiz.fhir.nl.r4.nl-core
+        version: 0.12.0-beta.4
+        installMode: STORE_AND_INSTALL
+
+      # NL Generic Functions (not on FHIR registry — must use direct URL)
       nl-gf:
         name: fhir.nl.gf
         version: 0.3.0
@@ -485,18 +584,9 @@ hapi:
       # OZO FHIR Implementation Guide
       ozo:
         name: fhir.ozo
-        version: 0.5.1
-        packageUrl: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/releases/download/v0.5.1/fhir.ozo-0.5.1.tgz
-        fetchDependencies: true
+        version: 0.5.2
+        packageUrl: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/releases/download/v0.5.2/fhir.ozo-0.5.2-minimal.tgz
         installMode: STORE_AND_INSTALL
-
-      # Example: Other implementation guides can be added here
-      # koppeltaal:
-      #   name: koppeltaalv2.00
-      #   version: 0.15.0-beta.9
-      #   packageUrl: https://github.com/vzvznl/Koppeltaal-2.0-FHIR/releases/download/v0.15.0-beta.9/koppeltaalv2-0.15.0-beta.9.tgz
-      #   fetchDependencies: true
-      #   installMode: STORE_AND_INSTALL
 
     # Supported resource types (ensure OZO resources are included)
     supported_resource_types:

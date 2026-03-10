@@ -11,11 +11,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 #### Documentation
-- **HAPI Installation Guide** - Added explicit `fhir.nl.gf` configuration to prevent server crash on startup:
-  - Added `fhir.nl.gf` as a separate implementation guide entry (with direct `packageUrl` to CI build) that must be listed before the OZO entry
+- **HAPI Installation Guide** - Major rewrite for HAPI FHIR 8.6.0 compatibility:
+  - **BREAKING**: Replaced `fetchDependencies: true` approach with explicit dependency listing — transitive dependencies pull in `hl7.fhir.r4.core` and `hl7.fhir.uv.extensions.r4` which contain R5-only SearchParameters (`DeviceUsage`, `DomainResource`) that crash HAPI R4
+  - Added `hl7.fhir.uv.extensions.r4` as `STORE_ONLY` entry to satisfy dependency resolution without installing problematic SearchParameters
+  - Added explicit `nictiz.fhir.nl.r4.zib2020` and `nictiz.fhir.nl.r4.nl-core` entries as `STORE_AND_INSTALL`
+  - Added `fhir.nl.gf` as a separate implementation guide entry (with direct `packageUrl` to CI build)
+  - Set `install_transitive_ig_dependencies: false` to prevent recursive dependency installation
+  - Updated prerequisites to HAPI FHIR v8.6.0+ and Java 17+
+  - Updated all version references to v0.5.2 and recommended minimal package for production
+  - Added troubleshooting entries for:
+    - `HAPI-1684: Unknown resource name "DeviceUsage"` / `"DomainResource"` (R5-only SearchParameters)
+    - `HAPI-1301: Unable to locate package fhir.nl.gf#0.3.0`
+    - Database schema errors after upgrading HAPI (stale NOT NULL constraints, CHECK constraints)
+  - Updated Package Dependencies table with install modes and extensions package warning
   - Updated both the Step 2 configuration and the Complete Configuration Example
-  - Added troubleshooting entry for `HAPI-1301: Unable to locate package fhir.nl.gf#0.3.0`
-  - Strengthened the Package Dependencies note from informational to a required action
 
 ## [0.5.2] - 2026-03-04
 
