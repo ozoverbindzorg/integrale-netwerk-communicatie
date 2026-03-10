@@ -63,6 +63,14 @@ hapi:
     validate_resource_status_for_package_upload: false
 
     implementationguides:
+      # IMPORTANT: fhir.nl.gf must be listed BEFORE ozo, because the OZO package
+      # depends on it and HAPI installs guides in order. This package is not
+      # published on the FHIR package registry, so it must be installed via URL.
+      nl-gf:
+        name: fhir.nl.gf
+        version: 0.3.0
+        packageUrl: https://build.fhir.org/ig/nuts-foundation/nl-generic-functions-ig/package.tgz
+        installMode: STORE_AND_INSTALL
       ozo:
         name: fhir.ozo
         version: 0.5.1
@@ -70,6 +78,9 @@ hapi:
         fetchDependencies: true
         installMode: STORE_AND_INSTALL
 ```
+
+> **Important:** The `fhir.nl.gf` package is not published on the FHIR package registry (`packages.fhir.org`). It **must** be listed as a separate implementation guide entry with a direct `packageUrl` and **must** appear before the OZO entry. If omitted, the server will crash with `ResourceNotFoundException: HAPI-1301: Unable to locate package fhir.nl.gf#0.3.0` during startup.
+{:.stu-note}
 
 #### Configuration Parameters Explained
 
@@ -365,7 +376,8 @@ The OZO FHIR Implementation Guide depends on the following packages, which will 
 
 These dependencies are required for proper validation of Dutch healthcare resources used in the OZO platform.
 
-> **Note:** The `fhir.nl.gf` package is not yet published on the FHIR package registry. If `fetchDependencies` fails to resolve it, install it manually by downloading from the [CI build](https://build.fhir.org/ig/nuts-foundation/nl-generic-functions-ig/package.tgz) and extracting to `~/.fhir/packages/fhir.nl.gf#0.3.0/`.
+> **Important:** The `fhir.nl.gf` package is **not** published on the FHIR package registry and cannot be resolved by HAPI automatically. You **must** add it as a separate implementation guide entry with a direct `packageUrl` before the OZO entry. See [Step 2](#step-2-configure-the-hapi-fhir-server) for the required configuration. Without this, the server will crash on startup with `HAPI-1301: Unable to locate package fhir.nl.gf#0.3.0`.
+{:.stu-note}
 
 ---
 
@@ -383,6 +395,25 @@ hapi:
 ### Issue: Snapshot Generation Errors
 
 **Solution:** The HAPI FHIR server may have issues generating snapshots for certain profiles. The `iginstaller_validationenabled: false` setting helps bypass this issue.
+
+### Issue: Server Crashes with `HAPI-1301: Unable to locate package fhir.nl.gf#0.3.0`
+
+**Cause:** The `fhir.nl.gf` package is not published on the FHIR package registry. When HAPI tries to resolve OZO's dependencies, it cannot find this package.
+
+**Solution:** Add `fhir.nl.gf` as a separate implementation guide entry **before** the OZO entry in your `application.yaml`, with a direct `packageUrl` pointing to the CI build:
+
+```yaml
+implementationguides:
+  nl-gf:
+    name: fhir.nl.gf
+    version: 0.3.0
+    packageUrl: https://build.fhir.org/ig/nuts-foundation/nl-generic-functions-ig/package.tgz
+    installMode: STORE_AND_INSTALL
+  ozo:
+    # ... OZO configuration ...
+```
+
+See the [configuration example](#method-1-configuration-based-installation-recommended) above for the full setup.
 
 ### Issue: Dependencies Not Installed
 
@@ -444,6 +475,13 @@ hapi:
 
     # Implementation Guides
     implementationguides:
+      # NL Generic Functions (not on FHIR registry — must be installed via URL BEFORE ozo)
+      nl-gf:
+        name: fhir.nl.gf
+        version: 0.3.0
+        packageUrl: https://build.fhir.org/ig/nuts-foundation/nl-generic-functions-ig/package.tgz
+        installMode: STORE_AND_INSTALL
+
       # OZO FHIR Implementation Guide
       ozo:
         name: fhir.ozo
