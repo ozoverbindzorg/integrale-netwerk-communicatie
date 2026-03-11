@@ -13,7 +13,8 @@ Description: "Practitioner profile for the OZO platform. Extends the NL Generic 
 * ^contact[=].telecom[=].value = "https://headease.nl"
 
 // Identifiers - AssignedId inherited from NlGfPractitioner, OZO slices added via open slicing
-// Note: NlGfPractitioner uses value:$this discriminator - do not redefine slicing discriminator here
+// patternIdentifier gives HAPI a concrete value for $this discriminator matching (fixes HAPI-0574)
+* identifier[AssignedId] ^patternIdentifier.system = "https://ozo.headease.nl/practitioners"
 
 // Require at least one OZO Professional identifier
 * obeys ozo-practitioner-has-professional-id

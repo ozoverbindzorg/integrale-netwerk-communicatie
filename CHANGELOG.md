@@ -6,6 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [0.5.4] - 2026-03-11
+
+### Fixed
+
+#### Profiles
+- **OZOPractitioner**, **OZOOrganization** - Fixed HAPI FHIR validation error `HAPI-0574: Slicing cannot be evaluated: Could not match discriminator ($this) for slice Practitioner.identifier:AssignedId`:
+  - Added `^patternIdentifier.system` to the `AssignedId` slice on both profiles
+  - The `AssignedId` slice (inherited from NL-GF parent profiles) uses a `value:$this` discriminator but lacked a top-level `patternIdentifier`, preventing HAPI from matching identifiers to the slice
+  - OZOPractitioner: `https://ozo.headease.nl/practitioners`
+  - OZOOrganization: `https://ozo.headease.nl/organizations`
+
 ## [0.5.3] - 2026-03-10
 
 ### Changed
@@ -300,6 +311,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `aliases.fsh` with common system and profile aliases
 - Established FSH-first authoring workflow
 
+[0.5.4]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.5.3...v0.5.4
 [0.5.3]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.5.2...v0.5.3
 [0.5.2]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.5.1...v0.5.2
 [0.5.1]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.5.0...v0.5.1
