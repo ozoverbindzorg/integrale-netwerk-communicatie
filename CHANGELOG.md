@@ -17,6 +17,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - OZOPractitioner: `https://ozo.headease.nl/practitioners`
   - OZOOrganization: `https://ozo.headease.nl/organizations`
 
+#### Documentation
+- **HAPI Installation Guide** - Updated all version references from v0.5.1/v0.5.2 to v0.5.4
+
 ## [0.5.3] - 2026-03-10
 
 ### Changed
