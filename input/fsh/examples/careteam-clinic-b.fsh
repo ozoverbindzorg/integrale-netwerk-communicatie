@@ -1,4 +1,4 @@
-Instance: CT-Clinic-B
+Instance: Clinic-B
 InstanceOf: OZOCareTeam
 Usage: #example
 Title: "CareTeam Clinic B - Huisarts Amsterdam"

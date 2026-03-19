@@ -8,6 +8,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.5.4] - 2026-03-11
 
+### Changed
+
+#### Examples
+- **Normalized example Instance names** - Removed abbreviated prefixes (`CT-`, `Msg-`, `Tsk-`, `AE-`) that caused ugly doubled page URLs (e.g., `CareTeam-CT-H-de-Boer.html`). The IG Publisher already prepends the resource type to page URLs, making prefixes redundant.
+  - CareTeam: `CT-H-de-Boer` → `Netwerk-H-de-Boer`, `CT-Jan-de-Hoop` → `Netwerk-Jan-de-Hoop`, `CT-Department-Thuiszorg` → `Department-Thuiszorg`, `CT-Clinic-B` → `Clinic-B`, `CT-Pharmacy-A` → `Pharmacy-A`
+  - Communication: `Msg-RelatedPerson-to-CareTeam` → `Reply-Kees-to-Netwerk`, `Msg-Team-Reply-1-Initial-Message` → `Pharmacy-Initial-Message`, `Msg-Team-Reply-2-Clinic-Response` → `Clinic-Response-to-Pharmacy`, `Msg-Team-Reply-3-Pharmacy-Followup` → `Pharmacy-Followup-by-Pieter`
+  - Task: `Tsk-Practitioner-Manu-Example` → `Notify-Manu-van-Weel`, `Tsk-Practitioner-Mark-Example` → `Notify-Mark-Benson`, `Tsk-RelatedPerson-Example` → `Notify-Kees-Groot`
+  - AuditEvent: `AE-System-Access` → `System-Read`, `AE-Practitioner-Manu-Access` → `Manu-Read-Messages`, `AE-Practitioner-Mark-Access` → `Mark-Read-Messages`, `AE-RelatedPerson-Access` → `Kees-Read-Messages`, `AE-REST-Create-Example` → `REST-Create`, `AE-REST-Search-Example` → `REST-Search`, `AE-REST-Update-Failure` → `REST-Update-Denied`
+
+### Added
+
+#### Examples
+- **Reply-Manu-to-Kees** - New Communication example: Practitioner Manu van Weel replies to RelatedPerson Kees Groot in the Thread-Example thread. Replaces the broken `Msg-Practitioner-to-Practitioner` example (which had sender = recipient = same person and wrong payload text)
+
+### Removed
+
+#### Examples
+- **Msg-Practitioner-to-Practitioner** - Deleted broken example where sender and recipient were both Manu van Weel and payload text was "Message from RelatedPerson to CareTeam"
+
 ### Fixed
 
 #### Profiles
@@ -18,6 +37,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - OZOOrganization: `https://ozo.headease.nl/organizations`
 
 #### Documentation
+- Updated all example links in `overview.md`, `interaction-messaging.md`, `interaction-network.md`, and `auditevent-nen7510.md` to match new Instance names
+- Updated cross-references in CommunicationRequest, Communication, and AuditEvent FSH files
 - **HAPI Installation Guide** - Updated all version references from v0.5.1/v0.5.2 to v0.5.4
 
 ## [0.5.3] - 2026-03-10

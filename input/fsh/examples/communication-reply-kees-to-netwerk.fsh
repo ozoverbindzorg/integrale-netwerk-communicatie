@@ -1,4 +1,4 @@
-Instance: Msg-RelatedPerson-to-CareTeam
+Instance: Reply-Kees-to-Netwerk
 InstanceOf: OZOCommunication
 Usage: #example
 * meta.profile = "http://ozoverbindzorg.nl/fhir/StructureDefinition/OZOCommunication"
@@ -8,7 +8,7 @@ Usage: #example
 * partOf = Reference(Thread-Example)
 * partOf.type = "CommunicationRequest"
 * status = #in-progress
-* recipient = Reference(CT-H-de-Boer)
+* recipient = Reference(Netwerk-H-de-Boer)
 * recipient.type = "CareTeam"
 * sender = Reference(Kees-Groot)
 * sender.type = "RelatedPerson"

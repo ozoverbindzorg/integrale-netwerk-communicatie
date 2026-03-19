@@ -1,4 +1,4 @@
-Instance: Msg-Team-Reply-1-Initial-Message
+Instance: Pharmacy-Initial-Message
 InstanceOf: OZOCommunication
 Usage: #example
 Title: "Team Messaging: Initial Message from Pharmacy"
@@ -12,7 +12,7 @@ Description: "First message in the thread - the initial question from the pharma
 * sender = Reference(A-P-Otheeker)
 * sender.type = "Practitioner"
 * sender.display = "A.P. Otheeker"
-* recipient = Reference(CT-Clinic-B)
+* recipient = Reference(Clinic-B)
 * recipient.type = "CareTeam"
 * recipient.display = "Huisarts Amsterdam - Team"
 * payload.contentString = "Beste collega's, kunnen jullie de medicatielijst van deze patiënt controleren op mogelijke interacties? We hebben een nieuw recept ontvangen voor bloedverdunners."

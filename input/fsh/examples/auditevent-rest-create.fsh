@@ -1,4 +1,4 @@
-Instance: AE-REST-Create-Example
+Instance: REST-Create
 InstanceOf: OZOAuditEvent
 Usage: #example
 Title: "AuditEvent - REST Create Operation"

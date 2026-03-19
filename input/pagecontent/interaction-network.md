@@ -38,10 +38,10 @@ RelatedPersons represent family members, friends, or informal caregivers. Exampl
 - [Willem-Bakker](RelatedPerson-Willem-Bakker.html) (Friend/Informal caregiver)
 
 #### 2. Create Floating Care Teams (Optional)
-Floating care teams represent organizational units or departments without specific patient assignment. See example: [CT-Department-Thuiszorg](CareTeam-CT-Department-Thuiszorg.html)
+Floating care teams represent organizational units or departments without specific patient assignment. See example: [Department-Thuiszorg](CareTeam-Department-Thuiszorg.html)
 
 #### 3. Create Patient Care Teams
-Patient-specific care teams include a subject (the patient) and can include practitioners, related persons, and even other care teams. See example: [CT-Jan-de-Hoop](CareTeam-CT-Jan-de-Hoop.html)
+Patient-specific care teams include a subject (the patient) and can include practitioners, related persons, and even other care teams. See example: [Netwerk-Jan-de-Hoop](CareTeam-Netwerk-Jan-de-Hoop.html)
 
 ### Key Principles
 

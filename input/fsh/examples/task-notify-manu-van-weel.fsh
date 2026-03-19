@@ -1,13 +1,13 @@
-Instance: Tsk-Practitioner-Mark-Example
+Instance: Notify-Manu-van-Weel
 InstanceOf: OZOTask
 Usage: #example
 * meta.profile = "http://ozoverbindzorg.nl/fhir/StructureDefinition/OZOTask"
 * meta.versionId = "2"
-* meta.lastUpdated = "2024-12-05T16:25:00.631+00:00"
-* meta.source = "#L2oJn1KICxCdjqYq"
+* meta.lastUpdated = "2024-12-05T16:25:00.081+00:00"
+* meta.source = "#JUZrXHNIP4pY4wNR"
 * basedOn = Reference(Thread-Example)
 * status = #completed
 * intent = #order
 * for = Reference(H-de-Boer) "H. de Boer"
 * for.type = "Patient"
-* owner = Reference(Mark-Benson)
+* owner = Reference(Manu-van-Weel)

@@ -1,4 +1,4 @@
-Instance: AE-REST-Search-Example
+Instance: REST-Search
 InstanceOf: OZOAuditEvent
 Usage: #example
 Title: "AuditEvent - REST Search Operation"

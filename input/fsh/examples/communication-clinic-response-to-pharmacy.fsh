@@ -1,4 +1,4 @@
-Instance: Msg-Team-Reply-2-Clinic-Response
+Instance: Clinic-Response-to-Pharmacy
 InstanceOf: OZOCommunication
 Usage: #example
 Title: "Team Messaging: Clinic Response"
@@ -8,13 +8,13 @@ Description: "Reply from the clinic to the pharmacy. A practitioner from the cli
 * meta.lastUpdated = "2025-12-04T10:30:00.000+00:00"
 * partOf = Reference(Pharmacy-to-Clinic)
 * partOf.type = "CommunicationRequest"
-* inResponseTo = Reference(Msg-Team-Reply-1-Initial-Message)
+* inResponseTo = Reference(Pharmacy-Initial-Message)
 * inResponseTo.type = "Communication"
 * status = #completed
 * sender = Reference(Manu-van-Weel)
 * sender.type = "Practitioner"
 * sender.display = "Manu van Weel"
-* recipient = Reference(CT-Pharmacy-A)
+* recipient = Reference(Pharmacy-A)
 * recipient.type = "CareTeam"
 * recipient.display = "Apotheek de Pil - Team"
 * payload.contentString = "Dank voor het bericht. Ik heb de medicatielijst bekeken en zie geen directe interacties met de huidige medicatie. Wel adviseer ik om de INR-waarden de eerste weken extra te monitoren. Ik stuur vandaag nog een uitgebreider advies."

@@ -65,19 +65,19 @@ The OZO AuditEvent profile extends the base FHIR AuditEvent with specific constr
 The following examples demonstrate various AuditEvent scenarios in the OZO AAA Proxy:
 
 #### Practitioner Access Events
-* [AE-Practitioner-Manu-Access](AuditEvent-AE-Practitioner-Manu-Access.html) - Practitioner accessing Communication resources
-* [AE-Practitioner-Mark-Access](AuditEvent-AE-Practitioner-Mark-Access.html) - Another Practitioner access example
+* [Manu-Read-Messages](AuditEvent-Manu-Read-Messages.html) - Practitioner accessing Communication resources
+* [Mark-Read-Messages](AuditEvent-Mark-Read-Messages.html) - Another Practitioner access example
 
 #### RelatedPerson Access Events
-* [AE-RelatedPerson-Access](AuditEvent-AE-RelatedPerson-Access.html) - RelatedPerson accessing Communication resources
+* [Kees-Read-Messages](AuditEvent-Kees-Read-Messages.html) - RelatedPerson accessing Communication resources
 
 #### REST Operation Events
-* [AE-REST-Create-Example](AuditEvent-AE-REST-Create-Example.html) - Successful REST create operation
-* [AE-REST-Search-Example](AuditEvent-AE-REST-Search-Example.html) - REST search operation
-* [AE-REST-Update-Failure](AuditEvent-AE-REST-Update-Failure.html) - Failed update operation with authorization error
+* [REST-Create](AuditEvent-REST-Create.html) - Successful REST create operation
+* [REST-Search](AuditEvent-REST-Search.html) - REST search operation
+* [REST-Update-Denied](AuditEvent-REST-Update-Denied.html) - Failed update operation with authorization error
 
 #### System Access Events
-* [AE-System-Access](AuditEvent-AE-System-Access.html) - System-to-system access using DID identifiers
+* [System-Read](AuditEvent-System-Read.html) - System-to-system access using DID identifiers
 
 ### Implementation Details
 

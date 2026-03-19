@@ -1,4 +1,4 @@
-Instance: CT-H-de-Boer
+Instance: Netwerk-H-de-Boer
 InstanceOf: OZOCareTeam
 Usage: #example
 * meta.profile = "http://ozoverbindzorg.nl/fhir/StructureDefinition/OZOCareTeam"

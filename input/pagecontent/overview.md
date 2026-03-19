@@ -119,7 +119,7 @@ the `Patient` to different `Organization`s
 
 
 ##### Examples
-* [CT-H-de-Boer](CareTeam-CT-H-de-Boer.html)
+* [Netwerk-H-de-Boer](CareTeam-Netwerk-H-de-Boer.html)
 
 #### Organization
 
@@ -222,10 +222,11 @@ The `Communication.sender` must always be an individual (`Practitioner` or `Rela
 
 ##### Examples
 
-* [Msg-RelatedPerson-to-CareTeam](Communication-Msg-RelatedPerson-to-CareTeam.html) - Individual to team
-* [Msg-Team-Reply-1-Initial-Message](Communication-Msg-Team-Reply-1-Initial-Message.html) - Team messaging: initial message
-* [Msg-Team-Reply-2-Clinic-Response](Communication-Msg-Team-Reply-2-Clinic-Response.html) - Team messaging: reply
-* [Msg-Team-Reply-3-Pharmacy-Followup](Communication-Msg-Team-Reply-3-Pharmacy-Followup.html) - Team messaging: different team member follows up
+* [Reply-Manu-to-Kees](Communication-Reply-Manu-to-Kees.html) - Practitioner replies to RelatedPerson
+* [Reply-Kees-to-Netwerk](Communication-Reply-Kees-to-Netwerk.html) - RelatedPerson to CareTeam
+* [Pharmacy-Initial-Message](Communication-Pharmacy-Initial-Message.html) - Team messaging: initial message
+* [Clinic-Response-to-Pharmacy](Communication-Clinic-Response-to-Pharmacy.html) - Team messaging: reply
+* [Pharmacy-Followup-by-Pieter](Communication-Pharmacy-Followup-by-Pieter.html) - Team messaging: different team member follows up
 
 ##### Attachment
 
@@ -252,9 +253,9 @@ The `Task` resource is used to:
 | owner   | 1..1        | a reference to a `RelatedPerson` or `Practitioner` |
 
 ##### Examples
-* [Tsk-RelatedPerson-Example](Task-Tsk-RelatedPerson-Example.html)
-* [Tsk-Practitioner-Manu-Example](Task-Tsk-Practitioner-Manu-Example.html)
-* [Tsk-Practitioner-Mark-Example](Task-Tsk-Practitioner-Mark-Example.html)
+* [Notify-Kees-Groot](Task-Notify-Kees-Groot.html)
+* [Notify-Manu-van-Weel](Task-Notify-Manu-van-Weel.html)
+* [Notify-Mark-Benson](Task-Notify-Mark-Benson.html)
 
 #### AuditEvent
 
@@ -267,13 +268,13 @@ The `AuditEvent` is used to:
 For detailed information about NEN7510 compliance and audit logging, see [AuditEvent for NEN7510 Compliance](auditevent-nen7510.html).
 
 ##### Examples
-* [AE-Practitioner-Manu-Access](AuditEvent-AE-Practitioner-Manu-Access.html)
-* [AE-Practitioner-Mark-Access](AuditEvent-AE-Practitioner-Mark-Access.html)
-* [AE-RelatedPerson-Access](AuditEvent-AE-RelatedPerson-Access.html)
-* [AE-REST-Create-Example](AuditEvent-AE-REST-Create-Example.html)
-* [AE-REST-Search-Example](AuditEvent-AE-REST-Search-Example.html)
-* [AE-REST-Update-Failure](AuditEvent-AE-REST-Update-Failure.html)
-* [AE-System-Access](AuditEvent-AE-System-Access.html)
+* [Manu-Read-Messages](AuditEvent-Manu-Read-Messages.html)
+* [Mark-Read-Messages](AuditEvent-Mark-Read-Messages.html)
+* [Kees-Read-Messages](AuditEvent-Kees-Read-Messages.html)
+* [REST-Create](AuditEvent-REST-Create.html)
+* [REST-Search](AuditEvent-REST-Search.html)
+* [REST-Update-Denied](AuditEvent-REST-Update-Denied.html)
+* [System-Read](AuditEvent-System-Read.html)
 
 ### Subscriptions
 

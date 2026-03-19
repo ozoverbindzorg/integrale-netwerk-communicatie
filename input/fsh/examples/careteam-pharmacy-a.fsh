@@ -1,4 +1,4 @@
-Instance: CT-Pharmacy-A
+Instance: Pharmacy-A
 InstanceOf: OZOCareTeam
 Usage: #example
 Title: "CareTeam Pharmacy A - Apotheek de Pil"

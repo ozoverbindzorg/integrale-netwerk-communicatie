@@ -15,5 +15,5 @@ Usage: #example
 * payload[=].contentAttachment.creation = "3899-06-21T00:00:00+02:00"
 * requester = Reference(Kees-Groot)
 * requester.type = "RelatedPerson"
-* recipient = Reference(CT-H-de-Boer)
+* recipient = Reference(Netwerk-H-de-Boer)
 * recipient.type = "CareTeam"

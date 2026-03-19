@@ -1,4 +1,4 @@
-Instance: Tsk-RelatedPerson-Example
+Instance: Notify-Kees-Groot
 InstanceOf: OZOTask
 Usage: #example
 * meta.profile = "http://ozoverbindzorg.nl/fhir/StructureDefinition/OZOTask"

@@ -1,4 +1,4 @@
-Instance: AE-System-Access
+Instance: System-Read
 InstanceOf: OZOAuditEvent
 Usage: #example
 Title: "AuditEvent - System Access"

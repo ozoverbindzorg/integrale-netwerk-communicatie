@@ -1,4 +1,4 @@
-Instance: CT-Jan-de-Hoop
+Instance: Netwerk-Jan-de-Hoop
 InstanceOf: OZOCareTeam
 Usage: #example
 * meta.profile = "http://ozoverbindzorg.nl/fhir/StructureDefinition/OZOCareTeam"
@@ -42,7 +42,7 @@ Usage: #example
 * participant[7].member = Reference(Willem-Bakker) "Willem Bakker"
 * participant[7].member.type = "RelatedPerson"
 * participant[8].member.type = "CareTeam"
-* participant[8].member.reference = "CareTeam/CT-Department-Thuiszorg"
+* participant[8].member.reference = "CareTeam/Department-Thuiszorg"
 * participant[8].member.display = "Afdeling Thuiszorg Oost"
 * participant[8].role.coding.system = "http://snomed.info/sct"
 * participant[8].role.coding.code = #405278004

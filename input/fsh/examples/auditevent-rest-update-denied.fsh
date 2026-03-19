@@ -1,4 +1,4 @@
-Instance: AE-REST-Update-Failure
+Instance: REST-Update-Denied
 InstanceOf: OZOAuditEvent
 Usage: #example
 Title: "AuditEvent - REST Update Operation Failure"
