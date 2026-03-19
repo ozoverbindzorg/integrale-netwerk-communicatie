@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.5.4] - 2026-03-11
 
+### Added
+
+#### Documentation
+- **Caching and Pagination** - New technical walkthrough page covering `Cache-Control` header requirements for FHIR requests (`no-cache` vs `no-store`), pagination with `_count` and Bundle `next` links, and the OZO proxy `Warning: 199` header for `no-store` detection
+
 ### Changed
 
 #### Examples
