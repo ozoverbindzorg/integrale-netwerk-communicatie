@@ -1,3 +1,5 @@
+This page covers individual messaging between RelatedPersons and Practitioners. For team-to-team messaging (e.g. pharmacy ↔ clinic), see [Team-to-Team Messaging](interaction-messaging-team.html).
+
 The messaging interaction consists of the following parts:
 * Creating a thread
 * Sending messages
@@ -101,94 +103,4 @@ The diagram below displays displays the creation of threads, and responding for 
 {% include fhir-messaging-interaction.svg %}
 {:/}
 
----
-
-### Team-to-Team Messaging
-
-Team-to-team messaging enables organizations (pharmacies, clinics, hospitals) to communicate as units while maintaining individual auditability. This pattern uses `CareTeam` resources to represent organizational teams.
-
-#### Key Concepts
-
-1. **CareTeam as Sender**: The `CommunicationRequest.sender` can be a `CareTeam`, which:
-   - Provides the **reply-to address** for the conversation
-   - Grants **team-level authorization** for message management
-   - Enables the **shared inbox pattern**
-
-2. **Individual Auditability**: Despite team-level messaging:
-   - `CommunicationRequest.requester` is always an individual (who initiated the thread)
-   - `Communication.sender` is always an individual (who sent each message)
-   - Every action is traceable to a specific person
-
-3. **Reply-To Discovery**: When replying to a team message:
-   - Read the `CommunicationRequest.sender` to find the reply-to `CareTeam`
-   - Send the reply to that `CareTeam` as recipient
-
-#### Example: Pharmacy to Clinic Communication
-
-**Step 1: Pharmacy initiates thread**
-
-A pharmacist (A.P. Otheeker) from Apotheek de Pil sends a message to Huisarts Amsterdam about a patient's medication:
-
-```
-CommunicationRequest:
-  status = active
-  subject = Patient/H-de-Boer
-  requester = Practitioner/A-P-Otheeker      ← Individual who initiated (auditability)
-  sender = CareTeam/Pharmacy-A               ← Team reply-to address
-  recipient = CareTeam/Clinic-B              ← Addressed to clinic team
-  payload = "Can you review the medication list for interactions?"
-```
-
-**Step 2: Clinic practitioner replies**
-
-Dr. Manu van Weel from the clinic responds. The reply goes to the pharmacy team (read from `CommunicationRequest.sender`):
-
-```
-Communication:
-  partOf = CommunicationRequest/...
-  sender = Practitioner/Manu-van-Weel        ← Individual auditability
-  recipient = CareTeam/Pharmacy-A            ← From CommunicationRequest.sender
-  payload = "I've reviewed the medications, no interactions found..."
-```
-
-**Step 3: Different pharmacy practitioner follows up**
-
-Another pharmacist (Pieter de Vries) from the same team responds, demonstrating that any team member can participate:
-
-```
-Communication:
-  partOf = CommunicationRequest/...
-  inResponseTo = Communication/step2
-  sender = Practitioner/Pieter-de-Vries      ← Different team member
-  recipient = CareTeam/Clinic-B              ← Continue to clinic team
-  payload = "Thank you for the quick response..."
-```
-
-#### Query Patterns
-
-**Find messages for my team:**
-```
-GET /Communication?recipient=CareTeam/Pharmacy-A&_include=Communication:based-on
-```
-
-**Find all messages in a thread:**
-```
-GET /Communication?based-on=CommunicationRequest/thread-id&_sort=sent
-```
-
-**Find messages I sent:**
-```
-GET /Communication?sender=Practitioner/my-id
-```
-
-#### Examples
-
-* [Pharmacy-A](CareTeam-Pharmacy-A.html) - Pharmacy team for team-level messaging
-* [Clinic-B](CareTeam-Clinic-B.html) - Clinic team for team-level messaging
-* [Pharmacy-to-Clinic](CommunicationRequest-Pharmacy-to-Clinic.html) - Team-to-team thread
-* [Pharmacy-Initial-Message](Communication-Pharmacy-Initial-Message.html) - Initial message
-* [Clinic-Response-to-Pharmacy](Communication-Clinic-Response-to-Pharmacy.html) - Clinic reply
-* [Pharmacy-Followup-by-Pieter](Communication-Pharmacy-Followup-by-Pieter.html) - Follow-up from different team member
-
-For detailed analysis of the addressing solution, see [FHIR Addressing Analysis](fhir-addressing-analysis.html).
 

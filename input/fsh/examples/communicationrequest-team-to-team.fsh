@@ -11,6 +11,8 @@ Description: "Example of a team-to-team CommunicationRequest where a pharmacy se
 * subject.type = "Patient"
 * requester = Reference(A-P-Otheeker)
 * requester.type = "Practitioner"
+* sender = Reference(A-P-Otheeker)
+* sender.type = "Practitioner"
 * extension[senderCareTeam].valueReference = Reference(Pharmacy-A)
 * recipient = Reference(Clinic-B)
 * recipient.type = "CareTeam"

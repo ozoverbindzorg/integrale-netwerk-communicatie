@@ -121,6 +121,9 @@ pages:
   interaction-messaging.md:
     title: Interaction - Creating Threads and Reading Messages
 
+  interaction-messaging-team.md:
+    title: Interaction - Team-to-Team Messaging
+
   interaction-dropbox.md:
     title: Adding attachments with the dropbox
 
@@ -235,6 +238,7 @@ menu:
   Interactions:
     Creating the network: interaction-network.html
     Reading and updating messages: interaction-messaging.html
+    Team-to-team messaging: interaction-messaging-team.html
     Adding attachments with the dropbox: interaction-dropbox.html
   Directory:
     Care Services Directory: care-services-directory.html

@@ -177,21 +177,23 @@ The `CommunicationRequest` Resource is used to:
 | status    | 1..1        | draft  \| active \| completed                                        |
 | subject   | 1..1        | Reference to a `Patient`                                             |
 | requester | 1..1        | a reference to a `RelatedPerson` or `Practitioner` (individual who initiated - for auditability) |
-| sender    | 0..1        | a reference to a `RelatedPerson`, `Practitioner` or `CareTeam` (reply-to address, enables team-level messaging) |
+| sender    | 0..1        | a reference to a `RelatedPerson` or `Practitioner` (individual sender)                                           |
+| extension[senderCareTeam] | 0..1 | a reference to a `CareTeam` (reply-to address for team-level messaging)                        |
 | recipient | 1..*        | a reference to a `RelatedPerson`, `Practitioner` or `CareTeam`       |
 | payload   | 1..*        | Message or attachment, one of `contentString` or `contentAttachment` |
 
 ##### Team-Level Messaging
 
-The `CommunicationRequest` supports team-level messaging through the `sender` field:
+The `CommunicationRequest` supports team-level messaging through the `senderCareTeam` extension (FHIR R4 `CommunicationRequest.sender` does not allow CareTeam references):
 
 * **`requester`**: Always an individual (`Practitioner` or `RelatedPerson`) - tracks who initiated the conversation for auditability
-* **`sender`**: Can be a `CareTeam` to enable team-level messaging:
+* **`sender`**: Always an individual (`Practitioner` or `RelatedPerson`) - the person who created the thread
+* **`extension[senderCareTeam]`**: A `CareTeam` reference that enables team-level messaging:
   * Provides the **reply-to address** for the conversation thread
   * Grants **team-level authorization** for message management (archive, delete)
   * Enables the **shared inbox pattern** where all team members can see and respond to messages
 
-When replying to a team-level thread, read the `CareTeam` from `CommunicationRequest.sender` to determine the reply recipient.
+When replying to a team-level thread, read the `CareTeam` from `CommunicationRequest.extension[senderCareTeam]` to determine the reply recipient.
 
 ##### Examples
 * [Thread-Example](CommunicationRequest-Thread-Example.html) - Individual-to-CareTeam messaging

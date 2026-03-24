@@ -303,138 +303,38 @@ Returns chronologically sorted thread.
 
 ---
 
-### Note to Self: Changes Required
+### Implementation Status
+
+> **All changes below have been implemented.** This section documents what was done for reference.
+
+### What Was Implemented
+
+Since FHIR R4 `CommunicationRequest.sender` does not allow CareTeam references, the solution uses an **extension** (`OZOSenderCareTeam`) instead of relaxing the sender constraint directly.
 
 ### FSH Profile Changes
 
-### File: `input/fsh/profiles/ozo-communicationrequest.fsh`
+**File: `input/fsh/profiles/ozo-communicationrequest.fsh`**
+- `sender` remains restricted to `OZOPractitioner | OZORelatedPerson` (individual sender)
+- `requester` remains restricted to `OZOPractitioner | OZORelatedPerson` (individual who initiated)
+- Added `OZOSenderCareTeam` extension (0..1) for CareTeam as reply-to address
+- `recipient` unchanged: `OZOPractitioner | OZORelatedPerson | OZOCareTeam`
 
-**Current constraints to relax:**
-```fsh
-// CURRENT:
-* sender only Reference(OZOPractitioner or OZORelatedPerson)
-* recipient only Reference(OZOPractitioner or OZORelatedPerson or OZOCareTeam)
+**File: `input/fsh/profiles/ozo-communication.fsh`**
+- No changes needed. `sender` = individual, `recipient` allows CareTeam.
 
-// CHANGE TO:
-* sender only Reference(OZOPractitioner or OZORelatedPerson or OZOCareTeam)
-* recipient only Reference(OZOPractitioner or OZORelatedPerson or OZOCareTeam)
+### Documentation Updates
 
-// KEEP AS IS (no change):
-* requester only Reference(OZOPractitioner or OZORelatedPerson)
-```
+- **`interaction-messaging.md`**: Added "Team-to-Team Messaging" section with examples using `extension[senderCareTeam]`
+- **`overview.md`**: Updated CommunicationRequest field table and team-level messaging description
 
-**Rationale:**
-- `requester` stays restricted to individuals (auditability - tracks who initiated)
-- `sender` now allows CareTeam (provides reply-to address and team-level authorization)
-- `recipient` remains unchanged (CareTeam already supported)
+### Examples Added
 
-### File: `input/fsh/profiles/ozo-communication.fsh`
+- `communicationrequest-team-to-team.fsh` - `Pharmacy-to-Clinic` with `senderCareTeam` extension
+- `communication-pharmacy-initial-message.fsh` - Initial message from pharmacy practitioner
+- `communication-clinic-response-to-pharmacy.fsh` - Clinic reply to pharmacy team
+- `communication-pharmacy-followup-by-pieter.fsh` - Follow-up from different team member
+- `careteam-pharmacy-a.fsh` and `careteam-clinic-b.fsh` - Team CareTeam resources
 
-**Current constraints:**
-```fsh
-// NO CHANGES NEEDED:
-* recipient only Reference(OZOPractitioner or OZORelatedPerson or OZOCareTeam)
-* sender only Reference(OZOPractitioner or OZORelatedPerson)
-```
+### Key Design Decision
 
-**Rationale:**
-- `sender` stays restricted to individuals (auditability - tracks who sent each message)
-- `recipient` already allows CareTeam (no change needed)
-- Individual team member can be tracked separately for display and delete permissions
-
----
-
-### Documentation Updates Required
-
-### File: `input/pagecontent/interaction-messaging.md`
-
-**Add new section:**
-- **Team-to-Team Messaging with CareTeam**
-  - Explain when to use CareTeam as sender for team-level authorization
-  - Show example: Pharmacy A → Clinic B with CommunicationRequest using CareTeam sender/recipient
-  - Document reply-to discovery: read CareTeam from `CommunicationRequest.sender`
-  - Explain how individual team members are tracked for auditability
-
-**Update existing examples:**
-- Add example showing `CommunicationRequest` with:
-  - `requester` = Practitioner (individual who initiated)
-  - `sender` = CareTeam (reply-to address with team-level authorization)
-  - `recipient` = CareTeam (addressed to team)
-- Add example showing `Communication` replies with:
-  - `sender` = Practitioner (individual auditability)
-  - `recipient` = CareTeam (from CommunicationRequest.sender)
-
-### File: `input/pagecontent/overview.md`
-
-**Update CommunicationRequest description:**
-```markdown
-The `CommunicationRequest` can use CareTeam as sender for team-level messaging:
-- `requester`: Individual who initiated (Practitioner or RelatedPerson) - for auditability
-- `sender`: Can be CareTeam to provide reply-to address and team-level authorization
-- `recipient`: Can be CareTeam to enable shared inbox pattern for teams
-```
-
-**Update Communication description:**
-```markdown
-The `Communication` sender must remain an individual for auditability:
-- `sender`: Individual who sent the message (Practitioner or RelatedPerson) - for auditability
-- `recipient`: Can be CareTeam to address messages to all members of a team
-- Individual team member tracked separately for display and delete permissions
-```
-
----
-
-### Examples to Add
-
-### File: `input/fsh/instances/communicationrequest-team-example.fsh` (NEW)
-
-```fsh
-Instance: CommunicationRequest-Pharmacy-to-Clinic
-InstanceOf: OZOCommunicationRequest
-Title: "Example: Pharmacy to Clinic Team-Level Communication Request"
-Description: "Shows a CommunicationRequest from a pharmacy team to a clinic team using CareTeam addressing"
-* status = #active
-* subject = Reference(Patient/example-patient)
-* requester = Reference(Practitioner/pharmacy-practitioner-a1)
-* sender = Reference(CareTeam/pharmacy-a)
-* recipient = Reference(CareTeam/clinic-b)
-* payload[0].contentString = "Can you review this patient's medication list for potential interactions?"
-```
-
-### File: `input/fsh/instances/communication-team-reply-example.fsh` (NEW)
-
-```fsh
-Instance: Communication-Clinic-Reply
-InstanceOf: OZOCommunication
-Title: "Example: Clinic Reply to Team-Level Message"
-Description: "Shows a Communication reply from clinic practitioner to pharmacy team"
-* status = #completed
-* basedOn = Reference(CommunicationRequest/CommunicationRequest-Pharmacy-to-Clinic)
-* sender = Reference(Practitioner/clinic-practitioner-b1)
-* recipient = Reference(CareTeam/pharmacy-a)
-* payload[0].contentString = "I've reviewed the medications and will send my recommendations today"
-```
-
----
-
-### Migration Notes
-
-- **Backward compatible:** Existing individual-to-individual messaging patterns remain unchanged
-- **New capability:** CareTeam-level messaging with team authorization now supported
-- **Team authorization:** CareTeam as sender provides authorization for message management
-- **Auditability preserved:** Individual practitioners tracked via requester field and Communication.sender
-
----
-
-### Comparison with Original Proposal:
-
-| Aspect | Original Proposal | Recommended Solution (CareTeam as Sender) |
-|--------|------------------|-------------------------------------------|
-| Addressing mechanism | Practitioner as sender with extension | CareTeam as sender in CommunicationRequest |
-| Team authorization | Unclear | CareTeam gives team-level authorization |
-| Individual auditability | Via extension | Communication.sender = Practitioner |
-| Reply-to discovery | Complex | Simple (read from CommunicationRequest.sender) |
-| Custom extensions | Yes (for tracking team) | Not required for basic flow |
-| Profile changes needed | Yes | Yes (allow CareTeam in sender) |
-
-This solution provides **team-level authorization** while maintaining **individual auditability** through proper use of requester and sender fields.
+The analysis above proposed adding CareTeam directly to `CommunicationRequest.sender`. During implementation, it was discovered that FHIR R4 does not allow CareTeam in that field. The `OZOSenderCareTeam` extension achieves the same goal while remaining FHIR R4 compliant. All sender fields remain restricted to individuals, preserving auditability.
