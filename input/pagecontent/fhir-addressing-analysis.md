@@ -10,9 +10,9 @@ This document analyzes the addressing problem in the FHIR proposal for team-leve
 
 ### Resource Meanings in OZO:
 
-1. **CareTeam**: Represents all people involved in a **patient's care**
-   - Includes both formal (practitioners) and informal (related persons) caregivers
-   - Patient-centric: organized around caring for a specific patient
+1. **CareTeam**: OZO defines two CareTeam profiles:
+   - **OZOCareTeam**: Patient care network — includes practitioners and informal caregivers, bound to a specific patient
+   - **OZOOrganizationalCareTeam**: Organizational team — represents a department or organizational unit (e.g., pharmacy, clinic) for team-to-team messaging, not bound to a patient
 
 2. **CommunicationRequest**: Represents a **conversation thread** (Current Pattern)
    - Includes all people involved in the conversation

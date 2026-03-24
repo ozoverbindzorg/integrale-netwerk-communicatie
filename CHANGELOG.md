@@ -6,6 +6,40 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [0.6.0] - 2026-03-24
+
+### Added
+
+#### Profiles
+- **OZOOrganizationalCareTeam** - New profile for organizational/department teams used in team-to-team messaging. Represents a department or organizational unit (e.g., pharmacy team, clinic team) for shared inbox functionality. Key constraints:
+  - `subject 0..0` — organizational teams have no patient
+  - `managingOrganization 1..1` — required link to the owning Organization
+  - `category 1..*` — required SNOMED CT coded team type
+  - `name 1..1` — team display name required
+  - `participant.member` restricted to `OZOPractitioner` only (no RelatedPerson in org teams)
+
+#### Documentation
+- **Team-to-Team Messaging** - New dedicated documentation page (`interaction-messaging-team.md`) with stepwise walkthrough of team-to-team messaging flows, including thread creation, replies from both teams, follow-up by different team members, and read receipts
+- Added PlantUML sequence diagram for team-to-team messaging interaction
+
+### Changed
+
+#### Profiles
+- **OZOCareTeam** - **BREAKING**: Clarified as patient care team profile only. Updated description to distinguish from `OZOOrganizationalCareTeam`. `participant.member` now also allows `OZOOrganizationalCareTeam` for nested team references (fixes existing conformance bug where `Netwerk-Jan-de-Hoop` referenced `Department-Thuiszorg` as CareTeam participant but the profile did not allow it)
+- **OZOCommunication** - `recipient` now also allows `OZOOrganizationalCareTeam` in addition to existing types
+- **OZOCommunicationRequest** - `recipient` now also allows `OZOOrganizationalCareTeam`. `OZOSenderCareTeam` extension tightened from `Reference(CareTeam)` to `Reference(OZOOrganizationalCareTeam)` (formalizes existing practice)
+
+#### Examples
+- **Pharmacy-A**, **Clinic-B**, **Department-Thuiszorg** - Changed from `OZOCareTeam` to `OZOOrganizationalCareTeam` profile. Removed fake `Patient/example-unassigned` subject references that were a workaround for the previous `subject 1..1` constraint
+
+#### Documentation
+- Split individual messaging page from team-to-team messaging into separate pages
+- Updated overview.md with separate CareTeam (Patient) and CareTeam (Organizational) sections
+- Updated interaction-network.md to reference both CareTeam profiles
+- Updated HAPI installation guide with `OZOOrganizationalCareTeam` profile and canonical URL
+- Updated PlantUML data model diagrams to show both CareTeam types
+- Fixed documentation to correctly describe the `senderCareTeam` extension pattern (`sender` field is always an individual, extension provides CareTeam reply-to address)
+
 ## [0.5.4] - 2026-03-11
 
 ### Added
@@ -340,6 +374,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `aliases.fsh` with common system and profile aliases
 - Established FSH-first authoring workflow
 
+[0.6.0]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.5.4...v0.6.0
 [0.5.4]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.5.3...v0.5.4
 [0.5.3]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.5.2...v0.5.3
 [0.5.2]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.5.1...v0.5.2

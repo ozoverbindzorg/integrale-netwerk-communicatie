@@ -101,7 +101,7 @@ system.
 * [Mark-Benson](Practitioner-Mark-Benson.html)
 * [A-P-Otheeker](Practitioner-A-P-Otheeker.html)
 
-#### CareTeam
+#### CareTeam (Patient)
 
 **Profile:** [OZOCareTeam](StructureDefinition-ozo-careteam.html)
 
@@ -109,17 +109,40 @@ The `CareTeam` is the resource that binds the patient to the related person(s) a
 only one care team resource for each patient in the system. Multiple care team resources _could_ exist if specific use
 cases require this. A CareTeam has a set of `participants` that consists of a `member`. For practitioners, this
 relationship _should_ also contain the `onBehalfOf` property, linking to the `Organization`, this maps the relation of
-the `Patient` to different `Organization`s
+the `Patient` to different `Organization`s. Participants can also include organizational teams (see below) for nested team references.
 
-| field       | Cardinality | description                                                               |
-|-------------|-------------|---------------------------------------------------------------------------|
-| subject     | 1..1        | reference to the `Patient`                                                |
-| participant | 1..*        | a reference to a `Patient`, `RelatedPerson`, `Practitioner` or `CareTeam` |
-| status      | 1..1        | "active"                                                                  |
-
+| field       | Cardinality | description                                                                                       |
+|-------------|-------------|---------------------------------------------------------------------------------------------------|
+| subject     | 1..1        | reference to the `Patient`                                                                        |
+| participant | 1..*        | a reference to a `Practitioner`, `RelatedPerson`, or `OZOOrganizationalCareTeam` (nested team)    |
+| status      | 1..1        | "active"                                                                                          |
 
 ##### Examples
 * [Netwerk-H-de-Boer](CareTeam-Netwerk-H-de-Boer.html)
+* [Netwerk-Jan-de-Hoop](CareTeam-Netwerk-Jan-de-Hoop.html) (includes a nested organizational team)
+
+#### CareTeam (Organizational)
+
+**Profile:** [OZOOrganizationalCareTeam](StructureDefinition-ozo-organizational-careteam.html)
+
+The `OZOOrganizationalCareTeam` represents a department or organizational unit (e.g., pharmacy team, clinic team) that is **not** bound to a specific patient. It is used for:
+* **Team-to-team messaging** — as sender (via the `senderCareTeam` extension) and recipient in conversations between organizations
+* **Shared inbox** — all team members can see and respond to messages addressed to the team
+* **Nested teams** — can be included as a participant in a patient's `CareTeam`
+
+| field                | Cardinality | description                                                          |
+|----------------------|-------------|----------------------------------------------------------------------|
+| subject              | 0..0        | not allowed — organizational teams have no patient                   |
+| name                 | 1..1        | team display name                                                    |
+| category             | 1..*        | SNOMED CT coded team type (e.g., pharmacy service, general medicine) |
+| managingOrganization | 1..1        | reference to the `Organization` this team belongs to                 |
+| participant          | 1..*        | a reference to a `Practitioner` (only practitioners, no RelatedPerson) |
+| status               | 1..1        | "active"                                                             |
+
+##### Examples
+* [Pharmacy-A](CareTeam-Pharmacy-A.html) - Pharmacy team for team-level messaging
+* [Clinic-B](CareTeam-Clinic-B.html) - Clinic team for team-level messaging
+* [Department-Thuiszorg](CareTeam-Department-Thuiszorg.html) - Organizational department team
 
 #### Organization
 

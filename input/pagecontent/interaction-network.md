@@ -37,11 +37,11 @@ RelatedPersons represent family members, friends, or informal caregivers. Exampl
 - [Jane-Groen](RelatedPerson-Jane-Groen.html) (Family member)
 - [Willem-Bakker](RelatedPerson-Willem-Bakker.html) (Friend/Informal caregiver)
 
-#### 2. Create Floating Care Teams (Optional)
-Floating care teams represent organizational units or departments without specific patient assignment. See example: [Department-Thuiszorg](CareTeam-Department-Thuiszorg.html)
+#### 2. Create Organizational Care Teams (Optional)
+Organizational care teams use the [OZOOrganizationalCareTeam](StructureDefinition-ozo-organizational-careteam.html) profile and represent departments or organizational units without specific patient assignment. They have no `subject`, require a `managingOrganization`, and only allow `Practitioner` participants. See example: [Department-Thuiszorg](CareTeam-Department-Thuiszorg.html)
 
 #### 3. Create Patient Care Teams
-Patient-specific care teams include a subject (the patient) and can include practitioners, related persons, and even other care teams. See example: [Netwerk-Jan-de-Hoop](CareTeam-Netwerk-Jan-de-Hoop.html)
+Patient-specific care teams use the [OZOCareTeam](StructureDefinition-ozo-careteam.html) profile and include a subject (the patient). They can include practitioners, related persons, and even organizational care teams as nested participants. See example: [Netwerk-Jan-de-Hoop](CareTeam-Netwerk-Jan-de-Hoop.html)
 
 ### Key Principles
 
@@ -56,9 +56,9 @@ Patient-specific care teams include a subject (the patient) and can include prac
    - Origin identifiers typically include the creating system's name and the local database ID
 
 3. **Care Team Types**:
-   - **Floating teams**: No subject, represent organizational units
-   - **Patient teams**: Include subject reference to the patient
-   - Teams can be nested - a CareTeam can be a participant in another CareTeam
+   - **Organizational teams** ([OZOOrganizationalCareTeam](StructureDefinition-ozo-organizational-careteam.html)): No subject, represent organizational units (departments, shared inboxes). Only practitioners as members.
+   - **Patient teams** ([OZOCareTeam](StructureDefinition-ozo-careteam.html)): Include subject reference to the patient. Practitioners, related persons, and organizational teams as members.
+   - Teams can be nested — an organizational CareTeam can be a participant in a patient CareTeam
 
 4. **Participant Roles**: Include appropriate SNOMED CT codes to identify the role of each participant within the care team
 

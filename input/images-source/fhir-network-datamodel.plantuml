@@ -21,19 +21,25 @@ RECTANGLE Organization {
   ...
 }
 
+RECTANGLE "CareTeam\n(Patient)" as CareTeam {
+  +subject: Reference(Patient)
+  +participant: Member
+  ...
+}
 
-RECTANGLE CareTeam {
+RECTANGLE "CareTeam\n(Organizational)" as OrgCareTeam {
+  +name: string
+  +category: CodeableConcept
+  +managingOrganization: Reference(Organization)
   +participant: Member
   ...
 }
 
 RECTANGLE Member {
-  +member: Reference(Practitioner | RelatedPerson | CareTeam)
+  +member: Reference(Practitioner | RelatedPerson | OrgCareTeam)
   onBehalfOf: Organization
   ...
 }
-
-
 
 Patient "1" <-- "1..1" CareTeam : subject <
 Patient "1" --> "1..1" Organization : managingOrganization >
@@ -42,4 +48,7 @@ Member "1" --> "1" Practitioner: member >
 Member "1" --> Patient: member >
 Member "1" --> RelatedPerson: member >
 Member "*" --> Organization: onBehalfOf >
+Member "0..1" --> OrgCareTeam: member >
+OrgCareTeam "1..1" --> Organization: managingOrganization >
+OrgCareTeam "1..*" --> Practitioner: participant.member >
 @enduml

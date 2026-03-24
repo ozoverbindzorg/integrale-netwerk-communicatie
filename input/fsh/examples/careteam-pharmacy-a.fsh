@@ -1,9 +1,9 @@
 Instance: Pharmacy-A
-InstanceOf: OZOCareTeam
+InstanceOf: OZOOrganizationalCareTeam
 Usage: #example
 Title: "CareTeam Pharmacy A - Apotheek de Pil"
 Description: "Example of a pharmacy team used for team-level messaging. This CareTeam represents the pharmacy as a whole for shared inbox functionality."
-* meta.profile = "http://ozoverbindzorg.nl/fhir/StructureDefinition/OZOCareTeam"
+* meta.profile = "http://ozoverbindzorg.nl/fhir/StructureDefinition/OZOOrganizationalCareTeam"
 * meta.versionId = "1"
 * meta.lastUpdated = "2025-12-04T10:00:00.000+00:00"
 * identifier[0].system = "https://www.ozoverbindzorg.nl/namingsystem/ozo-connect/team"
@@ -12,9 +12,6 @@ Description: "Example of a pharmacy team used for team-level messaging. This Car
 * identifier[1].value = "apotheek@depil.nl"
 * name = "Apotheek de Pil - Team"
 * status = #active
-* subject.reference = "Patient/example-unassigned"
-* subject.type = "Patient"
-* subject.display = "Organizational team - no specific patient"
 * category.coding.system = "http://snomed.info/sct"
 * category.coding.code = #310080006
 * category.coding.display = "Pharmacy service"

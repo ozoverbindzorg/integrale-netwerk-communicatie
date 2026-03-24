@@ -226,7 +226,11 @@ After installing the OZO package, you can create FHIR resources that conform to 
 
 ### Example: Creating an OZO CareTeam Resource
 
-The OZO CareTeam profile has the following canonical URL:
+OZO defines two CareTeam profiles:
+* **OZOCareTeam** — patient care networks (requires `subject`)
+* **OZOOrganizationalCareTeam** — organizational teams for team-to-team messaging (no `subject`, requires `managingOrganization`)
+
+The OZO CareTeam profile (patient) has the following canonical URL:
 ```
 http://ozoverbindzorg.nl/fhir/StructureDefinition/OZOCareTeam
 ```
@@ -333,6 +337,7 @@ The following table lists the canonical URLs for common OZO profiles:
 | Profile Name | Canonical URL |
 |--------------|---------------|
 | **OZOCareTeam** | `http://ozoverbindzorg.nl/fhir/StructureDefinition/OZOCareTeam` |
+| **OZOOrganizationalCareTeam** | `http://ozoverbindzorg.nl/fhir/StructureDefinition/OZOOrganizationalCareTeam` |
 | **OZOAuditEvent** | `http://ozoverbindzorg.nl/fhir/StructureDefinition/OZOAuditEvent` |
 | **OZOPatient** | `http://ozoverbindzorg.nl/fhir/StructureDefinition/OZOPatient` |
 | **OZOPractitioner** | `http://ozoverbindzorg.nl/fhir/StructureDefinition/OZOPractitioner` |

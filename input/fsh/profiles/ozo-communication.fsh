@@ -27,7 +27,7 @@ Description: "Communication profile for the OZO platform. Represents messages ex
 
 // Recipients - who the message is sent to
 * recipient 1..* MS
-* recipient only Reference(OZOPractitioner or OZORelatedPerson or OZOCareTeam)
+* recipient only Reference(OZOPractitioner or OZORelatedPerson or OZOCareTeam or OZOOrganizationalCareTeam)
 * recipient ^short = "Message recipient"
 * recipient ^definition = "The entity (practitioner, related person, or care team) who receives the message"
 * recipient.reference 1..1

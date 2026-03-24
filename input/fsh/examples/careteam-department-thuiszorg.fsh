@@ -1,7 +1,7 @@
 Instance: Department-Thuiszorg
-InstanceOf: OZOCareTeam
+InstanceOf: OZOOrganizationalCareTeam
 Usage: #example
-* meta.profile = "http://ozoverbindzorg.nl/fhir/StructureDefinition/OZOCareTeam"
+* meta.profile = "http://ozoverbindzorg.nl/fhir/StructureDefinition/OZOOrganizationalCareTeam"
 * meta.versionId = "1"
 * meta.lastUpdated = "2025-06-19T11:00:00.000+00:00"
 * identifier[0].system = "https://www.ozoverbindzorg.nl/namingsystem/ozo-connect/team"
@@ -10,9 +10,6 @@ Usage: #example
 * identifier[1].value = "thuiszorg.oost@zorgorganisatie.nl"
 * name = "Afdeling Thuiszorg Oost"
 * status = #active
-* subject.reference = "Patient/example-unassigned"
-* subject.type = "Patient"
-* subject.display = "Organizational team - no specific patient"
 * category.coding.system = "http://snomed.info/sct"
 * category.coding.code = #394730007
 * category.coding.display = "Healthcare related organization"

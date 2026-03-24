@@ -2,10 +2,10 @@ Profile: OZOCareTeam
 Parent: CareTeam
 Id: ozo-careteam
 Title: "OZO CareTeam"
-Description: "CareTeam profile for the OZO platform. Represents a care network consisting of healthcare professionals and informal caregivers coordinating care for a patient."
+Description: "CareTeam profile for patient care networks in OZO. Represents a care network of healthcare professionals and informal caregivers coordinating care for a specific patient. For organizational teams (departments, shared inboxes), use OZOOrganizationalCareTeam instead."
 * ^url = "http://ozoverbindzorg.nl/fhir/StructureDefinition/OZOCareTeam"
 * ^name = "OZOCareTeam"
-* ^description = "CareTeam profile for the OZO platform. Represents a care network consisting of healthcare professionals and informal caregivers coordinating care for a patient."
+* ^description = "CareTeam profile for patient care networks in OZO. Represents a care network of healthcare professionals and informal caregivers coordinating care for a specific patient. For organizational teams (departments, shared inboxes), use OZOOrganizationalCareTeam instead."
 * ^status = #active
 * ^publisher = "Headease"
 * ^contact[0].name = "Headease"
@@ -32,7 +32,7 @@ Description: "CareTeam profile for the OZO platform. Represents a care network c
 * participant ^definition = "Participants in the care team, including practitioners and related persons"
 
 * participant.member 1..1 MS
-* participant.member only Reference(OZOPractitioner or OZORelatedPerson)
+* participant.member only Reference(OZOPractitioner or OZORelatedPerson or OZOOrganizationalCareTeam)
 * participant.member ^short = "Who is on the team"
 * participant.member ^definition = "Reference to the practitioner or related person who is a member of this care team"
 * participant.member.reference 1..1

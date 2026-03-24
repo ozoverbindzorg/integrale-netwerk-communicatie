@@ -1,4 +1,4 @@
-Team-to-team messaging enables organizations (pharmacies, clinics, hospitals) to communicate as units while maintaining individual auditability. This pattern uses `CareTeam` resources to represent organizational teams.
+Team-to-team messaging enables organizations (pharmacies, clinics, hospitals) to communicate as units while maintaining individual auditability. This pattern uses the [OZOOrganizationalCareTeam](StructureDefinition-ozo-organizational-careteam.html) profile to represent organizational teams — these are CareTeams without a patient subject, linked to a managing `Organization`.
 
 For individual messaging (RelatedPerson ↔ Practitioner), see [Individual Messaging](interaction-messaging.html).
 

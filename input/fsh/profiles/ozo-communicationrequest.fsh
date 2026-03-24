@@ -60,7 +60,7 @@ Description: "CommunicationRequest profile for the OZO platform. Represents a me
 
 // Recipients - who should receive the thread
 * recipient 1..* MS
-* recipient only Reference(OZOPractitioner or OZORelatedPerson or OZOCareTeam)
+* recipient only Reference(OZOPractitioner or OZORelatedPerson or OZOCareTeam or OZOOrganizationalCareTeam)
 * recipient ^short = "Thread recipients"
 * recipient ^definition = "The intended recipients of the thread (practitioners, related persons, or care teams)"
 * recipient.reference 1..1
@@ -73,7 +73,7 @@ Title: "OZO Sender CareTeam"
 Description: "Extension to specify a CareTeam as the sender/reply-to address for team-level messaging. This extension is needed because CommunicationRequest.sender does not allow CareTeam references in FHIR R4."
 * ^url = "http://ozoverbindzorg.nl/fhir/StructureDefinition/ozo-sender-careteam"
 * ^status = #active
-* value[x] only Reference(CareTeam)
+* value[x] only Reference(OZOOrganizationalCareTeam)
 * valueReference 1..1
 * valueReference ^short = "CareTeam as sender"
 * valueReference ^definition = "Reference to the CareTeam acting as the sender/reply-to address for team-level messaging"
