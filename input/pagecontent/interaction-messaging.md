@@ -26,11 +26,11 @@ The following Subscription are likely to be created by the OZO client:
 
 Each subscription serves a different purpose. Understanding when notifications fire is critical for correct client implementation:
 
-| Subscription | Purpose | Fires when |
-|---|---|---|
-| `Communication?id` | **New message notification.** This is the primary mechanism for detecting new messages in a thread. | A new `Communication` is created (POST). |
-| `CommunicationRequest?id` | Thread lifecycle changes. | A `CommunicationRequest` is created or its status changes (e.g. DRAFT → ACTIVE). |
-| `Task?status=requested` | Read status changes. **Not suitable for new-message detection.** | A `Task` status changes to REQUESTED (e.g. COMPLETED → REQUESTED). |
+| Subscription              | Purpose                                                                                             | Fires when                                                                       |
+|---------------------------|-----------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------|
+| `Communication?id`        | **New message notification.** This is the primary mechanism for detecting new messages in a thread. | A new `Communication` is created (POST).                                         |
+| `CommunicationRequest?id` | Thread lifecycle changes.                                                                           | A `CommunicationRequest` is created or its status changes (e.g. DRAFT → ACTIVE). |
+| `Task?status=requested`   | Read status changes. **Not suitable for new-message detection.**                                    | A `Task` status changes to REQUESTED (e.g. COMPLETED → REQUESTED).               |
 
 > **Important:** The `Task` resource functions as a **read/unread indicator**, not as a message notification mechanism. When a new message arrives and the Task is already in status `requested` (unread), the OZO FHIR Api sets it to `requested` again — which is a no-op. HAPI FHIR does not create a new resource version when nothing changes, so **no subscription notification is sent**.
 >
