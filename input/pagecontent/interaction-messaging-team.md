@@ -62,14 +62,13 @@ A practitioner from Team A creates a new thread addressed to Team B. The process
   * The `recipient` is the `CareTeam` of Team B
   * The `status` is set to ACTIVE
   * The `payload` contains the initial message
-* The **OZO FHIR Api** does the following:
-  * A `Communication` is created as the first message in the thread:
-    * The `partOf` is set to the `CommunicationRequest` reference
-    * The `sender` is set to the `Practitioner` from Team A (individual auditability)
-    * The `recipient` is set to the `CareTeam` of Team B
-    * The `payload` contains the same initial message
-    * The `status` is set to COMPLETED
-  * For each member of Team B's `CareTeam` a new `Task` is created:
+* The **OZO platform** also creates a `Communication` as the first message in the thread:
+  * The `partOf` is set to the `CommunicationRequest` reference
+  * The `sender` is set to the `Practitioner` from Team A (individual auditability)
+  * The `recipient` is set to the `CareTeam` of Team B
+  * The `payload` contains the same initial message
+  * The `status` is set to COMPLETED
+* The **OZO FHIR Api** creates a `Task` for each member of Team B's `CareTeam`:
     * The `status` is set to REQUESTED
     * The `intent` is set to ORDER
     * The `basedOn` is set to the `CommunicationRequest` reference
@@ -168,7 +167,7 @@ CommunicationRequest:
   payload = "Kunnen jullie de medicatielijst controleren op mogelijke interacties?"
 ```
 
-The **OZO FHIR Api** creates the initial `Communication` and `Task` resources:
+The **OZO platform** also creates the initial `Communication`. The **OZO FHIR Api** then creates `Task` resources:
 
 ```
 Communication:
