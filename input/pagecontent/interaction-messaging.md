@@ -139,10 +139,10 @@ The diagram below displays the creation of threads, and responding for both the 
 
 ---
 
-### Example: Kees Groot messages his care team
+### Example: Informal caregiver communicates with professionals
 
 The following walkthrough shows a concrete example using patient H. de Boer's care network ([Netwerk-H-de-Boer](CareTeam-Netwerk-H-de-Boer.html)), which includes:
-* **Kees Groot** (RelatedPerson, informal caregiver)
+* **Kees Groot** (RelatedPerson — informal caregiver of H. de Boer, uses the OZO client)
 * **Manu van Weel** (Practitioner, Ziekenhuis Amsterdam)
 * **Mark Benson** (Practitioner, Huisarts Amsterdam)
 * **A.P. Otheeker** (Practitioner, Apotheek de Pil)
