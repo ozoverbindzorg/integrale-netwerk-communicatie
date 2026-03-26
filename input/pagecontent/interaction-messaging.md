@@ -83,7 +83,7 @@ A practitioner in the **OZO platform** responds to a message from a caregiver by
         * The owner is set to the recipient.
 * The **OZO client** receives a notification about the new `Communication` by Subscription and presents the message to the caregiver.
 
-> **Note:** The `Task` subscription alone is **not** reliable for detecting new messages. If the Task was already in REQUESTED status (the previous message was not yet read), setting it to REQUESTED again is a no-op and no notification is sent. Always use the `Communication` subscription for new-message detection.
+> **Note:** The `Task` subscription is **not designed** for detecting new messages. If the Task was already in REQUESTED status (the previous message was not yet read), setting it to REQUESTED again is a no-op and no notification is sent. Always use the `Communication` subscription for new-message detection.
 {:.stu-note}
 
 #### Marking the message as read
