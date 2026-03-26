@@ -48,6 +48,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Added "Subscription behavior" section explaining when each subscription fires and when it does **not** fire
   - Clarified that `Communication` subscription is the primary mechanism for new-message detection, not `Task`
   - Fixed misleading interaction flows that implied `Task` notifications detect new messages — `Task` is a **read/unread indicator** only. When a new message arrives and the Task is already REQUESTED (unread), the no-op update produces no notification
+- **Messaging example walkthroughs** - Added detailed concrete examples to both messaging pages showing the complete flow including all resources created by the OZO FHIR Api:
+  - Individual messaging (`interaction-messaging.md`): Kees Groot ↔ care team walkthrough with CommunicationRequest, Communication, Task creation/updates, AuditEvent read receipts, and subscription notifications at each step
+  - Team messaging (`interaction-messaging-team.md`): Extended the Pharmacy ↔ Clinic example with Task and AuditEvent resources, team-wide read behavior, and notification details demonstrating the Task no-op scenario
 
 ## [0.5.4] - 2026-03-11
 

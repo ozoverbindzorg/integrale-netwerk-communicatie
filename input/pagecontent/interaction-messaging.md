@@ -132,9 +132,147 @@ A caregiver in the **OZO client** responds to a message from a practitioner by t
 * The **OZO client** remains uninformed about the status of the message.
 
 ### Interaction diagram
-The diagram below displays displays the creation of threads, and responding for both the practitioner and related person.
+The diagram below displays the creation of threads, and responding for both the practitioner and related person.
 {::nomarkdown}
 {% include fhir-messaging-interaction.svg %}
 {:/}
 
+---
+
+### Example: Kees Groot messages his care team
+
+The following walkthrough shows a concrete example using patient H. de Boer's care network ([Netwerk-H-de-Boer](CareTeam-Netwerk-H-de-Boer.html)), which includes:
+* **Kees Groot** (RelatedPerson, informal caregiver)
+* **Manu van Weel** (Practitioner, Ziekenhuis Amsterdam)
+* **Mark Benson** (Practitioner, Huisarts Amsterdam)
+* **A.P. Otheeker** (Practitioner, Apotheek de Pil)
+
+#### Step 1: Kees creates a thread (OZO client)
+
+Kees Groot sends a message to the care team about a fracture report:
+
+```
+CommunicationRequest:
+  status = draft
+  subject = Patient/H-de-Boer
+  requester = RelatedPerson/Kees-Groot
+  recipient = CareTeam/Netwerk-H-de-Boer
+  payload[0].contentString = "Thread created by RelatedPerson"
+  payload[1].contentAttachment.title = "rapport_fractuur.pdf"
+```
+
+The **OZO FHIR Api** creates a `Task` for each CareTeam member (except the sender):
+
+```
+Task (for Manu van Weel):                    Task (for Mark Benson):
+  status = requested                           status = requested
+  intent = order                               intent = order
+  basedOn = CommunicationRequest/Thread-Example  basedOn = CommunicationRequest/Thread-Example
+  for = Patient/H-de-Boer                     for = Patient/H-de-Boer
+  owner = Practitioner/Manu-van-Weel          owner = Practitioner/Mark-Benson
+
+Task (for A.P. Otheeker):
+  status = requested
+  intent = order
+  basedOn = CommunicationRequest/Thread-Example
+  for = Patient/H-de-Boer
+  owner = Practitioner/A-P-Otheeker
+```
+
+**Notifications fired:**
+* `CommunicationRequest` subscription → OZO platform notified of new thread
+* `Task?status=requested` subscription → each practitioner notified of unread thread
+
+The **OZO platform** receives the `CommunicationRequest` and sets status to ACTIVE.
+
+#### Step 2: Manu van Weel replies (OZO platform)
+
+Practitioner Manu van Weel reads the message and replies:
+
+```
+Communication:
+  partOf = CommunicationRequest/Thread-Example
+  sender = Practitioner/Manu-van-Weel
+  recipient = RelatedPerson/Kees-Groot
+  payload.contentString = "Goedemorgen Kees, bedankt voor uw bericht. Ik heb het rapport bekeken en zal dit bespreken met het team."
+```
+
+The **OZO FHIR Api** updates Tasks:
+
+```
+Task (for Kees Groot):                        Task (for Manu van Weel):
+  status = requested   ← unread for Kees       status = completed  ← Manu is the sender
+  owner = RelatedPerson/Kees-Groot             owner = Practitioner/Manu-van-Weel
+```
+
+**Notifications fired:**
+* `Communication` subscription → OZO client notified of new message (primary new-message mechanism)
+* `Task?status=requested` subscription → Kees notified of unread message (only if Task status changed from COMPLETED to REQUESTED)
+
+#### Step 3: Kees reads the message and the read receipt is created (OZO client)
+
+Kees opens the message in the OZO client. The client creates an `AuditEvent`:
+
+```
+AuditEvent:
+  type = http://terminology.hl7.org/CodeSystem/audit-event-type#rest "RESTful Operation"
+  subtype = http://hl7.org/fhir/restful-interaction#read "read"
+  action = R
+  recorded = "2024-12-05T17:25:01+01:00"
+  agent.who = RelatedPerson/Kees-Groot
+  source.site = "OZO Client"
+  entity[0].what = CommunicationRequest/Thread-Example
+  entity[1].what = Communication/Reply-Manu-to-Kees
+```
+
+The **OZO FHIR Api** marks the Task as completed:
+
+```
+Task (for Kees Groot):
+  status = completed   ← was: requested
+  owner = RelatedPerson/Kees-Groot
+```
+
+**Notifications fired:**
+* `Task?status=requested` subscription → no (Task moved to COMPLETED, not REQUESTED)
+* The **OZO platform** detects the Task status change (REQUESTED → COMPLETED) and marks the message as read by Kees.
+
+#### Step 4: Kees responds (OZO client)
+
+Kees sends a follow-up message to the care team:
+
+```
+Communication:
+  partOf = CommunicationRequest/Thread-Example
+  sender = RelatedPerson/Kees-Groot
+  recipient = CareTeam/Netwerk-H-de-Boer
+  payload.contentString = "Bedankt voor de reactie, ik hoor graag wat het team ervan vindt."
+```
+
+The **OZO FHIR Api** updates Tasks for each CareTeam member:
+
+```
+Task (for Manu van Weel):                    Task (for Mark Benson):
+  status = requested   ← was: completed        status = requested   ← was already requested (no-op!)
+  owner = Practitioner/Manu-van-Weel          owner = Practitioner/Mark-Benson
+```
+
+**Notifications fired:**
+* `Communication` subscription → OZO platform notified of new message (always fires)
+* `Task?status=requested` subscription → Manu notified (status changed from COMPLETED to REQUESTED)
+* `Task?status=requested` subscription → Mark **not** notified (status was already REQUESTED — no-op, no new version created)
+
+> **Note:** This is why `Communication` is the primary new-message mechanism. Mark Benson had not yet read the previous message, so his Task was already REQUESTED. The FHIR server does not create a new version for a no-op update, and no Task notification is sent. The `Communication` subscription ensures Mark's OZO platform still shows the new message.
+{:.stu-note}
+
+---
+
+### Examples
+
+* [Thread-Example](CommunicationRequest-Thread-Example.html) - Thread created by RelatedPerson
+* [Reply-Manu-to-Kees](Communication-Reply-Manu-to-Kees.html) - Practitioner replies to RelatedPerson
+* [Reply-Kees-to-Netwerk](Communication-Reply-Kees-to-Netwerk.html) - RelatedPerson replies to CareTeam
+* [Notify-Manu-van-Weel](Task-Notify-Manu-van-Weel.html) - Task tracking unread status for Manu
+* [Notify-Kees-Groot](Task-Notify-Kees-Groot.html) - Task tracking unread status for Kees
+* [Kees-Read-Messages](AuditEvent-Kees-Read-Messages.html) - AuditEvent for Kees reading a message
 

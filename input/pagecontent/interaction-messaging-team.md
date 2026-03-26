@@ -168,7 +168,7 @@ CommunicationRequest:
   payload = "Kunnen jullie de medicatielijst controleren op mogelijke interacties?"
 ```
 
-The initial message `Communication` is also created:
+The **OZO FHIR Api** creates the initial `Communication` and `Task` resources:
 
 ```
 Communication:
@@ -178,9 +178,50 @@ Communication:
   payload = "Kunnen jullie de medicatielijst controleren op mogelijke interacties?"
 ```
 
-#### Step 2: Clinic practitioner replies
+```
+Task (for Manu van Weel):                    Task (for Mark Benson):
+  status = requested                           status = requested
+  intent = order                               intent = order
+  basedOn = CommunicationRequest/...           basedOn = CommunicationRequest/...
+  for = Patient/H-de-Boer                     for = Patient/H-de-Boer
+  owner = Practitioner/Manu-van-Weel          owner = Practitioner/Mark-Benson
 
-Dr. Manu van Weel from the clinic responds. The reply goes to the pharmacy team (read from `CommunicationRequest.extension[senderCareTeam]`):
+Task (for Johan van den Berg):
+  status = requested
+  intent = order
+  basedOn = CommunicationRequest/...
+  for = Patient/H-de-Boer
+  owner = Practitioner/Johan-van-den-Berg
+```
+
+**Notifications fired:**
+* `Communication` subscription → Clinic B practitioners notified of new message
+* `Task?status=requested` subscription → each Clinic B practitioner notified of unread thread
+
+#### Step 2: Manu van Weel reads the message and replies
+
+Dr. Manu van Weel from the clinic reads the message. The **OZO platform** creates an `AuditEvent`:
+
+```
+AuditEvent:
+  type = http://terminology.hl7.org/CodeSystem/audit-event-type#rest
+  action = R
+  recorded = "2025-12-04T10:15:00+01:00"
+  agent.who = Practitioner/Manu-van-Weel
+  source.site = "OZO Platform"
+  entity[0].what = CommunicationRequest/Pharmacy-to-Clinic
+  entity[1].what = Communication/Pharmacy-Initial-Message
+```
+
+The **OZO FHIR Api** marks the Task as completed. Because this is a team message, all Clinic B Tasks are completed:
+
+```
+Task (for Manu van Weel):     status = completed  ← was: requested
+Task (for Mark Benson):        status = completed  ← was: requested (team-wide read)
+Task (for Johan van den Berg): status = completed  ← was: requested (team-wide read)
+```
+
+Manu then replies. The reply goes to the pharmacy team (read from `CommunicationRequest.extension[senderCareTeam]`):
 
 ```
 Communication:
@@ -191,9 +232,21 @@ Communication:
   payload = "Ik heb de medicatielijst bekeken en zie geen directe interacties..."
 ```
 
+The **OZO FHIR Api** creates/updates Tasks for Pharmacy A members:
+
+```
+Task (for A.P. Otheeker):                    Task (for Pieter de Vries):
+  status = requested                           status = requested
+  owner = Practitioner/A-P-Otheeker           owner = Practitioner/Pieter-de-Vries
+```
+
+**Notifications fired:**
+* `Communication` subscription → Pharmacy A practitioners notified of new message
+* `Task?status=requested` subscription → each Pharmacy A practitioner notified of unread message
+
 #### Step 3: Different pharmacy practitioner follows up
 
-Another pharmacist (Pieter de Vries) from the same team responds, demonstrating that any team member can participate:
+A.P. Otheeker has not read the reply yet (Task still REQUESTED). Pieter de Vries reads it and responds, demonstrating that any team member can participate:
 
 ```
 Communication:
@@ -203,6 +256,26 @@ Communication:
   recipient = CareTeam/Clinic-B                      ← Continue to clinic team
   payload = "Bedankt voor de snelle reactie..."
 ```
+
+The **OZO FHIR Api** updates Tasks:
+
+```
+Pharmacy A Tasks:
+  Task (for A.P. Otheeker):  status = completed  ← was: requested (team-wide read)
+  Task (for Pieter de Vries): status = completed  ← Pieter is the sender
+
+Clinic B Tasks:
+  Task (for Manu van Weel):     status = requested  ← was: completed
+  Task (for Mark Benson):        status = requested  ← was: completed
+  Task (for Johan van den Berg): status = requested  ← was: completed
+```
+
+**Notifications fired:**
+* `Communication` subscription → Clinic B practitioners notified of new message (always fires)
+* `Task?status=requested` subscription → each Clinic B practitioner notified (status changed from COMPLETED to REQUESTED)
+
+> **Note:** If Clinic B had not yet read the previous message (Tasks still REQUESTED), the Task update would be a no-op and no Task notification would be sent. The `Communication` subscription ensures the new message is always detected regardless of read status.
+{:.stu-note}
 
 ---
 
