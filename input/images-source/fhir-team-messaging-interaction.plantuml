@@ -5,17 +5,16 @@ participant "OZO Platform\n(Team B)" as TeamB
 
 == Thread Creation (Team A initiates) ==
 TeamA -> FHIR : Create CommunicationRequest\n(status: 'active')\nrequester/sender = Practitioner A1\nextension[senderCareTeam] = CareTeam A\nrecipient = CareTeam B
-FHIR -> FHIR : Create Communication\n(initial message)\nsender = Practitioner A1\nrecipient = CareTeam B
 FHIR -> FHIR : Create Tasks\nfor each CareTeam B member\n(status: 'requested')
-FHIR -> TeamB : Notify of new Tasks\n[Via Subscription]
-TeamB -> FHIR : Fetch CommunicationRequest\nand Communication
+FHIR -> TeamB : Notify\n[Via Subscription, empty payload]
+TeamB -> FHIR : Fetch CommunicationRequest
 note over TeamB : Thread appears in\nTeam B's shared inbox
 
 == Reply from Team B ==
 TeamB -> FHIR : Create Communication\nsender = Practitioner B1\nrecipient = CareTeam A\n(from extension[senderCareTeam])
 FHIR -> FHIR : Create/Update Tasks\nfor CareTeam A members\n(status: 'requested')
 FHIR -> FHIR : Complete Tasks\nfor other CareTeam B members
-FHIR -> TeamA : Notify of new Tasks\n[Via Subscription]
+FHIR -> TeamA : Notify\n[Via Subscription, empty payload]
 TeamA -> FHIR : Fetch Communication
 note over TeamA : New message in\nTeam A's shared inbox
 
@@ -23,13 +22,14 @@ note over TeamA : New message in\nTeam A's shared inbox
 TeamA -> FHIR : Create Communication\nsender = Practitioner A2\n(different team member)\nrecipient = CareTeam B
 FHIR -> FHIR : Create/Update Tasks\nfor CareTeam B members\n(status: 'requested')
 FHIR -> FHIR : Complete Tasks\nfor other CareTeam A members
-FHIR -> TeamB : Notify of new Tasks\n[Via Subscription]
+FHIR -> TeamB : Notify\n[Via Subscription, empty payload]
 TeamB -> FHIR : Fetch Communication
 
 == Read Receipt ==
 TeamB -> FHIR : Create AuditEvent\n(action: 'R')\nagent = Practitioner B1
 FHIR -> FHIR : Complete Task\nfor Practitioner B1
 note over FHIR : Message marked as read\nfor all CareTeam B members
-FHIR -> TeamA : Notify Task update\n[Via Subscription]
+FHIR -> TeamA : Notify Task update\n[Via Subscription, empty payload]
+TeamA -> FHIR : Fetch Task
 note over TeamA : Message shown as\nread by Team B
 @enduml

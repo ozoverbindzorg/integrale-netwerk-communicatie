@@ -35,6 +35,15 @@ The following Subscription objects are created by the OZO platform for each team
 * `Communication?id`
 * `Task?status=requested` (the AAA proxy automatically scopes this to the current user's ownership)
 
+#### Notify-then-pull pattern
+
+In the Netherlands, healthcare data must not be pushed in subscription notifications. All subscriptions use the **notify-then-pull** pattern:
+
+1. The FHIR server sends an **empty notification** (no resource payload) to the subscriber's endpoint
+2. The subscriber **pulls** the changed resource by performing a FHIR read or search
+
+This means `channel.payload` must be left empty. The notification only signals that something matched the subscription criteria — the subscriber is responsible for fetching the actual data.
+
 #### Example Subscription resources
 
 **New message detection:**
@@ -45,7 +54,6 @@ Subscription:
   criteria = "Communication?id"
   channel.type = rest-hook
   channel.endpoint = "https://ozo-platform.example.nl/fhir/subscription/communication"
-  channel.payload = "application/fhir+json"
 ```
 
 **Unread message tracking:**
@@ -56,7 +64,6 @@ Subscription:
   criteria = "Task?status=requested"
   channel.type = rest-hook
   channel.endpoint = "https://ozo-platform.example.nl/fhir/subscription/task-unread"
-  channel.payload = "application/fhir+json"
 ```
 
 **Thread lifecycle:**
@@ -67,7 +74,6 @@ Subscription:
   criteria = "CommunicationRequest?id"
   channel.type = rest-hook
   channel.endpoint = "https://ozo-platform.example.nl/fhir/subscription/thread"
-  channel.payload = "application/fhir+json"
 ```
 
 ### Subscription behavior

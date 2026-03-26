@@ -6,28 +6,30 @@ participant "OZO Platform" as CTA
 == Thread Creation ==
 RPA -> FHIR : Create CommunicationRequest\n(status: 'draft')\n[As RelatedPerson]
 FHIR -> FHIR : Create Tasks\nfor each CareTeam member\n(status: 'requested')
-FHIR -> CTA : Notify of new CommunicationRequest\n[Via Subscription]
+FHIR -> CTA : Notify\n[Via Subscription, empty payload]
 CTA -> FHIR : Fetch CommunicationRequest
 CTA -> FHIR : Update CommunicationRequest\n(status: 'active')\n[After approval]
-FHIR -> RPA : Notify of updated CommunicationRequest\n[Via Subscription]
+FHIR -> RPA : Notify\n[Via Subscription, empty payload]
+RPA -> FHIR : Fetch CommunicationRequest
 
 == Practitioner Responds ==
 CTA -> FHIR : Create Communication\n[Practitioner -> RelatedPerson]
 FHIR -> FHIR : Update Tasks\n(status: 'requested' for recipients)
-FHIR -> RPA : Notify of new Communication\n[Via Subscription]
+FHIR -> RPA : Notify\n[Via Subscription, empty payload]
 note over RPA : New message detected\nvia Communication subscription\n(not via Task)
 RPA -> FHIR : Fetch Communication
 
 == Caregiver Reads Message ==
 RPA -> FHIR : Create AuditEvent\n(action: 'R', agent: RelatedPerson)
 FHIR -> FHIR : Update Task\n(status: 'completed')\nfor RelatedPerson
-FHIR -> CTA : Notify of Task update\n[Via Subscription]
+FHIR -> CTA : Notify Task update\n[Via Subscription, empty payload]
+CTA -> FHIR : Fetch Task
 note over CTA : Message marked as read\nby RelatedPerson
 
 == Caregiver Responds ==
 RPA -> FHIR : Create Communication\n[RelatedPerson -> CareTeam]
 FHIR -> FHIR : Update Tasks\n(status: 'requested' for CareTeam members)
-FHIR -> CTA : Notify of new Communication\n[Via Subscription]
+FHIR -> CTA : Notify\n[Via Subscription, empty payload]
 note over CTA : New message detected\nvia Communication subscription
 CTA -> FHIR : Fetch Communication
 note over CTA : When one practitioner reads,\nmarked as read for all CareTeam members
