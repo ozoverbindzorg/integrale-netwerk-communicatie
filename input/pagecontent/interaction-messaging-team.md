@@ -33,7 +33,22 @@ Both teams use the **OZO platform**. Unlike individual messaging, there is no OZ
 The following Subscription objects are created by the OZO platform for each team:
 * `CommunicationRequest?id`
 * `Communication?id`
-* `Task?id`
+* `Task?status=requested` (the AAA proxy automatically scopes this to the current user's ownership)
+
+### Subscription behavior
+
+Each subscription serves a different purpose. Understanding when notifications fire is critical for correct client implementation:
+
+| Subscription | Purpose | Fires when |
+|---|---|---|
+| `Communication?id` | **New message notification.** This is the primary mechanism for detecting new messages in a thread. | A new `Communication` is created (POST). |
+| `CommunicationRequest?id` | Thread lifecycle changes. | A `CommunicationRequest` is created or its status changes. |
+| `Task?status=requested` | Read status changes. **Not suitable for new-message detection.** | A `Task` status changes to REQUESTED (e.g. COMPLETED → REQUESTED). |
+
+> **Important:** The `Task` resource functions as a **read/unread indicator**, not as a message notification mechanism. When a new message arrives and the Task is already in status `requested` (unread), the OZO FHIR Api sets it to `requested` again — which is a no-op. HAPI FHIR does not create a new resource version when nothing changes, so **no subscription notification is sent**.
+>
+> To detect new messages, clients **must** subscribe to `Communication`. The `Task` subscription is only useful for observing read-status transitions.
+{:.stu-note}
 
 ### Create a new team thread
 
@@ -60,9 +75,10 @@ A practitioner from Team A creates a new thread addressed to Team B. The process
     * The `basedOn` is set to the `CommunicationRequest` reference
     * The `subject` is set to the `Patient` reference
     * The `owner` is set to the individual `CareTeam` member
-* The **OZO platform** (Team B side) receives the new `Task` by Subscription:
+* The **OZO platform** (Team B side) receives the new `Communication` and `Task` by Subscription:
+  * The `Communication` subscription notifies Team B of the new message
+  * The `Task` (status REQUESTED) tracks the unread state per team member
   * The thread appears in Team B's shared inbox for all team members
-  * Any practitioner from Team B can view and respond to the message
 
 ### Respond to a team thread (Team B replies)
 
@@ -88,9 +104,10 @@ A practitioner from Team B responds to the thread. The reply is addressed to Tea
         * The `owner` is set to the individual `CareTeam` member
   * For each member of Team B's `CareTeam` who is not the sender:
     * The existing task status is set to COMPLETED (the team member's colleague has responded)
-* The **OZO platform** (Team A side) receives a notification about the new `Task` and takes the following action:
-  * The thread appears with a new message indicator in Team A's shared inbox
+* The **OZO platform** (Team A side) receives a notification about the new `Communication` by Subscription:
+  * The new message appears in Team A's shared inbox
   * Any practitioner from Team A can view the response
+  * The `Task` status change (COMPLETED → REQUESTED) updates the unread indicator, but only if the previous message was already read. If the Task was already REQUESTED, no Task notification is sent — the `Communication` subscription ensures the message is always detected.
 
 ### Follow-up from a different team member (Team A replies)
 

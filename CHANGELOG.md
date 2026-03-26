@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
-## [0.6.0] - 2026-03-24
+## [0.6.0] - 2026-03-26
 
 ### Added
 
@@ -39,6 +39,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated HAPI installation guide with `OZOOrganizationalCareTeam` profile and canonical URL
 - Updated PlantUML data model diagrams to show both CareTeam types
 - Fixed documentation to correctly describe the `senderCareTeam` extension pattern (`sender` field is always an individual, extension provides CareTeam reply-to address)
+
+### Fixed
+
+#### Documentation
+- **Subscription guidance** - Clarified subscription behavior on both messaging pages (`interaction-messaging.md`, `interaction-messaging-team.md`):
+  - Changed recommended subscription from `Task?id` to `Task?status=requested` to avoid subscription storms and scope via AAA proxy
+  - Added "Subscription behavior" section explaining when each subscription fires and when it does **not** fire
+  - Clarified that `Communication` subscription is the primary mechanism for new-message detection, not `Task`
+  - Fixed misleading interaction flows that implied `Task` notifications detect new messages — `Task` is a **read/unread indicator** only. When a new message arrives and the Task is already REQUESTED (unread), the no-op update produces no notification
 
 ## [0.5.4] - 2026-03-11
 
