@@ -25,48 +25,36 @@ The following Subscriptions are likely to be created by the OZO client:
 #### Example Subscription resources
 
 **New message detection (OZO client):**
-```json
-{
-  "resourceType": "Subscription",
-  "status": "requested",
-  "reason": "Notify when new Communication messages are created",
-  "criteria": "Communication?id",
-  "channel": {
-    "type": "rest-hook",
-    "endpoint": "https://ozo-client.example.nl/fhir/subscription/communication",
-    "payload": "application/fhir+json"
-  }
-}
+```
+Subscription:
+  status = requested
+  reason = "Notify when new Communication messages are created"
+  criteria = "Communication?id"
+  channel.type = rest-hook
+  channel.endpoint = "https://ozo-client.example.nl/fhir/subscription/communication"
+  channel.payload = "application/fhir+json"
 ```
 
 **Unread message tracking (OZO client):**
-```json
-{
-  "resourceType": "Subscription",
-  "status": "requested",
-  "reason": "Notify when Task status changes to requested (unread indicator)",
-  "criteria": "Task?status=requested",
-  "channel": {
-    "type": "rest-hook",
-    "endpoint": "https://ozo-client.example.nl/fhir/subscription/task-unread",
-    "payload": "application/fhir+json"
-  }
-}
+```
+Subscription:
+  status = requested
+  reason = "Notify when Task status changes to requested (unread indicator)"
+  criteria = "Task?status=requested"
+  channel.type = rest-hook
+  channel.endpoint = "https://ozo-client.example.nl/fhir/subscription/task-unread"
+  channel.payload = "application/fhir+json"
 ```
 
 **Thread lifecycle (OZO platform):**
-```json
-{
-  "resourceType": "Subscription",
-  "status": "requested",
-  "reason": "Notify when CommunicationRequest is created or status changes",
-  "criteria": "CommunicationRequest?id",
-  "channel": {
-    "type": "rest-hook",
-    "endpoint": "https://ozo-platform.example.nl/fhir/subscription/thread",
-    "payload": "application/fhir+json"
-  }
-}
+```
+Subscription:
+  status = requested
+  reason = "Notify when CommunicationRequest is created or status changes"
+  criteria = "CommunicationRequest?id"
+  channel.type = rest-hook
+  channel.endpoint = "https://ozo-platform.example.nl/fhir/subscription/thread"
+  channel.payload = "application/fhir+json"
 ```
 
 ### Subscription behavior
