@@ -35,6 +35,53 @@ The following Subscription objects are created by the OZO platform for each team
 * `Communication?id`
 * `Task?status=requested` (the AAA proxy automatically scopes this to the current user's ownership)
 
+#### Example Subscription resources
+
+**New message detection:**
+```json
+{
+  "resourceType": "Subscription",
+  "status": "requested",
+  "reason": "Notify when new Communication messages are created",
+  "criteria": "Communication?id",
+  "channel": {
+    "type": "rest-hook",
+    "endpoint": "https://ozo-platform.example.nl/fhir/subscription/communication",
+    "payload": "application/fhir+json"
+  }
+}
+```
+
+**Unread message tracking:**
+```json
+{
+  "resourceType": "Subscription",
+  "status": "requested",
+  "reason": "Notify when Task status changes to requested (unread indicator)",
+  "criteria": "Task?status=requested",
+  "channel": {
+    "type": "rest-hook",
+    "endpoint": "https://ozo-platform.example.nl/fhir/subscription/task-unread",
+    "payload": "application/fhir+json"
+  }
+}
+```
+
+**Thread lifecycle:**
+```json
+{
+  "resourceType": "Subscription",
+  "status": "requested",
+  "reason": "Notify when CommunicationRequest is created or status changes",
+  "criteria": "CommunicationRequest?id",
+  "channel": {
+    "type": "rest-hook",
+    "endpoint": "https://ozo-platform.example.nl/fhir/subscription/thread",
+    "payload": "application/fhir+json"
+  }
+}
+```
+
 ### Subscription behavior
 
 Each subscription serves a different purpose. Understanding when notifications fire is critical for correct client implementation:
