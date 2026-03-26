@@ -236,10 +236,10 @@ menu:
     Access the API as OZO System: technical-walkthrough-access-ozo.html
     Caching and Pagination: technical-caching.html
   Interactions:
-    Creating the network: interaction-network.html
-    Reading and updating messages: interaction-messaging.html
-    Team-to-team messaging: interaction-messaging-team.html
-    Adding attachments with the dropbox: interaction-dropbox.html
+    Attachments - Adding attachments with the dropbox: interaction-dropbox.html
+    Care network - Creating: interaction-network.html
+    Messaging - Reading and updating: interaction-messaging.html
+    Messaging - Team-to-team: interaction-messaging-team.html
   Directory:
     Care Services Directory: care-services-directory.html
   Compliance:
