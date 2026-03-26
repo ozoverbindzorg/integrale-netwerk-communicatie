@@ -249,7 +249,6 @@ The `Communication.sender` must always be an individual (`Practitioner` or `Rela
 
 * [Reply-Manu-to-Kees](Communication-Reply-Manu-to-Kees.html) - Practitioner replies to RelatedPerson
 * [Reply-Kees-to-Netwerk](Communication-Reply-Kees-to-Netwerk.html) - RelatedPerson to CareTeam
-* [Pharmacy-Initial-Message](Communication-Pharmacy-Initial-Message.html) - Team messaging: initial message
 * [Clinic-Response-to-Pharmacy](Communication-Clinic-Response-to-Pharmacy.html) - Team messaging: reply
 * [Pharmacy-Followup-by-Pieter](Communication-Pharmacy-Followup-by-Pieter.html) - Team messaging: different team member follows up
 
