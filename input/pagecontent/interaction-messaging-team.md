@@ -165,23 +165,7 @@ The following walkthrough shows a concrete example with Apotheek de Pil (Pharmac
 
 A pharmacist (A.P. Otheeker) from Apotheek de Pil sends a message to Huisarts Amsterdam about a patient's medication — see [Pharmacy-to-Clinic](CommunicationRequest-Pharmacy-to-Clinic.html) for the full `CommunicationRequest`.
 
-The **OZO FHIR Api** creates `Task` resources for each Clinic B member:
-
-```
-Task (for Manu van Weel):                    Task (for Mark Benson):
-  status = requested                           status = requested
-  intent = order                               intent = order
-  basedOn = CommunicationRequest/...           basedOn = CommunicationRequest/...
-  for = Patient/H-de-Boer                     for = Patient/H-de-Boer
-  owner = Practitioner/Manu-van-Weel          owner = Practitioner/Mark-Benson
-
-Task (for Johan van den Berg):
-  status = requested
-  intent = order
-  basedOn = CommunicationRequest/...
-  for = Patient/H-de-Boer
-  owner = Practitioner/Johan-van-den-Berg
-```
+The **OZO FHIR Api** creates a `Task` (status `requested`) for each Clinic B member — see [Notify-Manu-van-Weel](Task-Notify-Manu-van-Weel.html) for an example of a Task resource.
 
 **Notifications fired:**
 * `CommunicationRequest` subscription → Clinic B notified of new thread
@@ -191,23 +175,16 @@ Task (for Johan van den Berg):
 
 Dr. Manu van Weel from the clinic reads the message. The **OZO platform** creates an `AuditEvent` — see [Manu-Read-Messages](AuditEvent-Manu-Read-Messages.html) for a similar example.
 
-The **OZO FHIR Api** marks the Task as completed. Because this is a team message, all Clinic B Tasks are completed:
-
-```
-Task (for Manu van Weel):     status = completed  ← was: requested
-Task (for Mark Benson):        status = completed  ← was: requested (team-wide read)
-Task (for Johan van den Berg): status = completed  ← was: requested (team-wide read)
-```
+The **OZO FHIR Api** marks the Tasks as completed. Because this is a team message, all Clinic B Tasks are completed (team-wide read):
+* Task (for Manu van Weel): status → `completed` (was: `requested`)
+* Task (for Mark Benson): status → `completed` (was: `requested`, team-wide read)
+* Task (for Johan van den Berg): status → `completed` (was: `requested`, team-wide read)
 
 Manu then replies. The reply goes to the pharmacy team (read from `CommunicationRequest.extension[senderCareTeam]`) — see [Clinic-Response-to-Pharmacy](Communication-Clinic-Response-to-Pharmacy.html) for the full `Communication`.
 
 The **OZO FHIR Api** creates/updates Tasks for Pharmacy A members:
-
-```
-Task (for A.P. Otheeker):                    Task (for Pieter de Vries):
-  status = requested                           status = requested
-  owner = Practitioner/A-P-Otheeker           owner = Practitioner/Pieter-de-Vries
-```
+* Task (for A.P. Otheeker): status → `requested`
+* Task (for Pieter de Vries): status → `requested`
 
 **Notifications fired:**
 * `Communication` subscription → Pharmacy A practitioners notified of new message
@@ -219,16 +196,14 @@ A.P. Otheeker has not read the reply yet (Task still REQUESTED). Pieter de Vries
 
 The **OZO FHIR Api** updates Tasks:
 
-```
-Pharmacy A Tasks:
-  Task (for A.P. Otheeker):  status = completed  ← was: requested (team-wide read)
-  Task (for Pieter de Vries): status = completed  ← Pieter is the sender
+**Pharmacy A Tasks:**
+* Task (for A.P. Otheeker): status → `completed` (was: `requested`, team-wide read)
+* Task (for Pieter de Vries): status → `completed` (Pieter is the sender)
 
-Clinic B Tasks:
-  Task (for Manu van Weel):     status = requested  ← was: completed
-  Task (for Mark Benson):        status = requested  ← was: completed
-  Task (for Johan van den Berg): status = requested  ← was: completed
-```
+**Clinic B Tasks:**
+* Task (for Manu van Weel): status → `requested` (was: `completed`)
+* Task (for Mark Benson): status → `requested` (was: `completed`)
+* Task (for Johan van den Berg): status → `requested` (was: `completed`)
 
 **Notifications fired:**
 * `Communication` subscription → Clinic B practitioners notified of new message (always fires)

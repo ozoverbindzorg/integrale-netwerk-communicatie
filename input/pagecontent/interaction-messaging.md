@@ -166,23 +166,7 @@ The following walkthrough shows a concrete example using patient H. de Boer's ca
 
 Kees Groot sends a message to the care team about a fracture report — see [Thread-Example](CommunicationRequest-Thread-Example.html) for the full `CommunicationRequest`.
 
-The **OZO FHIR Api** creates a `Task` for each CareTeam member (except the sender):
-
-```
-Task (for Manu van Weel):                    Task (for Mark Benson):
-  status = requested                           status = requested
-  intent = order                               intent = order
-  basedOn = CommunicationRequest/Thread-Example  basedOn = CommunicationRequest/Thread-Example
-  for = Patient/H-de-Boer                     for = Patient/H-de-Boer
-  owner = Practitioner/Manu-van-Weel          owner = Practitioner/Mark-Benson
-
-Task (for A.P. Otheeker):
-  status = requested
-  intent = order
-  basedOn = CommunicationRequest/Thread-Example
-  for = Patient/H-de-Boer
-  owner = Practitioner/A-P-Otheeker
-```
+The **OZO FHIR Api** creates a `Task` (status `requested`) for each CareTeam member except the sender — see [Notify-Manu-van-Weel](Task-Notify-Manu-van-Weel.html) and [Notify-Mark-Benson](Task-Notify-Mark-Benson.html) for examples.
 
 **Notifications fired:**
 * `CommunicationRequest` subscription → OZO platform notified of new thread
@@ -195,12 +179,8 @@ The **OZO platform** receives the `CommunicationRequest` and sets status to ACTI
 Practitioner Manu van Weel reads the message and replies — see [Reply-Manu-to-Kees](Communication-Reply-Manu-to-Kees.html) for the full `Communication`.
 
 The **OZO FHIR Api** updates Tasks:
-
-```
-Task (for Kees Groot):                        Task (for Manu van Weel):
-  status = requested   ← unread for Kees       status = completed  ← Manu is the sender
-  owner = RelatedPerson/Kees-Groot             owner = Practitioner/Manu-van-Weel
-```
+* [Notify-Kees-Groot](Task-Notify-Kees-Groot.html): status → `requested` (unread for Kees)
+* [Notify-Manu-van-Weel](Task-Notify-Manu-van-Weel.html): status → `completed` (Manu is the sender)
 
 **Notifications fired:**
 * `Communication` subscription → OZO client notified of new message (primary new-message mechanism)
@@ -211,12 +191,7 @@ Task (for Kees Groot):                        Task (for Manu van Weel):
 Kees opens the message in the OZO client. The client creates an `AuditEvent` — see [Kees-Read-Messages](AuditEvent-Kees-Read-Messages.html) for the full resource.
 
 The **OZO FHIR Api** marks the Task as completed:
-
-```
-Task (for Kees Groot):
-  status = completed   ← was: requested
-  owner = RelatedPerson/Kees-Groot
-```
+* [Notify-Kees-Groot](Task-Notify-Kees-Groot.html): status → `completed` (was: `requested`)
 
 **Notifications fired:**
 * `Task?status=requested` subscription → no (Task moved to COMPLETED, not REQUESTED)
@@ -227,12 +202,8 @@ Task (for Kees Groot):
 Kees sends a follow-up message to the care team — see [Reply-Kees-to-Netwerk](Communication-Reply-Kees-to-Netwerk.html) for the full `Communication`.
 
 The **OZO FHIR Api** updates Tasks for each CareTeam member:
-
-```
-Task (for Manu van Weel):                    Task (for Mark Benson):
-  status = requested   ← was: completed        status = requested   ← was already requested (no-op!)
-  owner = Practitioner/Manu-van-Weel          owner = Practitioner/Mark-Benson
-```
+* [Notify-Manu-van-Weel](Task-Notify-Manu-van-Weel.html): status → `requested` (was: `completed`)
+* [Notify-Mark-Benson](Task-Notify-Mark-Benson.html): status → `requested` (was already `requested` — **no-op!**)
 
 **Notifications fired:**
 * `Communication` subscription → OZO platform notified of new message (always fires)
