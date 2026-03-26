@@ -18,6 +18,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `name 1..1` — team display name required
   - `participant.member` restricted to `OZOPractitioner` only (no RelatedPerson in org teams)
 
+#### Examples
+- **Subscription-Communication**, **Subscription-Task-Unread**, **Subscription-CommunicationRequest** - New Subscription examples demonstrating the notify-then-pull pattern (empty `channel.payload` as required in Dutch healthcare). Covers new message detection, unread tracking, and thread lifecycle.
+
 #### Documentation
 - **Team-to-Team Messaging** - New dedicated documentation page (`interaction-messaging-team.md`) with stepwise walkthrough of team-to-team messaging flows, including thread creation, replies from both teams, follow-up by different team members, and read receipts
 - Added PlantUML sequence diagram for team-to-team messaging interaction
@@ -31,6 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Examples
 - **Pharmacy-A**, **Clinic-B**, **Department-Thuiszorg** - Changed from `OZOCareTeam` to `OZOOrganizationalCareTeam` profile. Removed fake `Patient/example-unassigned` subject references that were a workaround for the previous `subject 1..1` constraint
+- **Clinic-Response-to-Pharmacy** - Removed `inResponseTo` reference (was pointing to deleted `Pharmacy-Initial-Message`; this is now the first reply in the thread, responding to the CommunicationRequest payload)
 
 #### Documentation
 - Split individual messaging page from team-to-team messaging into separate pages
@@ -51,6 +55,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Messaging example walkthroughs** - Added detailed concrete examples to both messaging pages showing the complete flow including all resources created by the OZO FHIR Api:
   - Individual messaging (`interaction-messaging.md`): Kees Groot ↔ care team walkthrough with CommunicationRequest, Communication, Task creation/updates, AuditEvent read receipts, and subscription notifications at each step
   - Team messaging (`interaction-messaging-team.md`): Extended the Pharmacy ↔ Clinic example with Task and AuditEvent resources, team-wide read behavior, and notification details demonstrating the Task no-op scenario
+- **Inline examples replaced with FSH links** - Replaced inline pseudo-code blocks in both messaging pages with links to FSH example pages. Task state transitions and notification annotations remain inline as narrative.
+
+### Removed
+
+#### Examples
+- **Pharmacy-Initial-Message** - Deleted Communication example that duplicated the CommunicationRequest payload. The CommunicationRequest carries the initial message; no separate Communication is created at thread initiation.
 
 ## [0.5.4] - 2026-03-11
 

@@ -46,35 +46,9 @@ This means `channel.payload` must be left empty. The notification only signals t
 
 #### Example Subscription resources
 
-**New message detection:**
-```
-Subscription:
-  status = requested
-  reason = "Notify when new Communication messages are created"
-  criteria = "Communication?id"
-  channel.type = rest-hook
-  channel.endpoint = "https://ozo-platform.example.nl/fhir/subscription/communication"
-```
-
-**Unread message tracking:**
-```
-Subscription:
-  status = requested
-  reason = "Notify when Task status changes to requested (unread indicator)"
-  criteria = "Task?status=requested"
-  channel.type = rest-hook
-  channel.endpoint = "https://ozo-platform.example.nl/fhir/subscription/task-unread"
-```
-
-**Thread lifecycle:**
-```
-Subscription:
-  status = requested
-  reason = "Notify when CommunicationRequest is created or status changes"
-  criteria = "CommunicationRequest?id"
-  channel.type = rest-hook
-  channel.endpoint = "https://ozo-platform.example.nl/fhir/subscription/thread"
-```
+* [Subscription-Communication](Subscription-Subscription-Communication.html) — new message detection
+* [Subscription-Task-Unread](Subscription-Subscription-Task-Unread.html) — unread message tracking
+* [Subscription-CommunicationRequest](Subscription-Subscription-CommunicationRequest.html) — thread lifecycle
 
 ### Subscription behavior
 
@@ -189,18 +163,7 @@ The following walkthrough shows a concrete example with Apotheek de Pil (Pharmac
 
 #### Step 1: Pharmacy initiates thread
 
-A pharmacist (A.P. Otheeker) from Apotheek de Pil sends a message to Huisarts Amsterdam about a patient's medication:
-
-```
-CommunicationRequest:
-  status = active
-  subject = Patient/H-de-Boer
-  requester = Practitioner/A-P-Otheeker              ← Individual who initiated (auditability)
-  sender = Practitioner/A-P-Otheeker                 ← Individual sender
-  extension[senderCareTeam] = CareTeam/Pharmacy-A    ← Team reply-to address
-  recipient = CareTeam/Clinic-B                      ← Addressed to clinic team
-  payload = "Kunnen jullie de medicatielijst controleren op mogelijke interacties?"
-```
+A pharmacist (A.P. Otheeker) from Apotheek de Pil sends a message to Huisarts Amsterdam about a patient's medication — see [Pharmacy-to-Clinic](CommunicationRequest-Pharmacy-to-Clinic.html) for the full `CommunicationRequest`.
 
 The **OZO FHIR Api** creates `Task` resources for each Clinic B member:
 
@@ -226,18 +189,7 @@ Task (for Johan van den Berg):
 
 #### Step 2: Manu van Weel reads the message and replies
 
-Dr. Manu van Weel from the clinic reads the message. The **OZO platform** creates an `AuditEvent`:
-
-```
-AuditEvent:
-  type = http://terminology.hl7.org/CodeSystem/audit-event-type#rest
-  action = R
-  recorded = "2025-12-04T10:15:00+01:00"
-  agent.who = Practitioner/Manu-van-Weel
-  source.site = "OZO Platform"
-  entity[0].what = CommunicationRequest/Pharmacy-to-Clinic
-  entity[1].what = Communication/Pharmacy-Initial-Message
-```
+Dr. Manu van Weel from the clinic reads the message. The **OZO platform** creates an `AuditEvent` — see [Manu-Read-Messages](AuditEvent-Manu-Read-Messages.html) for a similar example.
 
 The **OZO FHIR Api** marks the Task as completed. Because this is a team message, all Clinic B Tasks are completed:
 
@@ -247,16 +199,7 @@ Task (for Mark Benson):        status = completed  ← was: requested (team-wide
 Task (for Johan van den Berg): status = completed  ← was: requested (team-wide read)
 ```
 
-Manu then replies. The reply goes to the pharmacy team (read from `CommunicationRequest.extension[senderCareTeam]`):
-
-```
-Communication:
-  partOf = CommunicationRequest/Pharmacy-to-Clinic
-  inResponseTo = Communication/Pharmacy-Initial-Message
-  sender = Practitioner/Manu-van-Weel                ← Individual auditability
-  recipient = CareTeam/Pharmacy-A                    ← From CommunicationRequest.extension[senderCareTeam]
-  payload = "Ik heb de medicatielijst bekeken en zie geen directe interacties..."
-```
+Manu then replies. The reply goes to the pharmacy team (read from `CommunicationRequest.extension[senderCareTeam]`) — see [Clinic-Response-to-Pharmacy](Communication-Clinic-Response-to-Pharmacy.html) for the full `Communication`.
 
 The **OZO FHIR Api** creates/updates Tasks for Pharmacy A members:
 
@@ -272,16 +215,7 @@ Task (for A.P. Otheeker):                    Task (for Pieter de Vries):
 
 #### Step 3: Different pharmacy practitioner follows up
 
-A.P. Otheeker has not read the reply yet (Task still REQUESTED). Pieter de Vries reads it and responds, demonstrating that any team member can participate:
-
-```
-Communication:
-  partOf = CommunicationRequest/Pharmacy-to-Clinic
-  inResponseTo = Communication/Clinic-Response-to-Pharmacy
-  sender = Practitioner/Pieter-de-Vries              ← Different team member
-  recipient = CareTeam/Clinic-B                      ← Continue to clinic team
-  payload = "Bedankt voor de snelle reactie..."
-```
+A.P. Otheeker has not read the reply yet (Task still REQUESTED). Pieter de Vries reads it and responds, demonstrating that any team member can participate — see [Pharmacy-Followup-by-Pieter](Communication-Pharmacy-Followup-by-Pieter.html) for the full `Communication`.
 
 The **OZO FHIR Api** updates Tasks:
 
@@ -331,11 +265,16 @@ GET /CommunicationRequest?_has:Extension:url=http://ozoverbindzorg.nl/fhir/Struc
 
 ### Examples
 
+#### Subscriptions
+* [Subscription-Communication](Subscription-Subscription-Communication.html) - New message detection
+* [Subscription-Task-Unread](Subscription-Subscription-Task-Unread.html) - Unread message tracking
+* [Subscription-CommunicationRequest](Subscription-Subscription-CommunicationRequest.html) - Thread lifecycle
+
+#### Messaging resources
 * [Pharmacy-A](CareTeam-Pharmacy-A.html) - Pharmacy team for team-level messaging
 * [Clinic-B](CareTeam-Clinic-B.html) - Clinic team for team-level messaging
 * [Pharmacy-to-Clinic](CommunicationRequest-Pharmacy-to-Clinic.html) - Team-to-team thread
-* [Pharmacy-Initial-Message](Communication-Pharmacy-Initial-Message.html) - Initial message
-* [Clinic-Response-to-Pharmacy](Communication-Clinic-Response-to-Pharmacy.html) - Clinic reply
+* [Clinic-Response-to-Pharmacy](Communication-Clinic-Response-to-Pharmacy.html) - First reply from clinic
 * [Pharmacy-Followup-by-Pieter](Communication-Pharmacy-Followup-by-Pieter.html) - Follow-up from different team member
 
 For detailed analysis of the addressing solution, see [FHIR Addressing Analysis](fhir-addressing-analysis.html).

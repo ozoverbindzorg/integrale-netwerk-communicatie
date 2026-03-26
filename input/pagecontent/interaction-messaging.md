@@ -33,35 +33,9 @@ This means `channel.payload` must be left empty. The notification only signals t
 
 #### Example Subscription resources
 
-**New message detection (OZO client):**
-```
-Subscription:
-  status = requested
-  reason = "Notify when new Communication messages are created"
-  criteria = "Communication?id"
-  channel.type = rest-hook
-  channel.endpoint = "https://ozo-client.example.nl/fhir/subscription/communication"
-```
-
-**Unread message tracking (OZO client):**
-```
-Subscription:
-  status = requested
-  reason = "Notify when Task status changes to requested (unread indicator)"
-  criteria = "Task?status=requested"
-  channel.type = rest-hook
-  channel.endpoint = "https://ozo-client.example.nl/fhir/subscription/task-unread"
-```
-
-**Thread lifecycle (OZO platform):**
-```
-Subscription:
-  status = requested
-  reason = "Notify when CommunicationRequest is created or status changes"
-  criteria = "CommunicationRequest?id"
-  channel.type = rest-hook
-  channel.endpoint = "https://ozo-platform.example.nl/fhir/subscription/thread"
-```
+* [Subscription-Communication](Subscription-Subscription-Communication.html) — new message detection
+* [Subscription-Task-Unread](Subscription-Subscription-Task-Unread.html) — unread message tracking
+* [Subscription-CommunicationRequest](Subscription-Subscription-CommunicationRequest.html) — thread lifecycle
 
 ### Subscription behavior
 
@@ -190,17 +164,7 @@ The following walkthrough shows a concrete example using patient H. de Boer's ca
 
 #### Step 1: Kees creates a thread (OZO client)
 
-Kees Groot sends a message to the care team about a fracture report:
-
-```
-CommunicationRequest:
-  status = draft
-  subject = Patient/H-de-Boer
-  requester = RelatedPerson/Kees-Groot
-  recipient = CareTeam/Netwerk-H-de-Boer
-  payload[0].contentString = "Thread created by RelatedPerson"
-  payload[1].contentAttachment.title = "rapport_fractuur.pdf"
-```
+Kees Groot sends a message to the care team about a fracture report — see [Thread-Example](CommunicationRequest-Thread-Example.html) for the full `CommunicationRequest`.
 
 The **OZO FHIR Api** creates a `Task` for each CareTeam member (except the sender):
 
@@ -228,15 +192,7 @@ The **OZO platform** receives the `CommunicationRequest` and sets status to ACTI
 
 #### Step 2: Manu van Weel replies (OZO platform)
 
-Practitioner Manu van Weel reads the message and replies:
-
-```
-Communication:
-  partOf = CommunicationRequest/Thread-Example
-  sender = Practitioner/Manu-van-Weel
-  recipient = RelatedPerson/Kees-Groot
-  payload.contentString = "Goedemorgen Kees, bedankt voor uw bericht. Ik heb het rapport bekeken en zal dit bespreken met het team."
-```
+Practitioner Manu van Weel reads the message and replies — see [Reply-Manu-to-Kees](Communication-Reply-Manu-to-Kees.html) for the full `Communication`.
 
 The **OZO FHIR Api** updates Tasks:
 
@@ -252,19 +208,7 @@ Task (for Kees Groot):                        Task (for Manu van Weel):
 
 #### Step 3: Kees reads the message and the read receipt is created (OZO client)
 
-Kees opens the message in the OZO client. The client creates an `AuditEvent`:
-
-```
-AuditEvent:
-  type = http://terminology.hl7.org/CodeSystem/audit-event-type#rest "RESTful Operation"
-  subtype = http://hl7.org/fhir/restful-interaction#read "read"
-  action = R
-  recorded = "2024-12-05T17:25:01+01:00"
-  agent.who = RelatedPerson/Kees-Groot
-  source.site = "OZO Client"
-  entity[0].what = CommunicationRequest/Thread-Example
-  entity[1].what = Communication/Reply-Manu-to-Kees
-```
+Kees opens the message in the OZO client. The client creates an `AuditEvent` — see [Kees-Read-Messages](AuditEvent-Kees-Read-Messages.html) for the full resource.
 
 The **OZO FHIR Api** marks the Task as completed:
 
@@ -280,15 +224,7 @@ Task (for Kees Groot):
 
 #### Step 4: Kees responds (OZO client)
 
-Kees sends a follow-up message to the care team:
-
-```
-Communication:
-  partOf = CommunicationRequest/Thread-Example
-  sender = RelatedPerson/Kees-Groot
-  recipient = CareTeam/Netwerk-H-de-Boer
-  payload.contentString = "Bedankt voor de reactie, ik hoor graag wat het team ervan vindt."
-```
+Kees sends a follow-up message to the care team — see [Reply-Kees-to-Netwerk](Communication-Reply-Kees-to-Netwerk.html) for the full `Communication`.
 
 The **OZO FHIR Api** updates Tasks for each CareTeam member:
 
@@ -310,6 +246,12 @@ Task (for Manu van Weel):                    Task (for Mark Benson):
 
 ### Examples
 
+#### Subscriptions
+* [Subscription-Communication](Subscription-Subscription-Communication.html) - New message detection
+* [Subscription-Task-Unread](Subscription-Subscription-Task-Unread.html) - Unread message tracking
+* [Subscription-CommunicationRequest](Subscription-Subscription-CommunicationRequest.html) - Thread lifecycle
+
+#### Messaging resources
 * [Thread-Example](CommunicationRequest-Thread-Example.html) - Thread created by RelatedPerson
 * [Reply-Manu-to-Kees](Communication-Reply-Manu-to-Kees.html) - Practitioner replies to RelatedPerson
 * [Reply-Kees-to-Netwerk](Communication-Reply-Kees-to-Netwerk.html) - RelatedPerson replies to CareTeam
