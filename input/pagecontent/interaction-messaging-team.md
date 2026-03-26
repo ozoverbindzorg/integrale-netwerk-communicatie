@@ -62,20 +62,14 @@ A practitioner from Team A creates a new thread addressed to Team B. The process
   * The `recipient` is the `CareTeam` of Team B
   * The `status` is set to ACTIVE
   * The `payload` contains the initial message
-* The **OZO platform** also creates a `Communication` as the first message in the thread:
-  * The `partOf` is set to the `CommunicationRequest` reference
-  * The `sender` is set to the `Practitioner` from Team A (individual auditability)
-  * The `recipient` is set to the `CareTeam` of Team B
-  * The `payload` contains the same initial message
-  * The `status` is set to COMPLETED
 * The **OZO FHIR Api** creates a `Task` for each member of Team B's `CareTeam`:
     * The `status` is set to REQUESTED
     * The `intent` is set to ORDER
     * The `basedOn` is set to the `CommunicationRequest` reference
     * The `subject` is set to the `Patient` reference
     * The `owner` is set to the individual `CareTeam` member
-* The **OZO platform** (Team B side) receives the new `Communication` and `Task` by Subscription:
-  * The `Communication` subscription notifies Team B of the new message
+* The **OZO platform** (Team B side) receives the new `CommunicationRequest` and `Task` by Subscription:
+  * The `CommunicationRequest` subscription notifies Team B of the new thread
   * The `Task` (status REQUESTED) tracks the unread state per team member
   * The thread appears in Team B's shared inbox for all team members
 
@@ -167,15 +161,7 @@ CommunicationRequest:
   payload = "Kunnen jullie de medicatielijst controleren op mogelijke interacties?"
 ```
 
-The **OZO platform** also creates the initial `Communication`. The **OZO FHIR Api** then creates `Task` resources:
-
-```
-Communication:
-  partOf = CommunicationRequest/Pharmacy-to-Clinic
-  sender = Practitioner/A-P-Otheeker                 ← Individual auditability
-  recipient = CareTeam/Clinic-B                      ← Addressed to clinic team
-  payload = "Kunnen jullie de medicatielijst controleren op mogelijke interacties?"
-```
+The **OZO FHIR Api** creates `Task` resources for each Clinic B member:
 
 ```
 Task (for Manu van Weel):                    Task (for Mark Benson):
@@ -194,7 +180,7 @@ Task (for Johan van den Berg):
 ```
 
 **Notifications fired:**
-* `Communication` subscription → Clinic B practitioners notified of new message
+* `CommunicationRequest` subscription → Clinic B notified of new thread
 * `Task?status=requested` subscription → each Clinic B practitioner notified of unread thread
 
 #### Step 2: Manu van Weel reads the message and replies
