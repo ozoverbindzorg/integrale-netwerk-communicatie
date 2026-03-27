@@ -21,7 +21,7 @@ Description: "Example of an AuditEvent for a failed REST update operation throug
 * source.observer = Reference(Device/ozo-aaa-proxy-001) "AAA Proxy Instance 001"
 * source.observer.type = "Device"
 * source.type = http://terminology.hl7.org/CodeSystem/security-source-type#4 "Application Server"
-* entity[0].what = Reference(Patient/5)
+* entity[0].what.reference = "Patient/5/_history/3"
 * entity[=].what.type = "Patient"
 * entity[=].type = http://hl7.org/fhir/resource-types#Patient "Patient"
 * entity[=].role = http://terminology.hl7.org/CodeSystem/object-role#4 "Domain Resource"

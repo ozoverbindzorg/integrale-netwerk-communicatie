@@ -49,10 +49,15 @@ The OZO AuditEvent profile extends the base FHIR AuditEvent with specific constr
 ##### Entity Information
 
 - **entity**: What was accessed/modified (0..*)
-  - **what**: Reference to the specific FHIR resource
+  - **what**: Version-specific reference to the FHIR resource (see below)
   - **type**: Type of resource
   - **role**: Domain Resource or Query
   - **query**: For searches, the query parameters used
+
+> **Important:** Entity references **must** be version-specific, using the format `{ResourceType}/{id}/_history/{version}` (e.g., `Communication/4648/_history/1`). This is a **NEN7510 requirement** — audit events serve as the legal record of who accessed what data. A non-versioned reference (e.g., `Communication/4648`) points to the *current* version of the resource, which may have been modified or deleted since the audit event was created. Only a version-specific reference guarantees the audit trail accurately reflects the state of the resource at the time of access.
+>
+> This applies to all CRUD operations (read, create, update, delete). For search operations, the `entity.query` field records the search parameters instead of a resource reference.
+{:.stu-note}
 
 ##### Extensions
 

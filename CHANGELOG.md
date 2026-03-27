@@ -14,10 +14,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **OZOCommunication** - Added `OZOPatient` to allowed `sender` types. Production data shows Patient resources are used as senders (4 out of 192 Communications).
 - **OZOCommunicationRequest** - Added `OZOPatient` to allowed `requester` and `sender` types. Production data shows Patient resources are used as requester/sender (2 out of 33 CommunicationRequests).
 
+#### Examples
+- **All AuditEvent examples** - Changed `entity.what` references to version-specific format (`{ResourceType}/{id}/_history/{version}`). NEN7510 requires audit events to reference the exact version of the resource accessed, not the mutable current version.
+
 ### Fixed
 
 #### Documentation
-- Production data conformance analysis documented in work-documents. Key finding: 94% of Communication resources are missing the required `status` field — the OZO platform must set `status = completed` when creating Communications.
+- **AuditEvent NEN7510 page** - Added requirement that `entity.what` must use version-specific references for NEN7510 compliance. Non-versioned references become broken links when resources are deleted, undermining the legal audit trail.
+- Production data conformance analysis documented in work-documents. Key findings: 94% of Communication resources missing required `status` field, and AuditEvent entity references not version-specific.
 
 ## [0.6.2] - 2026-03-27
 

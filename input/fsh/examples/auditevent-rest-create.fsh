@@ -20,7 +20,7 @@ Description: "Example of an AuditEvent for a successful REST create operation th
 * source.observer = Reference(Device/ozo-aaa-proxy-001) "AAA Proxy Instance 001"
 * source.observer.type = "Device"
 * source.type = http://terminology.hl7.org/CodeSystem/security-source-type#4 "Application Server"
-* entity[0].what = Reference(Task/12345)
+* entity[0].what.reference = "Task/12345/_history/1"
 * entity[=].what.type = "Task"
 * entity[=].type = http://hl7.org/fhir/resource-types#Task "Task"
 * entity[=].role = http://terminology.hl7.org/CodeSystem/object-role#4 "Domain Resource"
