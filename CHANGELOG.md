@@ -21,9 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### CapabilityStatements
 - **OZO-Server** - Base CapabilityStatement for unauthenticated `/metadata` requests. Shows server identity, security requirements (Nuts + DPoP), and supported profiles without interactions.
 - **OZO-System** - Full CRUD access to all resources. For server-to-server (OzoSystemCredential) access.
-- **OZO-Practitioner** - Read/write access scoped to CareTeam memberships. Documents proxy auto-applied search filters and write validation rules.
-- **OZO-RelatedPerson** - Read/write access scoped to own profile and CareTeam memberships. Documents proxy auto-applied search filters.
-- **OZO-Patient** - Read/write access scoped to own record and CareTeam memberships. Documents proxy auto-applied search filters.
+- **OZO-Client** - Shared CapabilityStatement for Practitioner, RelatedPerson, and Patient roles. All three roles have the same resource types and interactions — the AAA proxy scopes access differently per role via auto-applied search filters. Per-role filtering details are documented on the CapabilityStatements page.
 
 #### Examples
 - **Subscription-Communication**, **Subscription-Task-Unread**, **Subscription-CommunicationRequest** - New Subscription examples demonstrating the notify-then-pull pattern (empty `channel.payload` as required in Dutch healthcare). Covers new message detection, unread tracking, and thread lifecycle.
