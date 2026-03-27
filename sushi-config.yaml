@@ -112,6 +112,9 @@ pages:
   technical-walkthrough-access-rp.md:
     title: Access the API as RelatedPerson
 
+  technical-aaa-proxy.md:
+    title: AAA Proxy
+
   w3c-trace-context.md:
     title: W3C Trace Context Support
 
@@ -230,6 +233,7 @@ menu:
     Practitioner: ozo-authorization-practitioner.html
     Related Person: ozo-authorization-related-person.html
   Technical Walkthrough:
+    AAA Proxy: technical-aaa-proxy.html
     Installing OZO Package in HAPI FHIR: hapi-installation.html
     Setup Mutual TLS for OZO: technical-walkthrough-mtls.html
     Validate Access Tokens and DPoP headers: technical-walkthrough-validate-access-token.html
