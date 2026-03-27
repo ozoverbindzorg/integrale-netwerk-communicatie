@@ -6,7 +6,43 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
-## [0.6.0] - 2026-03-26
+## [0.6.1] - 2026-03-27
+
+### Added
+
+#### CapabilityStatements
+- **OZO-Server** - Base CapabilityStatement showing server identity, security requirements (Nuts + DPoP), and supported profiles.
+- **OZO-System** - Full CRUD access to all resources. For server-to-server (OzoSystemCredential) access.
+- **OZO-Client** - Shared CapabilityStatement for Practitioner, RelatedPerson, and Patient roles. All three roles have the same resource types and interactions — the AAA proxy scopes access differently per role via auto-applied search filters. Per-role filtering details are documented on the CapabilityStatements page.
+
+#### Examples
+- **Subscription-Communication**, **Subscription-Task-Unread**, **Subscription-CommunicationRequest** - New Subscription examples demonstrating the notify-then-pull pattern (empty `channel.payload` as required in Dutch healthcare). Covers new message detection, unread tracking, and thread lifecycle.
+
+#### Documentation
+- **CapabilityStatements** - New documentation page explaining the CapabilityStatement structure, AAA proxy access filtering per role, write validation, and Subscription support
+
+### Changed
+
+#### Examples
+- **Clinic-Response-to-Pharmacy** - Removed `inResponseTo` reference (was pointing to deleted `Pharmacy-Initial-Message`; this is now the first reply in the thread, responding to the CommunicationRequest payload)
+- **Notify-Manu-van-Weel**, **Notify-Mark-Benson**, **Notify-Kees-Groot** - Changed Task examples from `#completed` to `#requested` (initial state when created by the OZO FHIR Api). Added Title and Description.
+
+#### Documentation
+- **Messaging pages** - Replaced inline pseudo-code blocks with links to FSH example pages. Task state transitions and notification annotations remain inline as narrative.
+- **Subscription guidance** - Clarified subscription behavior on both messaging pages:
+  - Changed recommended subscription from `Task?id` to `Task?status=requested` to avoid subscription storms and scope via AAA proxy
+  - Added "Subscription behavior" section explaining when each subscription fires and when it does **not** fire
+  - Clarified that `Communication` subscription is the primary mechanism for new-message detection, not `Task`
+  - Fixed misleading interaction flows that implied `Task` notifications detect new messages — `Task` is a **read/unread indicator** only
+- **Notify-then-pull pattern** - Added explanation that Dutch healthcare requires empty subscription notifications; clients must pull data after notification
+- **Messaging example walkthroughs** - Added detailed concrete examples to both messaging pages showing the complete flow including Tasks, AuditEvents, and subscription notifications at each step
+
+### Removed
+
+#### Examples
+- **Pharmacy-Initial-Message** - Deleted Communication example that duplicated the CommunicationRequest payload. The CommunicationRequest carries the initial message; no separate Communication is created at thread initiation.
+
+## [0.6.0] - 2026-03-27
 
 ### Added
 
@@ -18,16 +54,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `name 1..1` — team display name required
   - `participant.member` restricted to `OZOPractitioner` only (no RelatedPerson in org teams)
 
-#### CapabilityStatements
-- **OZO-Server** - Base CapabilityStatement for unauthenticated `/metadata` requests. Shows server identity, security requirements (Nuts + DPoP), and supported profiles without interactions.
-- **OZO-System** - Full CRUD access to all resources. For server-to-server (OzoSystemCredential) access.
-- **OZO-Client** - Shared CapabilityStatement for Practitioner, RelatedPerson, and Patient roles. All three roles have the same resource types and interactions — the AAA proxy scopes access differently per role via auto-applied search filters. Per-role filtering details are documented on the CapabilityStatements page.
-
-#### Examples
-- **Subscription-Communication**, **Subscription-Task-Unread**, **Subscription-CommunicationRequest** - New Subscription examples demonstrating the notify-then-pull pattern (empty `channel.payload` as required in Dutch healthcare). Covers new message detection, unread tracking, and thread lifecycle.
-
 #### Documentation
-- **CapabilityStatements** - New documentation page explaining the role-based CapabilityStatement pattern, AAA proxy access filtering, write validation, and Subscription support
 - **Team-to-Team Messaging** - New dedicated documentation page (`interaction-messaging-team.md`) with stepwise walkthrough of team-to-team messaging flows, including thread creation, replies from both teams, follow-up by different team members, and read receipts
 - Added PlantUML sequence diagram for team-to-team messaging interaction
 
@@ -40,7 +67,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Examples
 - **Pharmacy-A**, **Clinic-B**, **Department-Thuiszorg** - Changed from `OZOCareTeam` to `OZOOrganizationalCareTeam` profile. Removed fake `Patient/example-unassigned` subject references that were a workaround for the previous `subject 1..1` constraint
-- **Clinic-Response-to-Pharmacy** - Removed `inResponseTo` reference (was pointing to deleted `Pharmacy-Initial-Message`; this is now the first reply in the thread, responding to the CommunicationRequest payload)
 
 #### Documentation
 - Split individual messaging page from team-to-team messaging into separate pages
@@ -49,24 +75,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated HAPI installation guide with `OZOOrganizationalCareTeam` profile and canonical URL
 - Updated PlantUML data model diagrams to show both CareTeam types
 - Fixed documentation to correctly describe the `senderCareTeam` extension pattern (`sender` field is always an individual, extension provides CareTeam reply-to address)
-
-### Fixed
-
-#### Documentation
-- **Subscription guidance** - Clarified subscription behavior on both messaging pages (`interaction-messaging.md`, `interaction-messaging-team.md`):
-  - Changed recommended subscription from `Task?id` to `Task?status=requested` to avoid subscription storms and scope via AAA proxy
-  - Added "Subscription behavior" section explaining when each subscription fires and when it does **not** fire
-  - Clarified that `Communication` subscription is the primary mechanism for new-message detection, not `Task`
-  - Fixed misleading interaction flows that implied `Task` notifications detect new messages — `Task` is a **read/unread indicator** only. When a new message arrives and the Task is already REQUESTED (unread), the no-op update produces no notification
-- **Messaging example walkthroughs** - Added detailed concrete examples to both messaging pages showing the complete flow including all resources created by the OZO FHIR Api:
-  - Individual messaging (`interaction-messaging.md`): Kees Groot ↔ care team walkthrough with CommunicationRequest, Communication, Task creation/updates, AuditEvent read receipts, and subscription notifications at each step
-  - Team messaging (`interaction-messaging-team.md`): Extended the Pharmacy ↔ Clinic example with Task and AuditEvent resources, team-wide read behavior, and notification details demonstrating the Task no-op scenario
-- **Inline examples replaced with FSH links** - Replaced inline pseudo-code blocks in both messaging pages with links to FSH example pages. Task state transitions and notification annotations remain inline as narrative.
-
-### Removed
-
-#### Examples
-- **Pharmacy-Initial-Message** - Deleted Communication example that duplicated the CommunicationRequest payload. The CommunicationRequest carries the initial message; no separate Communication is created at thread initiation.
 
 ## [0.5.4] - 2026-03-11
 
@@ -402,6 +410,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `aliases.fsh` with common system and profile aliases
 - Established FSH-first authoring workflow
 
+[0.6.1]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.6.0...v0.6.1
 [0.6.0]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.5.4...v0.6.0
 [0.5.4]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.5.3...v0.5.4
 [0.5.3]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.5.2...v0.5.3
