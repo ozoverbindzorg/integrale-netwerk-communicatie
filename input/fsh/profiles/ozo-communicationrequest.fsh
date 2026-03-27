@@ -41,7 +41,7 @@ Description: "CommunicationRequest profile for the OZO platform. Represents a me
 
 // Requester - who created the thread (individual for auditability)
 * requester 1..1 MS
-* requester only Reference(OZOPractitioner or OZORelatedPerson)
+* requester only Reference(OZOPractitioner or OZORelatedPerson or OZOPatient)
 * requester ^short = "Who created the thread"
 * requester ^definition = "The individual (practitioner or related person) who initiated the thread. Must be an individual for auditability purposes."
 * requester.reference 1..1
@@ -49,7 +49,7 @@ Description: "CommunicationRequest profile for the OZO platform. Represents a me
 
 // Sender - reply-to address for the thread (individual sender)
 * sender 0..1 MS
-* sender only Reference(OZOPractitioner or OZORelatedPerson)
+* sender only Reference(OZOPractitioner or OZORelatedPerson or OZOPatient)
 * sender ^short = "Individual reply-to address"
 * sender ^definition = "The individual entity to reply to. For team-level messaging, use the senderCareTeam extension instead."
 * sender.reference 1..1

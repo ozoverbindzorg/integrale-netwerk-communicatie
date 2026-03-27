@@ -33,7 +33,7 @@ Description: "Communication profile for the OZO platform. Represents messages ex
 
 // Sender - who sent the message
 * sender 1..1 MS
-* sender only Reference(OZOPractitioner or OZORelatedPerson)
+* sender only Reference(OZOPractitioner or OZORelatedPerson or OZOPatient)
 * sender ^short = "Message sender"
 * sender ^definition = "The entity (practitioner or related person) who sent the message"
 * sender.reference 1..1

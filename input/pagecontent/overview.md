@@ -199,8 +199,8 @@ The `CommunicationRequest` Resource is used to:
 |-----------|-------------|----------------------------------------------------------------------|
 | status    | 1..1        | draft  \| active \| completed                                        |
 | subject   | 1..1        | Reference to a `Patient`                                             |
-| requester | 1..1        | a reference to a `RelatedPerson` or `Practitioner` (individual who initiated - for auditability) |
-| sender    | 0..1        | a reference to a `RelatedPerson` or `Practitioner` (individual sender)                                           |
+| requester | 1..1        | a reference to a `RelatedPerson`, `Practitioner` or `Patient` (individual who initiated - for auditability) |
+| sender    | 0..1        | a reference to a `RelatedPerson`, `Practitioner` or `Patient` (individual sender)                                |
 | extension[senderCareTeam] | 0..1 | a reference to a `CareTeam` (reply-to address for team-level messaging)                        |
 | recipient | 1..*        | a reference to a `RelatedPerson`, `Practitioner` or `CareTeam`       |
 | payload   | 1..*        | Message or attachment, one of `contentString` or `contentAttachment` |
@@ -237,7 +237,7 @@ The `Communication` resource is used to:
 | status       | 1..1        | preparation \| in-progress  \| not-done \| on-hold \| stopped \| completed \| entered-in-error \| unknown |
 | partOf       | 1..1        | Reference to a `CommunicationRequest`                                                                     |
 | inResponseTo | 0..1        | Reference to a previous `Communication` in the thread                                                     |
-| sender       | 1..1        | a reference to a `RelatedPerson` or `Practitioner` (must be individual for auditability)                  |
+| sender       | 1..1        | a reference to a `RelatedPerson`, `Practitioner` or `Patient` (must be individual for auditability)       |
 | recipient    | 0..*        | Unused — thread participants are defined on `CommunicationRequest.recipient`                               |
 | payload      | 1..*        | Message or attachment, one of `contentString` or `contentAttachment`                                      |
 

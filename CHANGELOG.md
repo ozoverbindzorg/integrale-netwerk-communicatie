@@ -6,6 +6,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [0.6.3] - 2026-03-27
+
+### Changed
+
+#### Profiles
+- **OZOCommunication** - Added `OZOPatient` to allowed `sender` types. Production data shows Patient resources are used as senders (4 out of 192 Communications).
+- **OZOCommunicationRequest** - Added `OZOPatient` to allowed `requester` and `sender` types. Production data shows Patient resources are used as requester/sender (2 out of 33 CommunicationRequests).
+
+### Fixed
+
+#### Documentation
+- Production data conformance analysis documented in work-documents. Key finding: 94% of Communication resources are missing the required `status` field — the OZO platform must set `status = completed` when creating Communications.
+
 ## [0.6.2] - 2026-03-27
 
 ### Changed
@@ -425,6 +438,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `aliases.fsh` with common system and profile aliases
 - Established FSH-first authoring workflow
 
+[0.6.3]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.6.2...v0.6.3
 [0.6.2]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.6.1...v0.6.2
 [0.6.1]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.6.0...v0.6.1
 [0.6.0]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.5.4...v0.6.0
