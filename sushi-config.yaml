@@ -145,6 +145,9 @@ pages:
   care-services-directory.md:
     title: Care Services Directory
 
+  capability-statements.md:
+    title: CapabilityStatements
+
   technical-caching.md:
     title: Caching and Pagination
 
@@ -244,6 +247,7 @@ menu:
     Care Services Directory: care-services-directory.html
   Compliance:
     AuditEvent for NEN7510: auditevent-nen7510.html
+    CapabilityStatements: capability-statements.html
   RFCs:
     Organization Addressing: fhir-addressing-analysis.html
   Artifacts: artifacts.html
