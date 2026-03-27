@@ -1,16 +1,10 @@
-The OZO FHIR API uses CapabilityStatements to declare what the server supports. The API proxy serves the appropriate CapabilityStatement based on the caller's credentials.
+The OZO FHIR API defines three CapabilityStatements that together describe the full API contract. All three are available via the `/metadata` endpoint and in the [Artifacts](artifacts.html) section.
 
-### How it works
-
-The `/metadata` endpoint returns different CapabilityStatements depending on authentication:
-
-| Request | Returns | Description |
-|---------|---------|-------------|
-| Unauthenticated | [OZO-Server](CapabilityStatement-OZO-Server.html) | Server identity, security requirements, supported profiles. No interactions listed — authenticate first. |
-| System credentials | [OZO-System](CapabilityStatement-OZO-System.html) | Full CRUD access to all resources. |
-| Client credentials | [OZO-Client](CapabilityStatement-OZO-Client.html) | Read/write scoped by the proxy based on the caller's role and CareTeam memberships. |
-
-The [OZO-Client](CapabilityStatement-OZO-Client.html) CapabilityStatement applies to all three client roles: **Practitioner**, **RelatedPerson**, and **Patient**. These roles share the same resource types and interactions — the difference is how the AAA proxy scopes access.
+| CapabilityStatement | Description |
+|---------------------|-------------|
+| [OZO-Server](CapabilityStatement-OZO-Server.html) | Server identity, security requirements (Nuts + DPoP + mTLS), and supported OZO profiles. |
+| [OZO-System](CapabilityStatement-OZO-System.html) | Full CRUD access to all resources. For server-to-server integration (OzoSystemCredential). |
+| [OZO-Client](CapabilityStatement-OZO-Client.html) | Client access for Practitioner, RelatedPerson, and Patient roles. All three roles share the same resource types and interactions — the AAA proxy scopes access differently per role. |
 
 ### Access filtering by the AAA proxy
 
@@ -99,6 +93,6 @@ See the [Individual Messaging](interaction-messaging.html) and [Team-to-Team Mes
 
 ### CapabilityStatements
 
-* [OZO-Server](CapabilityStatement-OZO-Server.html) — Base (unauthenticated): server identity, security requirements, profiles
-* [OZO-System](CapabilityStatement-OZO-System.html) — System access: full CRUD, no access filters
-* [OZO-Client](CapabilityStatement-OZO-Client.html) — Client access (Practitioner, RelatedPerson, Patient): read/write scoped by proxy
+* [OZO-Server](CapabilityStatement-OZO-Server.html) — Server identity, security, profiles
+* [OZO-System](CapabilityStatement-OZO-System.html) — System access (full CRUD)
+* [OZO-Client](CapabilityStatement-OZO-Client.html) — Client access (Practitioner, RelatedPerson, Patient)
