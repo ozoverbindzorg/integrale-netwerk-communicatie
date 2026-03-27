@@ -14,7 +14,4 @@ Description: "Follow-up from a different practitioner at the pharmacy. This demo
 * sender = Reference(Pieter-de-Vries)
 * sender.type = "Practitioner"
 * sender.display = "Pieter de Vries"
-* recipient = Reference(Clinic-B)
-* recipient.type = "CareTeam"
-* recipient.display = "Huisarts Amsterdam - Team"
 * payload.contentString = "Bedankt voor de snelle reactie. Mijn collega is vandaag afwezig, maar ik neem dit over. We zullen de INR-monitoring inplannen en de patiënt informeren. Graag ontvangen we het uitgebreide advies zodra beschikbaar."

@@ -15,9 +15,7 @@ For individual messaging (RelatedPerson ↔ Practitioner), see [Individual Messa
    - `Communication.sender` is always an individual (who sent each message)
    - Every action is traceable to a specific person
 
-3. **Reply-To Discovery**: When replying to a team message:
-   - Read the `senderCareTeam` extension from the `CommunicationRequest` to find the reply-to `CareTeam`
-   - Send the reply to that `CareTeam` as recipient
+3. **Reply-To Discovery**: The `senderCareTeam` extension on the `CommunicationRequest` identifies the initiating team. The OZO FHIR Api uses this to determine which team members receive Tasks when a reply is created.
 
 ### Roles
 
@@ -96,9 +94,9 @@ A practitioner from Team B responds to the thread. The reply is addressed to Tea
   * The `partOf` is set to the reference of the `CommunicationRequest`
   * The `inResponseTo` is set to the reference of the previous `Communication` being replied to
   * The `sender` is set to the `Practitioner` from Team B (individual auditability)
-  * The `recipient` is set to the `CareTeam` of Team A (read from `CommunicationRequest.extension[senderCareTeam]`)
   * The `payload` consists of text and optionally attachments
   * The `status` is set to COMPLETED
+  * Note: `recipient` is not set — thread participants are defined on the `CommunicationRequest`.
 * The **OZO FHIR Api** does the following:
   * For each member of Team A's `CareTeam` (the recipient) and not the sender:
     * An existing task is queried depending on the status, the following action is taken:
@@ -125,7 +123,6 @@ A *different* practitioner from Team A follows up on the thread. This demonstrat
   * The `partOf` is set to the reference of the `CommunicationRequest`
   * The `inResponseTo` is set to the reference of the previous `Communication`
   * The `sender` is set to the different `Practitioner` from Team A (individual auditability — note this is a different person than the original requester)
-  * The `recipient` is set to the `CareTeam` of Team B
   * The `payload` consists of text and optionally attachments
   * The `status` is set to COMPLETED
 * The **OZO FHIR Api** processes tasks the same way as described above:
@@ -216,9 +213,9 @@ The **OZO FHIR Api** updates Tasks:
 
 ### Query Patterns
 
-**Find messages for my team:**
+**Find messages for my team (via thread membership):**
 ```
-GET /Communication?recipient=CareTeam/Pharmacy-A&_include=Communication:based-on
+GET /Communication?part-of:CommunicationRequest.recipient=CareTeam/Pharmacy-A&_include=Communication:based-on
 ```
 
 **Find all messages in a thread:**

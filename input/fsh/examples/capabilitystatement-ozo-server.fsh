@@ -4,7 +4,7 @@ Usage: #definition
 Title: "OZO Server Base CapabilityStatement"
 Description: "Base CapabilityStatement for the OZO FHIR API. Returned by the unauthenticated /metadata endpoint. Describes server identity, security requirements, and supported profiles. Authenticate to receive a role-specific CapabilityStatement with detailed interactions."
 * url = "http://ozoverbindzorg.nl/fhir/CapabilityStatement/OZO-Server"
-* version = "0.6.1"
+* version = "0.6.2"
 * name = "OZOServerCapabilityStatement"
 * title = "OZO Server Base CapabilityStatement"
 * status = #active

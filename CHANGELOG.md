@@ -6,6 +6,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [0.6.2] - 2026-03-27
+
+### Changed
+
+#### Profiles
+- **OZOCommunication** - Relaxed `recipient` from `1..*` to `0..*`. Thread participants are defined on `CommunicationRequest.recipient` — individual messages do not have separate addressing. The field is kept from the parent profile for FHIR compliance but documented as unused in the OZO messaging model. Matches production data where no Communication resources have a recipient.
+
+#### Examples
+- Removed `recipient` from all Communication examples (`Reply-Manu-to-Kees`, `Reply-Kees-to-Netwerk`, `Clinic-Response-to-Pharmacy`, `Pharmacy-Followup-by-Pieter`)
+
+#### Documentation
+- Updated Communication fields table in overview.md to show `recipient 0..*` as unused
+- Updated interaction flows in both messaging pages to note `recipient` is not set on Communications
+- Updated team messaging query pattern to use `part-of:CommunicationRequest.recipient` instead of `Communication.recipient`
+
 ## [0.6.1] - 2026-03-27
 
 ### Added
@@ -410,6 +425,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `aliases.fsh` with common system and profile aliases
 - Established FSH-first authoring workflow
 
+[0.6.2]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.6.1...v0.6.2
 [0.6.1]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.6.0...v0.6.1
 [0.6.0]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.5.4...v0.6.0
 [0.5.4]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.5.3...v0.5.4

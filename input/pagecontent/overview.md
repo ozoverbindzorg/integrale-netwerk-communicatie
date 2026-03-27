@@ -238,7 +238,7 @@ The `Communication` resource is used to:
 | partOf       | 1..1        | Reference to a `CommunicationRequest`                                                                     |
 | inResponseTo | 0..1        | Reference to a previous `Communication` in the thread                                                     |
 | sender       | 1..1        | a reference to a `RelatedPerson` or `Practitioner` (must be individual for auditability)                  |
-| recipient    | 1..*        | a reference to a `RelatedPerson`, `Practitioner` or `CareTeam`                                            |
+| recipient    | 0..*        | Unused — thread participants are defined on `CommunicationRequest.recipient`                               |
 | payload      | 1..*        | Message or attachment, one of `contentString` or `contentAttachment`                                      |
 
 ##### Auditability

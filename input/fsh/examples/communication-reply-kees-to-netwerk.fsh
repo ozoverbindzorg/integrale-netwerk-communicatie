@@ -8,8 +8,6 @@ Usage: #example
 * partOf = Reference(Thread-Example)
 * partOf.type = "CommunicationRequest"
 * status = #in-progress
-* recipient = Reference(Netwerk-H-de-Boer)
-* recipient.type = "CareTeam"
 * sender = Reference(Kees-Groot)
 * sender.type = "RelatedPerson"
 * payload.contentString = "Message from RelatedPerson to CareTeam"

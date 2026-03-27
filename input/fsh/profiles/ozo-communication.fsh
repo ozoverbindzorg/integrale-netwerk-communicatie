@@ -25,14 +25,11 @@ Description: "Communication profile for the OZO platform. Represents messages ex
 * status ^short = "Communication status"
 * status ^definition = "The status of the transmission (preparation | in-progress | not-done | on-hold | stopped | completed | entered-in-error | unknown)"
 
-// Recipients - who the message is sent to
-* recipient 1..* MS
+// Recipients - unused in OZO, thread participants are on CommunicationRequest.recipient
+* recipient 0..* MS
 * recipient only Reference(OZOPractitioner or OZORelatedPerson or OZOCareTeam or OZOOrganizationalCareTeam)
-* recipient ^short = "Message recipient"
-* recipient ^definition = "The entity (practitioner, related person, or care team) who receives the message"
-* recipient.reference 1..1
-* recipient.type 1..1
-* recipient.display 0..1 MS
+* recipient ^short = "Unused — thread participants are on CommunicationRequest"
+* recipient ^definition = "Not used in OZO. The thread participants are defined on CommunicationRequest.recipient. Individual messages do not have separate addressing — they are entries in a thread. This field is kept from the parent profile for FHIR compliance but has no meaning in the OZO messaging model."
 
 // Sender - who sent the message
 * sender 1..1 MS

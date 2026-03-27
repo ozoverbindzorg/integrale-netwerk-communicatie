@@ -83,8 +83,8 @@ A practitioner in the **OZO platform** responds to a message from a caregiver by
 * The **OZO platform** creates a new `Communication` with the following fields:
   * The partOf is set to the reference of the `CommunicationRequest`.
   * The sender is set to the reference of the `Practitioner`
-  * The recipient is set to the reference of the `RelatedPerson`
   * The payload consists of both text as the message and additionally multiple attachments such as PDF.
+  * Note: `recipient` is not set — thread participants are defined on the `CommunicationRequest`.
 * The  **OZO FHIR Api** does the following:
   * For each member of the `CareTeam` as part of recipient and not the sender:
     * An existing task is queried depending on the status, the following action is taken:
@@ -123,8 +123,8 @@ A caregiver in the **OZO client** responds to a message from a practitioner by t
 * The **OZO client** creates a new `Communication` with the following fields:
   * The partOf is set to the reference of the `CommunicationRequest`.
   * The sender is set to the reference of the `RelatedPerson`
-  * The recipient is set to the reference of the `CareTeam`
   * The payload consists of both text as the message and additionally multiple attachments such as PDF.
+  * Note: `recipient` is not set — thread participants are defined on the `CommunicationRequest`.
 * The  **OZO FHIR Api** does the following:
   * For each member of the `CareTeam` as part of recipient and not the sender:
     * An existing task is queried depending on the status, the following action is taken:
