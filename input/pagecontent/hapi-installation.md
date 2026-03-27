@@ -138,7 +138,27 @@ hapi:
 
     # Allow installation of resources regardless of status
     validate_resource_status_for_package_upload: false
+
+    # Profile validation mode for the repository validating interceptor
+    validation:
+      data:
+        profile_mode: DECLARED  # or ENFORCED for strict environments
 ```
+
+#### Profile validation modes
+
+The `profile_mode` setting controls how the HAPI server validates resources against OZO profiles:
+
+| Mode | Behavior |
+|------|----------|
+| **`ENFORCED`** | Resources **must** declare a `meta.profile` matching an installed profile. Resources without a profile are rejected. Recommended for production environments where all resources must conform to OZO profiles. |
+| **`DECLARED`** | Resources are validated against the profile declared in `meta.profile`, but resources without a profile are accepted. Recommended for environments that also accept non-OZO resources. |
+| **`OPTIONAL`** | Profiles are checked if present but validation errors are downgraded to warnings. |
+| **`TRUST`** | Profiles are not validated. |
+| **`OFF`** | Profile validation is completely disabled. |
+
+> **Recommendation:** Use `DECLARED` during initial setup and migration. Switch to `ENFORCED` once all clients consistently set `meta.profile` on their resources.
+{:.stu-note}
 
 ### Step 4: Restart the HAPI FHIR Server
 
@@ -571,6 +591,11 @@ hapi:
     # Disable validation during IG installation
     iginstaller_validationenabled: false
     validate_resource_status_for_package_upload: false
+
+    # Profile validation mode (DECLARED or ENFORCED for production)
+    validation:
+      data:
+        profile_mode: DECLARED
 
     # Implementation Guides — all dependencies listed explicitly
     implementationguides:
