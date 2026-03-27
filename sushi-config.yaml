@@ -133,6 +133,9 @@ pages:
   ozo-on-matrix.md:
     title: Matrix.io for OZO
 
+  resource-lifecycle.md:
+    title: Resource Lifecycle and Deletion Policy
+
   auditevent-nen7510.md:
     title: AuditEvent for NEN7510 Compliance
 
@@ -250,6 +253,7 @@ menu:
   Directory:
     Care Services Directory: care-services-directory.html
   Compliance:
+    Resource Lifecycle: resource-lifecycle.html
     AuditEvent for NEN7510: auditevent-nen7510.html
     CapabilityStatements: capability-statements.html
   RFCs:

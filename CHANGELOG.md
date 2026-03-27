@@ -14,6 +14,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **OZOCommunication** - Added `OZOPatient` to allowed `sender` types. Production data shows Patient resources are used as senders (4 out of 192 Communications).
 - **OZOCommunicationRequest** - Added `OZOPatient` to allowed `requester` and `sender` types. Production data shows Patient resources are used as requester/sender (2 out of 33 CommunicationRequests).
 
+#### Documentation
+- **Resource Lifecycle and Deletion Policy** - New page documenting the no-DELETE policy. Resources must use status transitions instead of deletion to preserve AuditEvent referential integrity (NEN7510). Only `Patient/$expunge` is supported for AVG/GDPR right-to-erasure. Includes status mapping per resource type, security labels, and proxy enforcement guidance.
+
 #### Examples
 - **All AuditEvent examples** - Changed `entity.what` references to version-specific format (`{ResourceType}/{id}/_history/{version}`). NEN7510 requires audit events to reference the exact version of the resource accessed, not the mutable current version.
 
