@@ -31,7 +31,9 @@ Both teams use the **OZO platform**. Unlike individual messaging, there is no OZ
 The following Subscription objects are created by the OZO platform for each team:
 * `CommunicationRequest?id`
 * `Communication?id`
-* `Task?status=requested` (the AAA proxy automatically scopes this to the current user's ownership)
+* `Task?status=requested`* (the AAA proxy automatically scopes this to the current user's ownership)
+
+\* If the platform needs to maintain a read-list (tracking when messages are marked as read), use `Task?id` instead. `Task?status=requested` only fires when status changes *to* requested, so it misses the REQUESTED → COMPLETED transition that indicates a message was read.
 
 #### Notify-then-pull pattern
 
