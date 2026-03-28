@@ -10,11 +10,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+#### Dependencies
+- **BREAKING**: Removed `fhir.nl.gf` (NL Generic Functions) dependency. OZOPractitioner and OZOOrganization no longer extend NL-GF profiles — they now extend base FHIR R4 `Practitioner` and `Organization` directly. This eliminates the `AssignedId` slice, the HAPI-0574 workaround, and the dependency on an unpublished package.
+
 #### Profiles
-- **OZOPatient** - **BREAKING**: Simplified identifier requirements. Removed named slices `ozoPersonId` and `ozoConnectPersonId` and invariant `ozo-patient-has-person-id`. Now uses open slicing with recognized slices for BSN (`http://fhir.nl/fhir/NamingSystem/bsn`) and email. Any `ozoverbindzorg.nl/namingsystem/` system accepted through open slicing.
-- **OZORelatedPerson** - **BREAKING**: Simplified identifier requirements. Removed all 5 named slices and invariant. Now uses open slicing with recognized email slice. Any identifier system accepted.
-- **OZOPractitioner** - **BREAKING**: Changed AssignedId system from `https://ozo.headease.nl/practitioners` to `https://www.ozoverbindzorg.nl/namingsystem/professional`. Removed invariant. Added recognized slices for BIG, UZI, and AGB national identifiers.
-- **OZOOrganization** - **BREAKING**: Changed AssignedId system from `https://ozo.headease.nl/organizations` to `https://www.ozoverbindzorg.nl/namingsystem/organization`. Added recognized AGB slice. URA slice inherited from NL-GF.
+- **OZOPatient** - **BREAKING**: Simplified identifiers to `0..* MS` with open slicing. No named slices, no invariants. Any identifier system accepted.
+- **OZORelatedPerson** - **BREAKING**: Simplified identifiers to `0..* MS` with open slicing. Removed all 5 named slices and invariant.
+- **OZOPractitioner** - **BREAKING**: Rebased from `NlGfPractitioner` to `Practitioner`. Simplified identifiers to `0..* MS` with open slicing. Removed `AssignedId` slice and invariant.
+- **OZOOrganization** - **BREAKING**: Rebased from `NlGfOrganization` to `Organization`. Simplified identifiers to `0..* MS` with open slicing. Removed `AssignedId` and URA slices.
 
 #### Examples
 - All 9 Practitioner examples: AssignedId system updated to `ozoverbindzorg.nl/namingsystem/professional`

@@ -12,22 +12,10 @@ Description: "RelatedPerson profile for the OZO platform. Represents informal ca
 * ^contact[=].telecom[0].system = #url
 * ^contact[=].telecom[=].value = "https://headease.nl"
 
-// At least one identifier required, open slicing for any system
-* identifier 1..* MS
-* identifier ^slicing.discriminator.type = #pattern
-* identifier ^slicing.discriminator.path = "system"
+// Identifiers - open slicing, any system accepted
+* identifier 0..* MS
 * identifier ^slicing.rules = #open
-* identifier ^slicing.description = "Open slicing on identifier system. Recognized slice: email. Any OZO system (https://www.ozoverbindzorg.nl/namingsystem/...) is supported through open slicing."
-
-// Recognized identifier slices
-* identifier contains
-    email 0..* MS
-
-* identifier[email].system 1..1
-* identifier[email].system = "https://www.ozoverbindzorg.nl/namingsystem/email" (exactly)
-* identifier[email].value 1..1
-* identifier[email] ^short = "Email identifier"
-* identifier[email] ^definition = "Email address of the related person"
+* identifier ^slicing.description = "Open slicing. Any identifier system is accepted. Common systems include OZO platform identifiers."
 
 // Active status is required
 * active 1..1 MS

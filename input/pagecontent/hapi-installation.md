@@ -88,13 +88,6 @@ hapi:
         version: 0.12.0-beta.4
         installMode: STORE_AND_INSTALL
 
-      # NL Generic Functions — not on FHIR registry, must use direct URL
-      nl-gf:
-        name: fhir.nl.gf
-        version: 0.3.0
-        packageUrl: https://build.fhir.org/ig/nuts-foundation/nl-generic-functions-ig/package.tgz
-        installMode: STORE_AND_INSTALL
-
       # OZO FHIR Implementation Guide
       ozo:
         name: fhir.ozo
@@ -106,8 +99,6 @@ hapi:
 > **Important:** Do **not** use `fetchDependencies: true` or `install_transitive_ig_dependencies: true`. These settings cause HAPI to pull in `hl7.fhir.r4.core` and `hl7.fhir.uv.extensions.r4` which contain SearchParameter resources referencing R5-only types (`DeviceUsage`, `DomainResource`), crashing the server. Instead, list all required dependencies explicitly as shown above.
 {:.stu-note}
 
-> **Important:** The `fhir.nl.gf` package is not published on the FHIR package registry (`packages.fhir.org`). It **must** be listed as a separate implementation guide entry with a direct `packageUrl`. If omitted, the server will crash with `ResourceNotFoundException: HAPI-1301: Unable to locate package fhir.nl.gf#0.3.0` during startup.
-{:.stu-note}
 
 #### Configuration Parameters Explained
 
@@ -424,15 +415,12 @@ The OZO FHIR Implementation Guide depends on the following packages. All depende
 | **hl7.fhir.uv.extensions.r4**   | 1.0.0         | `STORE_ONLY`        | FHIR R4 extensions (store only — see warning below) |
 | **nictiz.fhir.nl.r4.zib2020**   | 0.12.0-beta.4 | `STORE_AND_INSTALL` | Dutch Health and Care Information models (ZIB) |
 | **nictiz.fhir.nl.r4.nl-core**   | 0.12.0-beta.4 | `STORE_AND_INSTALL` | Dutch national core profiles                   |
-| **fhir.nl.gf**                   | 0.3.0         | `STORE_AND_INSTALL` | NL Generic Functions (care services directory) |
 
 These dependencies are required for proper validation of Dutch healthcare resources used in the OZO platform.
 
 > **Important:** The `hl7.fhir.uv.extensions.r4` package **must** use `STORE_ONLY` install mode. This package contains SearchParameter resources that reference FHIR R5-only types (`DeviceUsage`, `DomainResource`) which are not valid in R4. Using `STORE_AND_INSTALL` will crash the server with `HAPI-1684: Unknown resource name "DeviceUsage"`.
 {:.stu-note}
 
-> **Important:** The `fhir.nl.gf` package is **not** published on the FHIR package registry and cannot be resolved by HAPI automatically. It **must** be listed with a direct `packageUrl`. If omitted, the server will crash on startup with `HAPI-1301: Unable to locate package fhir.nl.gf#0.3.0`.
-{:.stu-note}
 
 ---
 
@@ -450,21 +438,6 @@ hapi:
 ### Issue: Snapshot Generation Errors
 
 **Solution:** The HAPI FHIR server may have issues generating snapshots for certain profiles. The `iginstaller_validationenabled: false` setting helps bypass this issue.
-
-### Issue: Server Crashes with `HAPI-1301: Unable to locate package fhir.nl.gf#0.3.0`
-
-**Cause:** The `fhir.nl.gf` package is not published on the FHIR package registry.
-
-**Solution:** Add `fhir.nl.gf` as a separate implementation guide entry with a direct `packageUrl`:
-
-```yaml
-implementationguides:
-  nl-gf:
-    name: fhir.nl.gf
-    version: 0.3.0
-    packageUrl: https://build.fhir.org/ig/nuts-foundation/nl-generic-functions-ig/package.tgz
-    installMode: STORE_AND_INSTALL
-```
 
 ### Issue: Server Crashes with `HAPI-1684: Unknown resource name "DeviceUsage"` or `"DomainResource"`
 
@@ -616,13 +589,6 @@ hapi:
       nl-core:
         name: nictiz.fhir.nl.r4.nl-core
         version: 0.12.0-beta.4
-        installMode: STORE_AND_INSTALL
-
-      # NL Generic Functions (not on FHIR registry — must use direct URL)
-      nl-gf:
-        name: fhir.nl.gf
-        version: 0.3.0
-        packageUrl: https://build.fhir.org/ig/nuts-foundation/nl-generic-functions-ig/package.tgz
         installMode: STORE_AND_INSTALL
 
       # OZO FHIR Implementation Guide

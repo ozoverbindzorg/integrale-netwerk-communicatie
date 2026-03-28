@@ -12,29 +12,10 @@ Description: "Patient profile for the OZO platform. Represents the client/patien
 * ^contact[=].telecom[0].system = #url
 * ^contact[=].telecom[=].value = "https://headease.nl"
 
-// At least one identifier required, open slicing for any system
-* identifier 1..* MS
-* identifier ^slicing.discriminator.type = #pattern
-* identifier ^slicing.discriminator.path = "system"
+// Identifiers - open slicing, any system accepted
+* identifier 0..* MS
 * identifier ^slicing.rules = #open
-* identifier ^slicing.description = "Open slicing on identifier system. Recognized slices include BSN and email. Any OZO system (https://www.ozoverbindzorg.nl/namingsystem/...) is supported through open slicing."
-
-// Recognized national identifier slices
-* identifier contains
-    bsn 0..* MS and
-    email 0..* MS
-
-* identifier[bsn].system 1..1
-* identifier[bsn].system = "http://fhir.nl/fhir/NamingSystem/bsn" (exactly)
-* identifier[bsn].value 1..1
-* identifier[bsn] ^short = "BSN (Burgerservicenummer)"
-* identifier[bsn] ^definition = "Dutch citizen service number"
-
-* identifier[email].system 1..1
-* identifier[email].system = "https://www.ozoverbindzorg.nl/namingsystem/email" (exactly)
-* identifier[email].value 1..1
-* identifier[email] ^short = "Email identifier"
-* identifier[email] ^definition = "Email address of the patient"
+* identifier ^slicing.description = "Open slicing. Any identifier system is accepted. Common systems include BSN and OZO platform identifiers."
 
 // Name is required (following NL-core naming conventions)
 * name 1..* MS
