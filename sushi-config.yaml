@@ -133,6 +133,9 @@ pages:
   resource-lifecycle.md:
     title: Resource Lifecycle and Deletion Policy
 
+  identifier-systems.md:
+    title: Identifier Systems
+
   auditevent-nen7510.md:
     title: AuditEvent for NEN7510 Compliance
 
@@ -250,6 +253,7 @@ menu:
   Directory:
     Care Services Directory: care-services-directory.html
   Compliance:
+    Identifier Systems: identifier-systems.html
     Resource Lifecycle: resource-lifecycle.html
     AuditEvent for NEN7510: auditevent-nen7510.html
     CapabilityStatements: capability-statements.html
