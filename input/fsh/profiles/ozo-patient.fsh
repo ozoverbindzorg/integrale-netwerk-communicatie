@@ -12,31 +12,29 @@ Description: "Patient profile for the OZO platform. Represents the client/patien
 * ^contact[=].telecom[0].system = #url
 * ^contact[=].telecom[=].value = "https://headease.nl"
 
-// Mandatory identifier for OZO system
+// At least one identifier required, open slicing for any system
 * identifier 1..* MS
 * identifier ^slicing.discriminator.type = #pattern
 * identifier ^slicing.discriminator.path = "system"
 * identifier ^slicing.rules = #open
-* identifier ^slicing.description = "Slice based on identifier system pattern. Additional OZO-* systems (e.g., OZO-MOBILE, OZO-WEB) are supported through open slicing."
+* identifier ^slicing.description = "Open slicing on identifier system. Recognized slices include BSN and email. Any OZO system (https://www.ozoverbindzorg.nl/namingsystem/...) is supported through open slicing."
 
+// Recognized national identifier slices
 * identifier contains
-    ozoPersonId 0..1 MS and
-    ozoConnectPersonId 0..1 MS
+    bsn 0..* MS and
+    email 0..* MS
 
-* identifier[ozoPersonId].system 1..1
-* identifier[ozoPersonId].system = "https://www.ozoverbindzorg.nl/namingsystem/ozo/person" (exactly)
-* identifier[ozoPersonId].value 1..1
-* identifier[ozoPersonId] ^short = "OZO Person identifier"
-* identifier[ozoPersonId] ^definition = "Unique identifier for the patient within the OZO system"
+* identifier[bsn].system 1..1
+* identifier[bsn].system = "http://fhir.nl/fhir/NamingSystem/bsn" (exactly)
+* identifier[bsn].value 1..1
+* identifier[bsn] ^short = "BSN (Burgerservicenummer)"
+* identifier[bsn] ^definition = "Dutch citizen service number"
 
-* identifier[ozoConnectPersonId].system 1..1
-* identifier[ozoConnectPersonId].system = "https://www.ozoverbindzorg.nl/namingsystem/ozo-connect/person" (exactly)
-* identifier[ozoConnectPersonId].value 1..1
-* identifier[ozoConnectPersonId] ^short = "OZO-CONNECT Person identifier"
-* identifier[ozoConnectPersonId] ^definition = "Unique identifier for the patient within the OZO-CONNECT system"
-
-// Require at least one OZO Person identifier
-* obeys ozo-patient-has-person-id
+* identifier[email].system 1..1
+* identifier[email].system = "https://www.ozoverbindzorg.nl/namingsystem/email" (exactly)
+* identifier[email].value 1..1
+* identifier[email] ^short = "Email identifier"
+* identifier[email] ^definition = "Email address of the patient"
 
 // Name is required (following NL-core naming conventions)
 * name 1..* MS
@@ -66,9 +64,3 @@ Description: "Patient profile for the OZO platform. Represents the client/patien
 * active 0..1 MS
 * active ^short = "Whether this patient record is in active use"
 * active ^definition = "Whether this patient's record is in active use. Default is true."
-
-// Invariant definition (must be outside the profile)
-Invariant: ozo-patient-has-person-id
-Description: "Patient must have at least one OZO Person identifier (matching pattern https://www.ozoverbindzorg.nl/namingsystem/ozo*/person)"
-Expression: "identifier.where(system.startsWith('https://www.ozoverbindzorg.nl/namingsystem/ozo') and system.endsWith('/person')).exists()"
-Severity: #error

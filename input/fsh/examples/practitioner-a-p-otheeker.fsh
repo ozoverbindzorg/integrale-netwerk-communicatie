@@ -5,7 +5,7 @@ Usage: #example
 * meta.versionId = "1"
 * meta.lastUpdated = "2024-12-05T16:24:57.115+00:00"
 * meta.source = "#DcsI5fG7KexfXCQg"
-* identifier[AssignedId].system = "https://ozo.headease.nl/practitioners"
+* identifier[AssignedId].system = "https://www.ozoverbindzorg.nl/namingsystem/professional"
 * identifier[AssignedId].value = "practitioner-a-p-otheeker"
 * identifier[AssignedId].assigner.identifier.type.coding.system = $provenance-participant-type
 * identifier[AssignedId].assigner.identifier.type.coding.code = #author

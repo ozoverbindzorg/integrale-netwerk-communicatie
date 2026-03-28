@@ -7,7 +7,7 @@ Usage: #example
 * meta.source = "#p6O1nWsUFXIluQnX"
 * identifier[ura].system = $ura
 * identifier[ura].value = "23123123123"
-* identifier[AssignedId].system = "https://ozo.headease.nl/organizations"
+* identifier[AssignedId].system = "https://www.ozoverbindzorg.nl/namingsystem/organization"
 * identifier[AssignedId].value = "org-ziekenhuis-amsterdam"
 * identifier[AssignedId].assigner.identifier.type.coding.system = $provenance-participant-type
 * identifier[AssignedId].assigner.identifier.type.coding.code = #author

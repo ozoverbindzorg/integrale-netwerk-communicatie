@@ -12,9 +12,20 @@ Description: "Organization profile for the OZO platform. Extends the NL Generic 
 * ^contact[=].telecom[0].system = #url
 * ^contact[=].telecom[=].value = "https://headease.nl"
 
-// Identifiers - AssignedId inherited from NlGfOrganization
-// patternIdentifier gives HAPI a concrete value for $this discriminator matching (fixes HAPI-0574)
-* identifier[AssignedId] ^patternIdentifier.system = "https://ozo.headease.nl/organizations"
+// AssignedId inherited from NlGfOrganization — set system for HAPI discriminator matching (HAPI-0574)
+* identifier[AssignedId] ^patternIdentifier.system = "https://www.ozoverbindzorg.nl/namingsystem/organization"
+
+// URA slice inherited from NL-GF (0..*, required unless partOf is set)
+
+// Additional recognized identifier slices
+* identifier contains
+    agb 0..* MS
+
+* identifier[agb].system 1..1
+* identifier[agb].system = "http://fhir.nl/fhir/NamingSystem/agb-z" (exactly)
+* identifier[agb].value 1..1
+* identifier[agb] ^short = "AGB code"
+* identifier[agb] ^definition = "Dutch healthcare provider AGB code (organization)"
 
 // Name is required
 * name 1..1 MS

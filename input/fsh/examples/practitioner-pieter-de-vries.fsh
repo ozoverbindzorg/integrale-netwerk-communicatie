@@ -4,7 +4,7 @@ Usage: #example
 * meta.profile = "http://ozoverbindzorg.nl/fhir/StructureDefinition/OZOPractitioner"
 * meta.versionId = "1"
 * meta.lastUpdated = "2025-06-19T10:15:00.000+00:00"
-* identifier[AssignedId].system = "https://ozo.headease.nl/practitioners"
+* identifier[AssignedId].system = "https://www.ozoverbindzorg.nl/namingsystem/professional"
 * identifier[AssignedId].value = "practitioner-pieter-de-vries"
 * identifier[AssignedId].assigner.identifier.type.coding.system = $provenance-participant-type
 * identifier[AssignedId].assigner.identifier.type.coding.code = #author

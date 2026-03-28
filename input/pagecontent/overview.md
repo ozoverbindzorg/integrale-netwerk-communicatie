@@ -30,7 +30,7 @@ is primary identified by the BSN. Required fields:
 
 | field                           | cardinality | description         |
 |---------------------------------|-------------|---------------------|
-| identifier (OZO person)         | 1..1        | System: `https://www.ozoverbindzorg.nl/namingsystem/ozo/person` or `ozo-connect/person` |
+| identifier                      | 1..*        | Open slicing. Recognized: BSN (`http://fhir.nl/fhir/NamingSystem/bsn`), email. Any `ozoverbindzorg.nl/namingsystem/` system supported. |
 | name                            | 1..*        | The name field, ZIB |
 | gender                          | 1..1        |                     |
 | birthDate                       | 1..1        |                     |
@@ -54,7 +54,7 @@ resources exist, one for each patient it has a caregiving relationship with.
 
 | field                                                                    | cardinality | description                            |
 |--------------------------------------------------------------------------|-------------|----------------------------------------|
-| identifier (OZO person + network-relation)                               | 1..*        | Systems: `https://www.ozoverbindzorg.nl/namingsystem/ozo/person` and `/network-relation` |
+| identifier                                                               | 1..*        | Open slicing. Recognized: email. Any `ozoverbindzorg.nl/namingsystem/` system supported. |
 | name                                                                     | 1..*        | The name field, ZIB                    |
 | patient                                                                  | 1..1        | The reference to the patient           |
 | relationship                                                             | 1..1        | system=urn:oid:2.16.840.1.113883.5.111 |
@@ -85,7 +85,10 @@ practitioner is linked to the patient by the care team. `OZOPractitioner` extend
 
 | field                    | Cardinality | description                                                        |
 |--------------------------|-------------|--------------------------------------------------------------------|
-| identifier[AssignedId]   | 1..1        | Platform-assigned identifier with assigner (required by NL-GF)     |
+| identifier[AssignedId]   | 1..1        | System: `https://www.ozoverbindzorg.nl/namingsystem/professional` (required by NL-GF) |
+| identifier[big]          | 0..*        | BIG registration number (`http://fhir.nl/fhir/NamingSystem/big`)   |
+| identifier[uzi]          | 0..*        | UZI number (`http://fhir.nl/fhir/NamingSystem/uzi-nr-pers`)       |
+| identifier[agb]          | 0..*        | AGB code (`http://fhir.nl/fhir/NamingSystem/agb-z`)               |
 | name                     | 1..*        | The name field, ZIB                                                |
 | active                   | 1..1        | true                                                               |
 

@@ -12,12 +12,32 @@ Description: "Practitioner profile for the OZO platform. Extends the NL Generic 
 * ^contact[=].telecom[0].system = #url
 * ^contact[=].telecom[=].value = "https://headease.nl"
 
-// Identifiers - AssignedId inherited from NlGfPractitioner, OZO slices added via open slicing
-// patternIdentifier gives HAPI a concrete value for $this discriminator matching (fixes HAPI-0574)
-* identifier[AssignedId] ^patternIdentifier.system = "https://ozo.headease.nl/practitioners"
+// AssignedId inherited from NlGfPractitioner — set system for HAPI discriminator matching (HAPI-0574)
+* identifier[AssignedId] ^patternIdentifier.system = "https://www.ozoverbindzorg.nl/namingsystem/professional"
 
-// Require at least one OZO Professional identifier
-* obeys ozo-practitioner-has-professional-id
+// Additional recognized identifier slices (open slicing inherited from NL-GF)
+* identifier contains
+    big 0..* MS and
+    uzi 0..* MS and
+    agb 0..* MS
+
+* identifier[big].system 1..1
+* identifier[big].system = "http://fhir.nl/fhir/NamingSystem/big" (exactly)
+* identifier[big].value 1..1
+* identifier[big] ^short = "BIG registration number"
+* identifier[big] ^definition = "Dutch healthcare professional registration number (BIG-register)"
+
+* identifier[uzi].system 1..1
+* identifier[uzi].system = "http://fhir.nl/fhir/NamingSystem/uzi-nr-pers" (exactly)
+* identifier[uzi].value 1..1
+* identifier[uzi] ^short = "UZI number"
+* identifier[uzi] ^definition = "Dutch healthcare professional UZI card number"
+
+* identifier[agb].system 1..1
+* identifier[agb].system = "http://fhir.nl/fhir/NamingSystem/agb-z" (exactly)
+* identifier[agb].value 1..1
+* identifier[agb] ^short = "AGB code"
+* identifier[agb] ^definition = "Dutch healthcare provider AGB code (practitioner)"
 
 // Active status is required
 * active 1..1 MS
@@ -31,9 +51,3 @@ Description: "Practitioner profile for the OZO platform. Extends the NL Generic 
 * name.text 0..1 MS
 * name.family 1..1 MS
 * name.given 0..* MS
-
-// Invariant definition (must be outside the profile)
-Invariant: ozo-practitioner-has-professional-id
-Description: "Practitioner must have at least one OZO Professional identifier (matching pattern https://www.ozoverbindzorg.nl/namingsystem/ozo*/professional)"
-Expression: "identifier.where(system.startsWith('https://www.ozoverbindzorg.nl/namingsystem/ozo') and system.endsWith('/professional')).exists()"
-Severity: #error

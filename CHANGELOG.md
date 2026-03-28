@@ -6,6 +6,25 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [0.7.0] - 2026-03-28
+
+### Changed
+
+#### Profiles
+- **OZOPatient** - **BREAKING**: Simplified identifier requirements. Removed named slices `ozoPersonId` and `ozoConnectPersonId` and invariant `ozo-patient-has-person-id`. Now uses open slicing with recognized slices for BSN (`http://fhir.nl/fhir/NamingSystem/bsn`) and email. Any `ozoverbindzorg.nl/namingsystem/` system accepted through open slicing.
+- **OZORelatedPerson** - **BREAKING**: Simplified identifier requirements. Removed all 5 named slices and invariant. Now uses open slicing with recognized email slice. Any identifier system accepted.
+- **OZOPractitioner** - **BREAKING**: Changed AssignedId system from `https://ozo.headease.nl/practitioners` to `https://www.ozoverbindzorg.nl/namingsystem/professional`. Removed invariant. Added recognized slices for BIG, UZI, and AGB national identifiers.
+- **OZOOrganization** - **BREAKING**: Changed AssignedId system from `https://ozo.headease.nl/organizations` to `https://www.ozoverbindzorg.nl/namingsystem/organization`. Added recognized AGB slice. URA slice inherited from NL-GF.
+
+#### Examples
+- All 9 Practitioner examples: AssignedId system updated to `ozoverbindzorg.nl/namingsystem/professional`
+- All 4 Organization examples: AssignedId system updated to `ozoverbindzorg.nl/namingsystem/organization`
+- Patient and RelatedPerson examples: removed named slice references (now positional)
+
+#### Documentation
+- Updated `overview.md` identifier tables for all resource types
+- Updated `interaction-network.md` identifier requirements section
+
 ## [0.6.3] - 2026-03-27
 
 ### Changed
@@ -445,6 +464,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `aliases.fsh` with common system and profile aliases
 - Established FSH-first authoring workflow
 
+[0.7.0]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.6.3...v0.7.0
 [0.6.3]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.6.2...v0.6.3
 [0.6.2]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.6.1...v0.6.2
 [0.6.1]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.6.0...v0.6.1

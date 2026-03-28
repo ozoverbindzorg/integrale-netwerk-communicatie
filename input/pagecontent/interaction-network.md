@@ -7,13 +7,15 @@ This IG distinguishes the following roles when establishing care networks:
 * The **OZO client**, an environment where caregivers participate in care networks and interact with care teams.
 
 ### Identifier Requirements
-All resources must include two types of identifiers:
-* An **email identifier** with system `https://www.ozoverbindzorg.nl/namingsystem/email` for communication purposes (temporary - should migrate to telecom)
-* An **origin identifier** using the OZO naming system pattern to distinguish which system created the resource:
-  * `https://www.ozoverbindzorg.nl/namingsystem/ozo/person` or `ozo-connect/person` for Patient and RelatedPerson
-  * `https://www.ozoverbindzorg.nl/namingsystem/ozo/professional` or `ozo-connect/professional` for Practitioner
-  * `https://www.ozoverbindzorg.nl/namingsystem/ozo/team` or `ozo-connect/team` for CareTeam
-  * `https://www.ozoverbindzorg.nl/namingsystem/ozo/network-relation` for RelatedPerson network relationships
+All resources must include at least one identifier. The OZO platform uses identifiers under the `https://www.ozoverbindzorg.nl/namingsystem/` base. Recognized systems per resource type:
+
+* **Patient**: BSN (`http://fhir.nl/fhir/NamingSystem/bsn`), email, OZO person identifiers
+* **RelatedPerson**: email, OZO person and network-relation identifiers
+* **Practitioner**: AssignedId (`https://www.ozoverbindzorg.nl/namingsystem/professional`), BIG, UZI, AGB
+* **Organization**: AssignedId (`https://www.ozoverbindzorg.nl/namingsystem/organization`), URA, AGB
+* **CareTeam**: OZO team identifiers, email
+
+All profiles use open slicing — additional identifier systems are accepted.
 
 ### Creating the Care Network - Order of Operations
 
