@@ -4,7 +4,7 @@ Usage: #example
 * meta.profile = "http://ozoverbindzorg.nl/fhir/StructureDefinition/OZORelatedPerson"
 * meta.versionId = "1"
 * meta.lastUpdated = "2025-06-19T10:20:00.000+00:00"
-* identifier[0].system = "https://www.ozoverbindzorg.nl/namingsystem/ozo/person"
+* identifier[0].system = "https://www.ozoverbindzorg.nl/namingsystem/person"
 * identifier[0].value = "RP-1503"
 * patient = Reference(Jan-de-Hoop) "Jan de Hoop"
 * patient.type = "Patient"

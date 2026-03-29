@@ -8,14 +8,13 @@ Base URL: `https://www.ozoverbindzorg.nl/namingsystem/`
 
 | System | Used for | Description |
 |--------|----------|-------------|
-| `.../{variant}/person` | Patient, RelatedPerson | Platform user identity |
-| `.../{variant}/professional` | Practitioner | Platform practitioner identity |
-| `.../{variant}/organization` | Organization | Platform organization identity |
-| `.../{variant}/team` | CareTeam | Platform team identity |
-| `.../{variant}/network-relation` | RelatedPerson | Relationship between a person and a patient's care network |
-| `.../email` | Any resource | Email address (temporary — should migrate to `telecom`) |
-
-The `{variant}` identifies the originating system (e.g., `ozo-connect`, `ozo`, `ozo-mobile`). Multiple variants may coexist on the same resource.
+| `.../person` | Patient, RelatedPerson | Platform user identity |
+| `.../professional` | Practitioner | Platform practitioner identity |
+| `.../organization` | Organization | Platform organization identity |
+| `.../team` | CareTeam | Platform team identity |
+| `.../network-relation` | RelatedPerson | Relationship between a person and a patient's care network |
+| `.../email` | Any resource | Email address |
+| `.../device` | AuditEvent (source.observer) | Device/system identity (logical identifier) |
 
 ### Dutch national identifiers
 

@@ -11,7 +11,7 @@ Usage: #example
 * identifier[0].assigner.identifier.type.coding.code = #author
 * identifier[0].assigner.identifier.system = $ura
 * identifier[0].assigner.identifier.value = "12312312"
-* identifier[+].system = "https://www.ozoverbindzorg.nl/namingsystem/ozo-connect/professional"
+* identifier[+].system = "https://www.ozoverbindzorg.nl/namingsystem/professional"
 * identifier[=].value = "PRAC-005"
 * identifier[+].system = "https://www.ozoverbindzorg.nl/namingsystem/email"
 * identifier[=].value = "a.otheeker@apotheek-de-pil.nl"

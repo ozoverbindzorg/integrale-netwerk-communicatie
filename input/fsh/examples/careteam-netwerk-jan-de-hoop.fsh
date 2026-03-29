@@ -5,7 +5,7 @@ Usage: #example
 * meta.versionId = "2"
 * meta.lastUpdated = "2025-06-18T08:46:55.505+00:00"
 * meta.source = "#43d00a4ffedf340f1b5f669c84f9507a"
-* identifier[0].system = "https://www.ozoverbindzorg.nl/namingsystem/ozo-connect/team"
+* identifier[0].system = "https://www.ozoverbindzorg.nl/namingsystem/team"
 * identifier[0].value = "39"
 * identifier[1].system = "https://www.ozoverbindzorg.nl/namingsystem/email"
 * identifier[1].value = "delisa.jutstra@zozijn.nl"
