@@ -59,9 +59,8 @@ Description: "AuditEvent profile for OZO AAA Proxy to comply with NEN7510 standa
 * source.site ^short = "Logical source location within the enterprise"
 * source.site ^definition = "Logical source location within the healthcare enterprise network"
 * source.observer 1..1 MS
-* source.observer only Reference(Device)
 * source.observer ^short = "The identity of source detecting the event"
-* source.observer ^definition = "Identifier of the source where the event was detected (OZO AAA Proxy)"
+* source.observer ^definition = "Logical identifier of the source where the event was detected (OZO AAA Proxy). Use observer.identifier with system/value — no Device resource needs to exist on the server."
 * source.type 1..* MS
 * source.type from OZOAuditEventSourceTypeVS (extensible)
 

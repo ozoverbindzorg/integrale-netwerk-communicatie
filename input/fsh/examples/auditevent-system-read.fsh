@@ -19,7 +19,9 @@ Description: "Example of an AuditEvent for a system-to-system access through OZO
 * agent[=].who.type = "Device"
 * agent[=].requestor = true
 * source.site = "OZO AAA Proxy"
-* source.observer = Reference(Device/ozo-aaa-proxy-001) "AAA Proxy Instance 001"
+* source.observer.identifier.system = "https://www.ozoverbindzorg.nl/namingsystem/device"
+* source.observer.identifier.value = "aaa-proxy-001"
+* source.observer.display = "AAA Proxy Instance 001"
 * source.observer.type = "Device"
 * source.type = http://terminology.hl7.org/CodeSystem/security-source-type#4 "Application Server"
 * entity[0].what.reference = "CareTeam/10/_history/2"
