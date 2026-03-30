@@ -68,9 +68,9 @@ Description: "AuditEvent profile for OZO AAA Proxy to comply with NEN7510 standa
 * entity 0..* MS
 * entity ^short = "Data or objects used"
 * entity ^definition = "Specific instances of data or objects that have been accessed"
-* entity.what 1..1 MS
+* entity.what 0..1 MS
 * entity.what ^short = "Specific resource accessed"
-* entity.what ^definition = "Reference to the specific FHIR resource that was accessed or modified"
+* entity.what ^definition = "Version-specific reference to the FHIR resource that was accessed or modified. Absent for search operations that return no results — the search query in entity.query serves as the audit trail."
 * entity.type 0..1 MS
 * entity.type from OZOAuditEventEntityTypeVS (extensible)
 * entity.role 0..1 MS
