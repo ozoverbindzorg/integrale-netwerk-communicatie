@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **OZOPractitioner** - **BREAKING**: Rebased from `NlGfPractitioner` to `Practitioner`. Simplified identifiers to `0..* MS` with open slicing. Removed `AssignedId` slice and invariant.
 - **OZOOrganization** - **BREAKING**: Rebased from `NlGfOrganization` to `Organization`. Simplified identifiers to `0..* MS` with open slicing. Removed `AssignedId` and URA slices.
 - **OZOAuditEvent** - `source.observer` no longer constrained to `Reference(Device)`. Now accepts any reference type with logical identifiers (system/value) — no Device resource needs to exist on the server.
+- **OZOAuditEvent** - Relaxed `entity.what` from `1..1` to `0..1`. Empty search results are access attempts that must be logged for NEN7510 but don't reference a specific resource — the search query in `entity.query` serves as the audit trail. Aligns with FHIR R4 base.
 
 #### Examples
 - **Normalized OZO naming systems** - All examples now use `https://www.ozoverbindzorg.nl/namingsystem/{type}` without `ozo/` or `ozo-connect/` prefixes: `.../person`, `.../professional`, `.../organization`, `.../team`, `.../network-relation`, `.../email`, `.../device`
