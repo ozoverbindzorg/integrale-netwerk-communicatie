@@ -112,6 +112,9 @@ pages:
   technical-aaa-proxy.md:
     title: AAA Proxy
 
+  technical-namingsystems.md:
+    title: Naming Systems Guide
+
   w3c-trace-context.md:
     title: W3C Trace Context Support
 
@@ -240,6 +243,7 @@ menu:
     Installing OZO Package in HAPI FHIR: hapi-installation.html
     Setup Mutual TLS for OZO: technical-walkthrough-mtls.html
     Validate Access Tokens and DPoP headers: technical-walkthrough-validate-access-token.html
+    Naming Systems Guide: technical-namingsystems.html
     W3C Trace Context Support: w3c-trace-context.html
     Access the API as Practitioner: technical-walkthrough-access-practitioner.html
     Access the API as Related Person: technical-walkthrough-access-rp.html
