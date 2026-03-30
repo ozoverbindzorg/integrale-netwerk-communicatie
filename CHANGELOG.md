@@ -6,7 +6,25 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
-## [0.7.0] - 2026-03-30
+## [0.7.1] - 2026-03-30
+
+### Changed
+
+#### Profiles
+- **OZOAuditEvent** - `source.observer` no longer constrained to `Reference(Device)`. Now accepts any reference type with logical identifiers (system/value) — no Device resource needs to exist on the server.
+- **OZOAuditEvent** - Relaxed `entity.what` from `1..1` to `0..1`. Empty search results are access attempts that must be logged for NEN7510 but don't reference a specific resource — the search query in `entity.query` serves as the audit trail. Aligns with FHIR R4 base.
+
+#### Examples
+- **Normalized OZO naming systems** - All examples now use `https://www.ozoverbindzorg.nl/namingsystem/{type}` without `ozo/` or `ozo-connect/` prefixes: `.../person`, `.../professional`, `.../organization`, `.../team`, `.../network-relation`, `.../email`, `.../device`
+- **AuditEvent examples** - `source.observer` changed from literal `Reference(Device/ozo-aaa-proxy-001)` to logical identifier with `system = .../device`, `value = aaa-proxy-001`
+- **Device example** - Restored with normalized naming system (`https://www.ozoverbindzorg.nl/namingsystem/device`)
+
+#### Documentation
+- **Identifier Systems** - New page under Compliance listing all OZO and Dutch national identifier systems. Documents the open-slicing approach where profiles do not enforce specific systems.
+- Updated HAPI installation guide: removed all `fhir.nl.gf` references from configuration, dependency table, troubleshooting, and complete example
+- Added `Task?id` note on both messaging pages: needed for read-list tracking (REQUESTED → COMPLETED transitions)
+
+## [0.7.0] - 2026-03-28
 
 ### Changed
 
@@ -18,20 +36,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **OZORelatedPerson** - **BREAKING**: Simplified identifiers to `0..* MS` with open slicing. Removed all 5 named slices and invariant.
 - **OZOPractitioner** - **BREAKING**: Rebased from `NlGfPractitioner` to `Practitioner`. Simplified identifiers to `0..* MS` with open slicing. Removed `AssignedId` slice and invariant.
 - **OZOOrganization** - **BREAKING**: Rebased from `NlGfOrganization` to `Organization`. Simplified identifiers to `0..* MS` with open slicing. Removed `AssignedId` and URA slices.
-- **OZOAuditEvent** - `source.observer` no longer constrained to `Reference(Device)`. Now accepts any reference type with logical identifiers (system/value) — no Device resource needs to exist on the server.
-- **OZOAuditEvent** - Relaxed `entity.what` from `1..1` to `0..1`. Empty search results are access attempts that must be logged for NEN7510 but don't reference a specific resource — the search query in `entity.query` serves as the audit trail. Aligns with FHIR R4 base.
 
 #### Examples
-- **Normalized OZO naming systems** - All examples now use `https://www.ozoverbindzorg.nl/namingsystem/{type}` without `ozo/` or `ozo-connect/` prefixes: `.../person`, `.../professional`, `.../organization`, `.../team`, `.../network-relation`, `.../email`, `.../device`
-- **AuditEvent examples** - `source.observer` changed from literal `Reference(Device/ozo-aaa-proxy-001)` to logical identifier with `system = .../device`, `value = aaa-proxy-001`
-- **Device example** - Restored with normalized naming system (`https://www.ozoverbindzorg.nl/namingsystem/device`)
+- All 9 Practitioner examples: identifier system updated to `ozoverbindzorg.nl/namingsystem/professional`
+- All 4 Organization examples: identifier system updated to `ozoverbindzorg.nl/namingsystem/organization`
+- Patient and RelatedPerson examples: removed named slice references (now positional)
 
 #### Documentation
-- **Identifier Systems** - New page under Compliance listing all OZO and Dutch national identifier systems. Documents the open-slicing approach where profiles do not enforce specific systems.
 - Updated `overview.md` identifier tables for all resource types
 - Updated `interaction-network.md` identifier requirements section
-- Updated HAPI installation guide: removed all `fhir.nl.gf` references from configuration, dependency table, troubleshooting, and complete example
-- Added `Task?id` note on both messaging pages: needed for read-list tracking (REQUESTED → COMPLETED transitions)
 
 ## [0.6.3] - 2026-03-27
 
@@ -472,6 +485,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `aliases.fsh` with common system and profile aliases
 - Established FSH-first authoring workflow
 
+[0.7.1]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.7.0...v0.7.1
 [0.7.0]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.6.3...v0.7.0
 [0.6.3]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.6.2...v0.6.3
 [0.6.2]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.6.1...v0.6.2
