@@ -1,8 +1,9 @@
 Instance: ozo-aaa-proxy-001
-InstanceOf: Device
+InstanceOf: OZODevice
 Usage: #example
 Title: "OZO AAA Proxy Device"
 Description: "Device representing the OZO AAA Proxy instance. Referenced by AuditEvent.source.observer via logical identifier."
+* meta.profile = "http://ozoverbindzorg.nl/fhir/StructureDefinition/OZODevice"
 * meta.versionId = "1"
 * meta.lastUpdated = "2025-01-08T09:00:00.000+01:00"
 * identifier.system = "https://www.ozoverbindzorg.nl/namingsystem/device"

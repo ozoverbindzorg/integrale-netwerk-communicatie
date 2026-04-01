@@ -4,7 +4,7 @@ Usage: #definition
 Title: "OZO System CapabilityStatement"
 Description: "CapabilityStatement for OZO system-level access (server-to-server). Full CRUD access to all resources without access filters. Requires OzoSystemCredential via the Nuts protocol."
 * url = "http://ozoverbindzorg.nl/fhir/CapabilityStatement/OZO-System"
-* version = "0.7.1"
+* version = "0.7.2"
 * name = "OZOSystemCapabilityStatement"
 * title = "OZO System CapabilityStatement"
 * status = #active
