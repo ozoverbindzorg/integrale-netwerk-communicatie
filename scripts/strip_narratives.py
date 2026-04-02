@@ -108,9 +108,23 @@ def strip_narratives_from_file(file_path, keep_snapshots=False):
                 f.write('\n')
 
             return True
+        elif resource_type in ('ValueSet', 'CodeSystem', 'CapabilityStatement', 'SearchParameter'):
+            # Keep conformance resources but strip narratives
+            if 'text' in data:
+                del data['text']
+                print(f"Removed text from {os.path.basename(file_path)}")
+            with open(file_path, 'w') as f:
+                json.dump(data, f, separators=(',', ':'))
+                f.write('\n')
+            return True
+
         else:
-            print(f"Skipping {os.path.basename(file_path)} - not a StructureDefinition or ImplementationGuide")
-            return False
+            # Remove example/instance resources from the minimal package
+            # These are resources like Patient, Communication, Task, etc.
+            # that get installed as real data on HAPI FHIR servers
+            print(f"Removing example resource {os.path.basename(file_path)} ({resource_type})")
+            os.remove(file_path)
+            return True
 
     except Exception as e:
         print(f"Error processing {file_path}: {e}")
