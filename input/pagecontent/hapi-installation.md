@@ -362,6 +362,8 @@ The following table lists the canonical URLs for common OZO profiles:
 
 1. **Always set meta.profile**: The `meta.profile` element tells the HAPI FHIR server which profile to validate against.
 
+5. **Example resources are installed**: The OZO IG package includes example resources (Patients, Practitioners, Communications, etc.) that are installed alongside profiles when using `STORE_AND_INSTALL`. These are identifiable by their well-known IDs (e.g., `H-de-Boer`, `Manu-van-Weel`). To avoid example data on a production server, delete the example resources after installation or use a post-install script to remove resources without a production-issued ID.
+
 2. **Profile constraints**: Each OZO profile has specific constraints (cardinality, required elements, value sets). Review the profile definition in the [Artifacts](artifacts.html) section.
 
 3. **Referenced resources**: OZO profiles often reference other OZO profiles (e.g., OZOCareTeam references OZOPatient, OZOPractitioner). Ensure all referenced resources also conform to their respective OZO profiles.
