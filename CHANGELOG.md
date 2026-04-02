@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [0.7.4] - 2026-04-02
+
+### Fixed
+
+#### Examples
+- **Subscription examples** - Reverted status back to `requested` (correct for examples showing what a client would create). The HAPI activation issue is solved by the minimal package stripping examples.
+
 ## [0.7.3] - 2026-04-02
 
 ### Fixed
@@ -502,6 +509,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `aliases.fsh` with common system and profile aliases
 - Established FSH-first authoring workflow
 
+[0.7.4]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.7.3...v0.7.4
 [0.7.3]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.7.2...v0.7.3
 [0.7.2]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.7.1...v0.7.2
 [0.7.1]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.7.0...v0.7.1
