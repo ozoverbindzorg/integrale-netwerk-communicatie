@@ -30,7 +30,7 @@ identifier[1].system = "https://www.ozoverbindzorg.nl/namingsystem/network-relat
 identifier[1].value = "67890"                         ← relationship ID (unique per patient-person pair)
 
 identifier[2].system = "https://www.ozoverbindzorg.nl/namingsystem/email"
-identifier[2].value = "kees@example.nl"
+identifier[2].value = "kees@example.com"
 ```
 
 #### Practitioner
@@ -69,7 +69,7 @@ identifier[0].system = "https://www.ozoverbindzorg.nl/namingsystem/team"
 identifier[0].value = "netwerk-h-de-boer"             ← platform team ID
 
 identifier[1].system = "https://www.ozoverbindzorg.nl/namingsystem/email"
-identifier[1].value = "team@example.nl"               ← team email (if applicable)
+identifier[1].value = "team@example.com"               ← team email (if applicable)
 ```
 
 #### AuditEvent (source.observer)

@@ -7,4 +7,4 @@ Description: "Subscription for tracking unread message status via Task resources
 * reason = "Notify when Task status changes to requested (unread indicator)"
 * criteria = "Task?status=requested"
 * channel.type = #rest-hook
-* channel.endpoint = "https://ozo-client.example.nl/fhir/subscription/task-unread"
+* channel.endpoint = "https://ozo-client.example.com/fhir/subscription/task-unread"

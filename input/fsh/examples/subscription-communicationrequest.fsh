@@ -7,4 +7,4 @@ Description: "Subscription for detecting new threads and thread status changes. 
 * reason = "Notify when CommunicationRequest is created or status changes"
 * criteria = "CommunicationRequest?id"
 * channel.type = #rest-hook
-* channel.endpoint = "https://ozo-platform.example.nl/fhir/subscription/thread"
+* channel.endpoint = "https://ozo-platform.example.com/fhir/subscription/thread"

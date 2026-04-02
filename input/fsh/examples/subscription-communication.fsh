@@ -7,4 +7,4 @@ Description: "Subscription for detecting new Communication messages. This is the
 * reason = "Notify when new Communication messages are created"
 * criteria = "Communication?id"
 * channel.type = #rest-hook
-* channel.endpoint = "https://ozo-client.example.nl/fhir/subscription/communication"
+* channel.endpoint = "https://ozo-client.example.com/fhir/subscription/communication"
