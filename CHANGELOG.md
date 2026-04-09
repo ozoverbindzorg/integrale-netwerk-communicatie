@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [0.7.5] - 2026-04-02
+
+### Added
+
+#### Profiles
+- **OZOTask** - Added `focus` field (0..1, Reference(OZOCommunication)) to point to the latest Communication in the thread. When a new message arrives, the OZO FHIR Api updates `Task.focus` to reference the new Communication. This ensures Task subscriptions fire even when the status value doesn't change (the resource content genuinely changes), and gives clients a direct pointer to the most recent unread message.
+
 ## [0.7.4] - 2026-04-02
 
 ### Fixed
@@ -509,6 +516,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `aliases.fsh` with common system and profile aliases
 - Established FSH-first authoring workflow
 
+[0.7.5]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.7.4...v0.7.5
 [0.7.4]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.7.3...v0.7.4
 [0.7.3]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.7.2...v0.7.3
 [0.7.2]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.7.1...v0.7.2

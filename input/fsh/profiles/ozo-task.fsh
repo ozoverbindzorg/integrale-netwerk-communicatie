@@ -37,6 +37,12 @@ Description: "Task profile for the OZO platform. Represents work assignments, re
 * for.type 1..1
 * for.display 0..1 MS
 
+// Focus - points to the latest Communication in the thread
+* focus 0..1 MS
+* focus only Reference(OZOCommunication)
+* focus ^short = "Latest Communication in the thread"
+* focus ^definition = "Reference to the latest Communication in the thread. Updated by the OZO FHIR Api when a new message arrives in the thread. This field provides a pointer to the most recent unread message for clients using the Task as a read/unread indicator, and ensures Task subscriptions fire even when the status value doesn't change (because the resource content genuinely changes when focus is updated)."
+
 // Owner - who is responsible for the task
 * owner 1..1 MS
 * owner only Reference(OZOPractitioner or OZORelatedPerson)
