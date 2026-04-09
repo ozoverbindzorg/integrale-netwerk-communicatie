@@ -33,7 +33,7 @@ The following Subscription objects are created by the OZO platform for each team
 * `Communication?id`
 * `Task?status=requested`* (the AAA proxy automatically scopes this to the current user's ownership)
 
-\* If the platform needs to maintain a read-list (tracking when messages are marked as read), use `Task?id` instead. `Task?status=requested` only fires when status changes *to* requested, so it misses the REQUESTED → COMPLETED transition that indicates a message was read.
+\* If the platform also needs to detect **read receipts** (REQUESTED → COMPLETED transitions), use `Task?id` instead. `Task?status=requested` fires on new messages (including the `focus` update trick) but stops firing once the Task moves to COMPLETED.
 
 #### Notify-then-pull pattern
 
@@ -54,15 +54,15 @@ This means `channel.payload` must be left empty. The notification only signals t
 
 Each subscription serves a different purpose. Understanding when notifications fire is critical for correct client implementation:
 
-| Subscription              | Purpose                                                                                             | Fires when                                                         |
-|---------------------------|-----------------------------------------------------------------------------------------------------|--------------------------------------------------------------------|
-| `Communication?id`        | **New message notification.** This is the primary mechanism for detecting new messages in a thread. | A new `Communication` is created (POST).                           |
-| `CommunicationRequest?id` | Thread lifecycle changes.                                                                           | A `CommunicationRequest` is created or its status changes.         |
-| `Task?status=requested`   | Read status changes. **Not suitable for new-message detection.**                                    | A `Task` status changes to REQUESTED (e.g. COMPLETED → REQUESTED). |
+| Subscription              | Purpose                                                                    | Fires when                                                                                                                                 |
+|---------------------------|----------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
+| `Communication?id`        | New message notification.                                                  | A new `Communication` is created (POST).                                                                                                   |
+| `CommunicationRequest?id` | Thread lifecycle changes.                                                  | A `CommunicationRequest` is created or its status changes.                                                                                 |
+| `Task?status=requested`   | **Unread message tracking and new-message notification for the recipient.** | Any change to a Task that matches `status=requested`. This includes status transitions to REQUESTED AND content changes (like `focus`) on Tasks already REQUESTED. |
 
-> **Important:** The `Task` resource functions as a **read/unread indicator**, not as a message notification mechanism. When a new message arrives and the Task is already in status `requested` (unread), the OZO FHIR Api sets it to `requested` again — which is a no-op. HAPI FHIR does not create a new resource version when nothing changes, so **no subscription notification is sent**.
+> **Important:** When a new message arrives, the OZO FHIR Api updates the Task's `focus` field to reference the new `Communication`. This ensures `Task?status=requested` fires even when the task was already in REQUESTED status — the `focus` change creates a new resource version. The `focus` field also gives clients a direct pointer to the most recent unread message.
 >
-> To detect new messages, clients **must** subscribe to `Communication`. The `Task` subscription is only useful for observing read-status transitions.
+> This means `Task?status=requested` is a reliable single subscription for both unread tracking and new-message notification from the recipient's perspective.
 {:.stu-note}
 
 ### Create a new team thread
@@ -83,6 +83,7 @@ A practitioner from Team A creates a new thread addressed to Team B. The process
     * The `basedOn` is set to the `CommunicationRequest` reference
     * The `subject` is set to the `Patient` reference
     * The `owner` is set to the individual `CareTeam` member
+    * The `focus` is not set at thread creation (there is no initial `Communication` yet — the thread's initial message is on `CommunicationRequest.payload`)
 * The **OZO platform** (Team B side) receives the new `CommunicationRequest` and `Task` by Subscription:
   * The `CommunicationRequest` subscription notifies Team B of the new thread
   * The `Task` (status REQUESTED) tracks the unread state per team member
@@ -104,18 +105,21 @@ A practitioner from Team B responds to the thread. The reply is addressed to Tea
     * An existing task is queried depending on the status, the following action is taken:
       * if a task exists:
         * The status is set to REQUESTED
+        * The `focus` is updated to reference the new `Communication` (ensures the subscription fires even when status was already REQUESTED)
       * if a task does not exist, a new one is created with the following properties:
         * The `status` is set to REQUESTED
         * The `intent` is set to ORDER
         * The `basedOn` is set to the `CommunicationRequest` reference
         * The `subject` is set to the `Patient` reference
         * The `owner` is set to the individual `CareTeam` member
+        * The `focus` is set to the new `Communication` reference
   * For each member of Team B's `CareTeam` who is not the sender:
     * The existing task status is set to COMPLETED (the team member's colleague has responded)
+    * The `focus` is updated to reference the new `Communication`
 * The **OZO platform** (Team A side) receives a notification about the new `Communication` by Subscription:
   * The new message appears in Team A's shared inbox
   * Any practitioner from Team A can view the response
-  * The `Task` status change (COMPLETED → REQUESTED) updates the unread indicator, but only if the previous message was already read. If the Task was already REQUESTED, no Task notification is sent — the `Communication` subscription ensures the message is always detected.
+  * The `Task` subscription also fires: `focus` was updated to point to the new `Communication`, creating a new version even when the status was already REQUESTED.
 
 ### Follow-up from a different team member (Team A replies)
 
@@ -206,9 +210,9 @@ The **OZO FHIR Api** updates Tasks:
 
 **Notifications fired:**
 * `Communication` subscription → Clinic B practitioners notified of new message (always fires)
-* `Task?status=requested` subscription → each Clinic B practitioner notified (status changed from COMPLETED to REQUESTED)
+* `Task?status=requested` subscription → each Clinic B practitioner notified (status changed from COMPLETED to REQUESTED AND focus updated to new Communication)
 
-> **Note:** If Clinic B had not yet read the previous message (Tasks still REQUESTED), the Task update would be a no-op and no Task notification would be sent. The `Communication` subscription ensures the new message is always detected regardless of read status.
+> **Note:** Even if Clinic B had not yet read the previous message (Tasks still REQUESTED), the `focus` update would still create a new Task version and fire the subscription. The `focus` field eliminates the no-op scenario.
 {:.stu-note}
 
 ---
