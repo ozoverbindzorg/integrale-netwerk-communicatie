@@ -13,16 +13,15 @@ This IG distinguishes the following roles when processing messages:
 * The **OZO client**, an environment where caregivers create, receive and respond to messages in communication with the practitioners.
 
 ### Prerequisite, Subscriptions
-The following Subscription objects are created by the OZO platform:
-* `CommunicationRequest?id`
-* `Communication?id`
-* `Task?status=requested`* (the AAA proxy automatically scopes this to the current user's ownership)
 
-\* If the platform also needs to detect **read receipts** (REQUESTED → COMPLETED transitions), use `Task?id` instead. `Task?status=requested` fires on new messages (including the `focus` update trick) but stops firing once the Task moves to COMPLETED.
+In practice, a single Subscription is enough for most clients and platforms:
 
-The following Subscriptions are likely to be created by the OZO client:
-* `Communication?id` (for new message detection)
-* `Task?status=requested` (for unread message tracking)
+* **`Task?status=requested`** — **required**. Covers unread tracking and new-message notification for the recipient (the AAA proxy automatically scopes this to the current user's ownership). Use `Task?id` instead if you also need to detect **read receipts** (REQUESTED → COMPLETED transitions).
+
+Optional additional subscriptions:
+
+* `Communication?id` — *optional*. Only needed to see messages **you** sent yourself. Your own Task is set to COMPLETED on send and won't match `status=requested`, but the HTTP POST response usually gives you the same data.
+* `CommunicationRequest?id` — *optional*. Only needed if you care about thread lifecycle events (DRAFT → ACTIVE approval, thread revoked/completed) separately from messages.
 
 #### Notify-then-pull pattern
 
@@ -35,29 +34,24 @@ This means `channel.payload` must be left empty. The notification only signals t
 
 #### Example Subscription resources
 
-* [Subscription-Communication](Subscription-Subscription-Communication.html) — new message detection
-* [Subscription-Task-Unread](Subscription-Subscription-Task-Unread.html) — unread message tracking
-* [Subscription-CommunicationRequest](Subscription-Subscription-CommunicationRequest.html) — thread lifecycle
+* [Subscription-Task-Unread](Subscription-Subscription-Task-Unread.html) — unread tracking and new-message notification (required)
+* [Subscription-Communication](Subscription-Subscription-Communication.html) — own sent messages (optional)
+* [Subscription-CommunicationRequest](Subscription-Subscription-CommunicationRequest.html) — thread lifecycle (optional)
 
 ### Subscription behavior
 
 Each subscription serves a different purpose. Understanding when notifications fire is critical for correct client implementation:
 
-| Subscription              | Purpose                                                                    | Fires when                                                                                                                                 |
-|---------------------------|----------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
-| `Communication?id`        | New message notification.                                                  | A new `Communication` is created (POST).                                                                                                   |
-| `CommunicationRequest?id` | Thread lifecycle changes.                                                  | A `CommunicationRequest` is created or its status changes (e.g. DRAFT → ACTIVE).                                                           |
-| `Task?status=requested`   | **Unread message tracking and new-message notification for the recipient.** | Any change to a Task that matches `status=requested`. This includes status transitions to REQUESTED AND content changes (like `focus`) on Tasks already REQUESTED. |
+| Subscription              | Purpose                                                                                                             | Required? | Fires when                                                                                                                                                         |
+|---------------------------|---------------------------------------------------------------------------------------------------------------------|-----------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `Task?status=requested`   | **Unread tracking and new-message notification for the recipient.** Primary mechanism.                              | Required  | Any change to a Task that matches `status=requested`. This includes status transitions to REQUESTED AND content changes (like `focus`) on Tasks already REQUESTED. |
+| `Communication?id`        | Visibility of your own sent messages (sender's Task goes to COMPLETED and won't match `status=requested`).          | Optional  | A new `Communication` is created (POST).                                                                                                                           |
+| `CommunicationRequest?id` | Thread lifecycle changes (DRAFT → ACTIVE, revoked, completed).                                                      | Optional  | A `CommunicationRequest` is created or its status changes.                                                                                                         |
 
 > **Important:** When a new message arrives, the OZO FHIR Api updates the Task's `focus` field to reference the new `Communication`. This ensures `Task?status=requested` fires even when the task was already in REQUESTED status — the `focus` change creates a new resource version. The `focus` field also gives clients a direct pointer to the most recent unread message.
 >
-> This means `Task?status=requested` is a reliable single subscription for both unread tracking and new-message notification from the recipient's perspective. Clients only need to subscribe to `Communication?id` if they want to see messages they sent themselves (the sender's own Task is set to COMPLETED and won't match `status=requested`).
+> This means `Task?status=requested` is a reliable single subscription for both unread tracking and new-message notification. The other two subscriptions are optional and only needed for specific edge cases.
 {:.stu-note}
-
-#### Recommended subscriptions by use case
-
-* **For unread messages / new-message notification:** Subscribe to `Task?status=requested`. The AAA proxy automatically rewrites the subscription criteria to scope it to the current user (adding `owner=Practitioner/x,CareTeam/y`), so the client does not need to include `owner` explicitly. It also avoids a **subscription storm** — a generic `Task?id` subscription fires for every Task change across all users.
-* **For visibility of your own sent messages:** Subscribe to `Communication?id`. The sender's own Task is set to COMPLETED on send and does not match `status=requested`.
 
 ### Create a new thread, the initial question
 As client of the  **OZO FHIR Api** can create a new thread. The process of creating a new thread looks as follows:
