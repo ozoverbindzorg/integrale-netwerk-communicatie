@@ -6,6 +6,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [0.7.6] - 2026-04-02
+
+### Changed
+
+#### Documentation
+- **Subscription guidance** - With `Task.focus` being updated on every new Communication, `Task?status=requested` is now sufficient as the primary subscription for both unread tracking and new-message notification. Both messaging pages updated to:
+  - Mark `Task?status=requested` as the **only required** subscription
+  - Mark `Communication?id` as **optional** (only needed to see own sent messages)
+  - Mark `CommunicationRequest?id` as **optional** (only needed for thread lifecycle events)
+  - Reorder subscription tables and example lists with Task first
+  - Document the no-op problem and how `Task.focus` updates solve it
+  - Note that `Task?id` is only needed when the platform also wants to detect read receipts (REQUESTED → COMPLETED transitions)
+
 ## [0.7.5] - 2026-04-02
 
 ### Added
@@ -516,6 +529,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `aliases.fsh` with common system and profile aliases
 - Established FSH-first authoring workflow
 
+[0.7.6]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.7.5...v0.7.6
 [0.7.5]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.7.4...v0.7.5
 [0.7.4]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.7.3...v0.7.4
 [0.7.3]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.7.2...v0.7.3

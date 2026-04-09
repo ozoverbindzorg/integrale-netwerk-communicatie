@@ -4,7 +4,7 @@ Usage: #definition
 Title: "OZO Client CapabilityStatement"
 Description: "CapabilityStatement for authenticated client access to the OZO FHIR API. Covers Practitioner, RelatedPerson, and Patient roles. All three roles have the same resource types and interactions available — the AAA proxy scopes access differently per role by automatically applying search filters based on the caller's credentials. See the CapabilityStatements documentation page for per-role filtering details."
 * url = "http://ozoverbindzorg.nl/fhir/CapabilityStatement/OZO-Client"
-* version = "0.7.5"
+* version = "0.7.6"
 * name = "OZOClientCapabilityStatement"
 * title = "OZO Client CapabilityStatement"
 * status = #active
