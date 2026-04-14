@@ -16,8 +16,8 @@ else
   echo "Using existing Docker image: $IMAGE_NAME"
 fi
 
-# Create output directories
-mkdir -p ./public ./output
+# Create output directory
+mkdir -p ./output
 
 # Run the build
 echo "Running build in Docker container..."
@@ -26,4 +26,4 @@ docker run --rm -v "${PWD}:/src" "$IMAGE_NAME"
 echo ""
 echo "Build complete!"
 echo "Opening Implementation Guide in browser..."
-open public/index.html || xdg-open public/index.html || echo "Please open public/index.html manually"
+open output/index.html || xdg-open output/index.html || echo "Please open output/index.html manually"
