@@ -26,9 +26,9 @@ Description: "CareTeam profile for organizational teams in OZO. Represents a dep
 * name ^definition = "The name of the organizational team (e.g., 'Apotheek de Pil - Team')"
 
 // Category identifies the type of team (e.g., pharmacy, general medicine)
-* category 1..* MS
+* category 0..* MS
 * category ^short = "Type of team"
-* category ^definition = "SNOMED CT coded category identifying the type of organizational team (e.g., pharmacy service, general medicine)"
+* category ^definition = "Optional coded category identifying the type of organizational team (e.g., pharmacy service, general medicine). Any code system may be used — SNOMED CT, the Dutch organization type list (urn:oid:2.16.840.1.113883.2.4.15.1060), or a plain text description."
 
 // Managing organization is required - links team to its organization
 * managingOrganization 1..1 MS

@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [0.7.7] - 2026-04-14
+
+### Changed
+
+#### Profiles
+- **OZOOrganizationalCareTeam** - Relaxed `category` from `1..*` to `0..*`. The SNOMED CT practice setting list lacks coverage for primary care and the social domain, making it impractical to require a coded category for all team types. Category is now optional — teams can provide any code system (SNOMED CT, Dutch organization type list `urn:oid:2.16.840.1.113883.2.4.15.1060`, or plain text).
+
 ## [0.7.6] - 2026-04-02
 
 ### Changed
@@ -529,6 +536,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `aliases.fsh` with common system and profile aliases
 - Established FSH-first authoring workflow
 
+[0.7.7]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.7.6...v0.7.7
 [0.7.6]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.7.5...v0.7.6
 [0.7.5]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.7.4...v0.7.5
 [0.7.4]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.7.3...v0.7.4
