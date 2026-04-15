@@ -30,16 +30,16 @@ This method involves configuring the HAPI FHIR server's `application.yaml` file 
 
 Visit the OZO FHIR Implementation Guide releases page:
 - **Repository:** [https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/releases](https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/releases)
-- **Latest Release:** [v0.7.7](https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/releases/tag/v0.7.7)
+- **Latest Release:** [v0.7.8](https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/releases/tag/v0.7.8)
 
 From the release page, copy the URL of the `.tgz` package file. For production servers, use the **minimal** package (smaller, optimized for server deployment):
 ```
-fhir.ozo-0.7.7-minimal.tgz
+fhir.ozo-0.7.8-minimal.tgz
 ```
 
 The full download URL will be:
 ```
-https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/releases/download/v0.7.7/fhir.ozo-0.7.7-minimal.tgz
+https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/releases/download/v0.7.8/fhir.ozo-0.7.8-minimal.tgz
 ```
 
 ### Step 2: Configure the HAPI FHIR Server
@@ -91,8 +91,8 @@ hapi:
       # OZO FHIR Implementation Guide
       ozo:
         name: fhir.ozo
-        version: 0.7.7
-        packageUrl: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/releases/download/v0.7.7/fhir.ozo-0.7.7-minimal.tgz
+        version: 0.7.8
+        packageUrl: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/releases/download/v0.7.8/fhir.ozo-0.7.8-minimal.tgz
         installMode: STORE_AND_INSTALL
 ```
 
@@ -105,7 +105,7 @@ hapi:
 | Parameter | Description | Recommended Value |
 |-----------|-------------|-------------------|
 | **name** | The package identifier (must match the package ID) | `fhir.ozo` |
-| **version** | The version of the package to install | `0.7.7` |
+| **version** | The version of the package to install | `0.7.8` |
 | **packageUrl** | Direct URL to the `.tgz` package file | Release download URL |
 | **installMode** | How to handle the package installation | `STORE_AND_INSTALL` |
 
@@ -173,7 +173,7 @@ Once the server has restarted, verify that the OZO package was installed success
 
 Look for log entries indicating successful package installation:
 ```
-INFO: Installing package fhir.ozo version 0.7.7
+INFO: Installing package fhir.ozo version 0.7.8
 INFO: Successfully installed implementation guide: fhir.ozo
 ```
 
@@ -205,7 +205,7 @@ All OZO profiles share the same `version` field, which matches the installed IG 
 curl "http://localhost:8080/fhir/StructureDefinition?url:below=http://ozoverbindzorg.nl/fhir/StructureDefinition&_elements=url,version,name&_sort=name"
 ```
 
-The `version` field on each returned StructureDefinition reflects the IG package version (e.g., `"version": "0.7.7"`).
+The `version` field on each returned StructureDefinition reflects the IG package version (e.g., `"version": "0.7.8"`).
 
 #### Query the ImplementationGuide resource
 
@@ -389,7 +389,7 @@ hapi:
 
 Download the `.tgz` package from the releases page:
 ```bash
-wget https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/releases/download/v0.7.7/fhir.ozo-0.7.7.tgz
+wget https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/releases/download/v0.7.8/fhir.ozo-0.7.8.tgz
 ```
 
 ### Step 2: Upload via FHIR API
@@ -399,7 +399,7 @@ Use the `$install` operation to upload the package:
 ```bash
 curl -X POST \
   -H "Content-Type: application/gzip" \
-  --data-binary @fhir.ozo-0.7.7.tgz \
+  --data-binary @fhir.ozo-0.7.8.tgz \
   "http://localhost:8080/fhir/ImplementationGuide/\$install"
 ```
 
@@ -597,8 +597,8 @@ hapi:
       # OZO FHIR Implementation Guide
       ozo:
         name: fhir.ozo
-        version: 0.7.7
-        packageUrl: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/releases/download/v0.7.7/fhir.ozo-0.7.7-minimal.tgz
+        version: 0.7.8
+        packageUrl: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/releases/download/v0.7.8/fhir.ozo-0.7.8-minimal.tgz
         installMode: STORE_AND_INSTALL
 
     # Supported resource types (ensure OZO resources are included)

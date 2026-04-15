@@ -32,9 +32,9 @@ Description: "CareTeam profile for patient care networks in OZO. Represents a ca
 * participant ^definition = "Participants in the care team, including practitioners and related persons"
 
 * participant.member 1..1 MS
-* participant.member only Reference(OZOPractitioner or OZORelatedPerson or OZOOrganizationalCareTeam)
+* participant.member only Reference(OZOPractitioner or OZORelatedPerson or OZOPatient or OZOOrganizationalCareTeam)
 * participant.member ^short = "Who is on the team"
-* participant.member ^definition = "Reference to the practitioner or related person who is a member of this care team"
+* participant.member ^definition = "Reference to the practitioner, related person, or patient who is a member of this care team. A patient may participate in their own care network (e.g., self-reliant clients)."
 * participant.member.reference 1..1
 * participant.member.type 1..1
 * participant.member.display 0..1 MS
