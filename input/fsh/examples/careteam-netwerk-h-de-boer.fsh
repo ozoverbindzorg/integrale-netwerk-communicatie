@@ -8,7 +8,10 @@ Usage: #example
 * status = #active
 * subject = Reference(H-de-Boer) "H. de Boer"
 * subject.type = "Patient"
-* participant[0].member = Reference(Kees-Groot)
+* participant[0].member = Reference(H-de-Boer) "H. de Boer"
+* participant[=].member.type = "Patient"
+* participant[=].role.text = "Zelfredzame cliënt"
+* participant[+].member = Reference(Kees-Groot)
 * participant[=].member.type = "RelatedPerson"
 * participant[+].member = Reference(Manu-van-Weel) "Manu van Weel"
 * participant[=].member.type = "Practitioner"

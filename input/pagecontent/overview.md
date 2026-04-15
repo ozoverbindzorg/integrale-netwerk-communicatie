@@ -117,11 +117,11 @@ the `Patient` to different `Organization`s. Participants can also include organi
 | field       | Cardinality | description                                                                                       |
 |-------------|-------------|---------------------------------------------------------------------------------------------------|
 | subject     | 1..1        | reference to the `Patient`                                                                        |
-| participant | 1..*        | a reference to a `Practitioner`, `RelatedPerson`, or `OZOOrganizationalCareTeam` (nested team)    |
+| participant | 1..*        | a reference to a `Practitioner`, `RelatedPerson`, `Patient` (self-reliant client), or `OZOOrganizationalCareTeam` (nested team) |
 | status      | 1..1        | "active"                                                                                          |
 
 ##### Examples
-* [Netwerk-H-de-Boer](CareTeam-Netwerk-H-de-Boer.html)
+* [Netwerk-H-de-Boer](CareTeam-Netwerk-H-de-Boer.html) (includes patient as self-reliant participant)
 * [Netwerk-Jan-de-Hoop](CareTeam-Netwerk-Jan-de-Hoop.html) (includes a nested organizational team)
 
 #### CareTeam (Organizational)

@@ -43,7 +43,7 @@ RelatedPersons represent family members, friends, or informal caregivers. Exampl
 Organizational care teams use the [OZOOrganizationalCareTeam](StructureDefinition-ozo-organizational-careteam.html) profile and represent departments or organizational units without specific patient assignment. They have no `subject`, require a `managingOrganization`, and only allow `Practitioner` participants. See example: [Department-Thuiszorg](CareTeam-Department-Thuiszorg.html)
 
 #### 3. Create Patient Care Teams
-Patient-specific care teams use the [OZOCareTeam](StructureDefinition-ozo-careteam.html) profile and include a subject (the patient). They can include practitioners, related persons, and even organizational care teams as nested participants. See example: [Netwerk-Jan-de-Hoop](CareTeam-Netwerk-Jan-de-Hoop.html)
+Patient-specific care teams use the [OZOCareTeam](StructureDefinition-ozo-careteam.html) profile and include a subject (the patient). They can include practitioners, related persons, the patient themselves (for self-reliant clients), and organizational care teams as nested participants. See examples: [Netwerk-Jan-de-Hoop](CareTeam-Netwerk-Jan-de-Hoop.html), [Netwerk-H-de-Boer](CareTeam-Netwerk-H-de-Boer.html) (includes patient as participant)
 
 ### Key Principles
 
@@ -59,7 +59,7 @@ Patient-specific care teams use the [OZOCareTeam](StructureDefinition-ozo-carete
 
 3. **Care Team Types**:
    - **Organizational teams** ([OZOOrganizationalCareTeam](StructureDefinition-ozo-organizational-careteam.html)): No subject, represent organizational units (departments, shared inboxes). Only practitioners as members.
-   - **Patient teams** ([OZOCareTeam](StructureDefinition-ozo-careteam.html)): Include subject reference to the patient. Practitioners, related persons, and organizational teams as members.
+   - **Patient teams** ([OZOCareTeam](StructureDefinition-ozo-careteam.html)): Include subject reference to the patient. Practitioners, related persons, patients (self-reliant clients), and organizational teams as members.
    - Teams can be nested — an organizational CareTeam can be a participant in a patient CareTeam
 
 4. **Participant Roles**: Include appropriate SNOMED CT codes to identify the role of each participant within the care team
