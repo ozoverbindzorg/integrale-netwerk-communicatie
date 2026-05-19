@@ -1,3 +1,14 @@
+// Invariant definitions (must be outside the profile)
+Invariant: ozo-communication-unique-recipients
+Description: "Each recipient can appear at most once in a Communication. Compares the literal recipient.reference strings; logical references via identifier (no reference field) are not de-duplicated. Note: OZO does not use Communication.recipient (thread participants live on CommunicationRequest); the invariant is defensive against accidental misuse."
+Expression: "recipient.reference.distinct().count() = recipient.reference.count()"
+Severity: #error
+
+Invariant: ozo-communication-unique-partof
+Description: "Each partOf reference (thread linkage) can appear at most once in a Communication. Compares the literal partOf.reference strings; logical references via identifier (no reference field) are not de-duplicated."
+Expression: "partOf.reference.distinct().count() = partOf.reference.count()"
+Severity: #error
+
 Profile: OZOCommunication
 Parent: Communication
 Id: ozo-communication
@@ -46,3 +57,7 @@ Description: "Communication profile for the OZO platform. Represents messages ex
 * payload ^definition = "Text, attachment, or other data that comprises the message"
 * payload.content[x] 1..1 MS
 * payload.content[x] only string or Attachment
+
+// Constraints
+* obeys ozo-communication-unique-recipients
+* obeys ozo-communication-unique-partof

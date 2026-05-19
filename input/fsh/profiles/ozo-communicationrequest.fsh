@@ -1,3 +1,9 @@
+// Invariant definition (must be outside the profile)
+Invariant: ozo-communicationrequest-unique-recipients
+Description: "Each recipient can appear at most once in a CommunicationRequest. Compares the literal recipient.reference strings; logical references via identifier (no reference field) are not de-duplicated."
+Expression: "recipient.reference.distinct().count() = recipient.reference.count()"
+Severity: #error
+
 Profile: OZOCommunicationRequest
 Parent: CommunicationRequest
 Id: ozo-communicationrequest
@@ -65,6 +71,9 @@ Description: "CommunicationRequest profile for the OZO platform. Represents a me
 * recipient ^definition = "The intended recipients of the thread (practitioners, related persons, or care teams)"
 * recipient.reference 1..1
 * recipient.type 1..1
+
+// Constraints
+* obeys ozo-communicationrequest-unique-recipients
 
 // Extension definition for CareTeam as sender
 Extension: OZOSenderCareTeam

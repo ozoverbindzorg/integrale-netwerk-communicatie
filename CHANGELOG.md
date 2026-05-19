@@ -6,6 +6,25 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [0.7.9] - 2026-05-19
+
+### Added
+
+#### Profiles — uniqueness invariants
+
+Audit-driven addition of `Severity: #error` invariants on every OZO profile field where listing the same FHIR Reference twice has no semantic meaning. Triggered by a staging incident on `CareTeam.participant.member` (see below); the audit found the same data-integrity class of bug latent across four other fields. AuditEvent's `agent` and `entity` are intentionally excluded — same actor in different `agent.type` (e.g. user + system) is a legitimate audit-chain pattern and would be falsely rejected.
+
+- **OZOCareTeam** - `ozo-careteam-unique-members` on `participant.member.reference`. A staging CareTeam was found with the same `Practitioner/<uuid>` referenced from two different `participant` entries, which made FHIR Patch delete operations fail with `HAPI-1267: Multiple elements found ... when deleting` (per spec, delete requires the FHIRPath to return a single element).
+- **OZOCommunicationRequest** - `ozo-communicationrequest-unique-recipients` on `recipient.reference`. Threads with the same recipient listed twice are semantically empty noise.
+- **OZOCommunication** - `ozo-communication-unique-recipients` on `recipient.reference` and `ozo-communication-unique-partof` on `partOf.reference`. Same shape as CommunicationRequest plus thread-linkage symmetry. (`recipient` is documented as unused in OZO; the invariant is defensive against accidental misuse.)
+- **OZOTask** - `ozo-task-unique-basedon` on `basedOn.reference`. Linking the same thread twice is meaningless.
+
+All invariants follow the pattern `<field>.reference.distinct().count() = <field>.reference.count()` — comparing literal reference strings. Logical references via `identifier` are not de-duplicated. If OZO ever needs to differentiate by role/period (CareTeam) or other discriminators, the invariants must be relaxed accordingly.
+
+**Deploy order matters**: existing resources that already violate any of these invariants become non-updatable until cleaned up (HAPI validates write-side, not read-side). A pre-deploy scan on staging found exactly one offending CareTeam — already patched in this iteration (`142de2d6-9f32-4f7b-9e98-5ecb92af05e1`, v4 → v5, 4 → 3 unique participants). Rollback: revert to the previous IG version in `ozo-cloud-deployment`; no schema or data migration involved.
+
+Validation requires `meta.profile` to be set on the resource (HAPI is configured with `DECLARED` mode on staging/production). The OZO Matrix bridge already sets `meta.profile = OZOCareTeam`/`OZOCommunication`/etc. on its writes, so bridge-originated data is covered.
+
 ## [0.7.8] - 2026-04-15
 
 ### Changed

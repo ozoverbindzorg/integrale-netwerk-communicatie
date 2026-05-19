@@ -1,3 +1,9 @@
+// Invariant definition (must be outside the profile)
+Invariant: ozo-task-unique-basedon
+Description: "Each basedOn reference (thread linkage) can appear at most once in a Task. Compares the literal basedOn.reference strings; logical references via identifier (no reference field) are not de-duplicated."
+Expression: "basedOn.reference.distinct().count() = basedOn.reference.count()"
+Severity: #error
+
 Profile: OZOTask
 Parent: Task
 Id: ozo-task
@@ -49,3 +55,6 @@ Description: "Task profile for the OZO platform. Represents work assignments, re
 * owner ^short = "Task owner"
 * owner ^definition = "The entity (practitioner or related person) who owns and is responsible for completing this task"
 * owner.reference 1..1
+
+// Constraints
+* obeys ozo-task-unique-basedon

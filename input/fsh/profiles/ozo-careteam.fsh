@@ -1,3 +1,9 @@
+// Invariant definition (must be outside the profile)
+Invariant: ozo-careteam-unique-members
+Description: "Each member can appear at most once as a participant in a CareTeam. Compares the literal participant.member.reference strings; logical references via identifier (no reference field) are not de-duplicated. The OZO platform does not currently differentiate participants by role or period; if that ever becomes a requirement this invariant must be relaxed accordingly."
+Expression: "participant.member.reference.distinct().count() = participant.member.reference.count()"
+Severity: #error
+
 Profile: OZOCareTeam
 Parent: CareTeam
 Id: ozo-careteam
@@ -46,3 +52,6 @@ Description: "CareTeam profile for patient care networks in OZO. Represents a ca
 * participant.onBehalfOf.reference 1..1
 * participant.onBehalfOf.type 1..1
 * participant.onBehalfOf.display 0..1 MS
+
+// Constraints
+* obeys ozo-careteam-unique-members
