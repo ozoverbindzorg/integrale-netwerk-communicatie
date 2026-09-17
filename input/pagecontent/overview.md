@@ -205,7 +205,7 @@ The `CommunicationRequest` Resource is used to:
 | requester | 1..1        | a reference to a `RelatedPerson`, `Practitioner` or `Patient` (individual who initiated - for auditability) |
 | sender    | 0..1        | a reference to a `RelatedPerson`, `Practitioner` or `Patient` (individual sender)                                |
 | extension[senderCareTeam] | 0..1 | a reference to a `CareTeam` (reply-to address for team-level messaging)                        |
-| recipient | 1..*        | a reference to a `RelatedPerson`, `Practitioner` or `CareTeam`       |
+| recipient | 1..*        | the thread participants: references to `RelatedPerson`, `Practitioner` or `CareTeam`. For team-to-team threads this lists every participating team, including the initiating team from `extension[senderCareTeam]` |
 | payload   | 1..*        | Message or attachment, one of `contentString` or `contentAttachment` |
 
 ##### Team-Level Messaging
@@ -218,8 +218,9 @@ The `CommunicationRequest` supports team-level messaging through the `senderCare
   * Provides the **reply-to address** for the conversation thread
   * Grants **team-level authorization** for message management (archive, delete)
   * Enables the **shared inbox pattern** where all team members can see and respond to messages
+* **`recipient`**: Lists every team participating in the thread, including the initiating team. The initiating team is the same `CareTeam` as in `extension[senderCareTeam]` (enforced by the invariant `ozo-cr-sender-careteam-in-recipient`). The AAA proxy scopes access to threads, messages and Tasks on `recipient`, so this entry is what gives the members of the initiating team access to their own thread.
 
-When replying to a team-level thread, read the `CareTeam` from `CommunicationRequest.extension[senderCareTeam]` to determine the reply recipient.
+Replies are `Communication` resources with `partOf` set to the thread; they carry no recipient of their own. `extension[senderCareTeam]` identifies the initiating team, for display and for the Task handling at thread creation. Threads initiated by a team can be found with the custom search parameter [`sender-careteam`](SearchParameter-ozo-communicationrequest-sender-careteam.html). See [Team-to-Team Messaging](interaction-messaging-team.html) for the full flow.
 
 ##### Examples
 * [Thread-Example](CommunicationRequest-Thread-Example.html) - Individual-to-CareTeam messaging
@@ -286,7 +287,7 @@ The `Task` resource is used to:
 
 #### AuditEvent
 
-**Profile:** [OZOAuditEvent](StructureDefinition-OZOAuditEvent.html) (custom profile for NEN7510 compliance)
+**Profile:** [OZOAuditEvent](StructureDefinition-ozo-auditevent.html) (custom profile for NEN7510 compliance)
 
 The `AuditEvent` is used to:
 * Update the `Task` status field as client of the OZO FHIR Api

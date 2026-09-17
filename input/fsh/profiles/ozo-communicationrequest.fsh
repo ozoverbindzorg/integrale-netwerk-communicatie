@@ -4,6 +4,13 @@ Description: "Each recipient can appear at most once in a CommunicationRequest. 
 Expression: "recipient.reference.distinct().count() = recipient.reference.count()"
 Severity: #error
 
+// The initiating CareTeam must be a recipient as well: the AAA proxy scopes thread access on
+// recipient, and HAPI cannot OR across search parameters (recipient OR sender-careteam).
+Invariant: ozo-cr-sender-careteam-in-recipient
+Description: "When extension[senderCareTeam] is present, the referenced CareTeam must also be listed in recipient. The AAA proxy scopes thread access on recipient; without this entry the initiating team cannot see its own thread."
+Severity: #error
+Expression: "extension('http://ozoverbindzorg.nl/fhir/StructureDefinition/ozo-sender-careteam').empty() or (extension('http://ozoverbindzorg.nl/fhir/StructureDefinition/ozo-sender-careteam').value.reference in recipient.reference)"
+
 Profile: OZOCommunicationRequest
 Parent: CommunicationRequest
 Id: ozo-communicationrequest
@@ -63,17 +70,20 @@ Description: "CommunicationRequest profile for the OZO platform. Represents a me
 
 // Extension for CareTeam as sender (for team-level messaging)
 * extension contains OZOSenderCareTeam named senderCareTeam 0..1 MS
+* extension[senderCareTeam] ^short = "Initiating CareTeam (reply-to address for team-level messaging)"
+* extension[senderCareTeam] ^definition = "The CareTeam on whose behalf the thread was started. The same CareTeam must also be listed in recipient (invariant ozo-cr-sender-careteam-in-recipient) so that the thread is in the initiating team's access scope."
 
-// Recipients - who should receive the thread
+// Recipients - all participants of the thread
 * recipient 1..* MS
 * recipient only Reference(OZOPractitioner or OZORelatedPerson or OZOCareTeam or OZOOrganizationalCareTeam)
-* recipient ^short = "Thread recipients"
-* recipient ^definition = "The intended recipients of the thread (practitioners, related persons, or care teams)"
+* recipient ^short = "Thread participants"
+* recipient ^definition = "All participants of the thread (practitioners, related persons, or care teams). For team-to-team threads this lists every participating team, including the initiating team referenced in extension[senderCareTeam]. The AAA proxy scopes access to threads, messages and Tasks on this element."
 * recipient.reference 1..1
 * recipient.type 1..1
 
 // Constraints
 * obeys ozo-communicationrequest-unique-recipients
+* obeys ozo-cr-sender-careteam-in-recipient
 
 // Extension definition for CareTeam as sender
 Extension: OZOSenderCareTeam
@@ -86,3 +96,22 @@ Description: "Extension to specify a CareTeam as the sender/reply-to address for
 * valueReference 1..1
 * valueReference ^short = "CareTeam as sender"
 * valueReference ^definition = "Reference to the CareTeam acting as the sender/reply-to address for team-level messaging"
+
+// Search parameter on the extension: find threads initiated by a given CareTeam
+Instance: ozo-communicationrequest-sender-careteam
+InstanceOf: SearchParameter
+Usage: #definition
+Title: "OZO CommunicationRequest sender-careteam"
+Description: "Search parameter on CommunicationRequest.extension[senderCareTeam]: find the threads initiated by a given CareTeam."
+* url = "http://ozoverbindzorg.nl/fhir/SearchParameter/ozo-communicationrequest-sender-careteam"
+* name = "OZOCommunicationRequestSenderCareTeam"
+* status = #active
+* experimental = false
+* date = "2026-09-17"
+* publisher = "Headease"
+* description = "Find CommunicationRequest resources (threads) initiated by a given CareTeam. Matches the CareTeam referenced in the senderCareTeam extension (http://ozoverbindzorg.nl/fhir/StructureDefinition/ozo-sender-careteam). Example: CommunicationRequest?sender-careteam=CareTeam/Pharmacy-A"
+* code = #sender-careteam
+* base = #CommunicationRequest
+* type = #reference
+* expression = "CommunicationRequest.extension('http://ozoverbindzorg.nl/fhir/StructureDefinition/ozo-sender-careteam').value.ofType(Reference)"
+* target = #CareTeam

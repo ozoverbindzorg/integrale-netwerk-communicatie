@@ -25,7 +25,7 @@ The OZO AuditEvent profile extends the base FHIR AuditEvent with specific constr
 
 ##### Core Elements
 
-- **type**: REST operation or transmit event (required)
+- **type**: REST operation (logged by the proxy), transmit event, or access event for a read receipt created by a client (required)
 - **subtype**: Specific FHIR interaction (read, create, update, delete, search, etc.)
 - **action**: CRUD operation code (C, R, U, D, E) (required)
 - **outcome**: Success (0), minor failure (4), or major failure (8) (required)
@@ -69,14 +69,12 @@ The OZO AuditEvent profile extends the base FHIR AuditEvent with specific constr
 
 The following examples demonstrate various AuditEvent scenarios in the OZO AAA Proxy:
 
-#### Practitioner Access Events
-* [Manu-Read-Messages](AuditEvent-Manu-Read-Messages.html) - Practitioner accessing Communication resources
-* [Mark-Read-Messages](AuditEvent-Mark-Read-Messages.html) - Another Practitioner access example
+#### Read Receipts (type `access`, created by clients)
+* [Manu-Read-Messages](AuditEvent-Manu-Read-Messages.html) - Practitioner Manu van Weel viewed a message (OZO platform)
+* [Mark-Read-Messages](AuditEvent-Mark-Read-Messages.html) - Practitioner Mark Benson viewed a message (OZO platform)
+* [Kees-Read-Messages](AuditEvent-Kees-Read-Messages.html) - RelatedPerson Kees Groot viewed a message (OZO client)
 
-#### RelatedPerson Access Events
-* [Kees-Read-Messages](AuditEvent-Kees-Read-Messages.html) - RelatedPerson accessing Communication resources
-
-#### REST Operation Events
+#### REST Operation Events (type `rest`, created by the proxy)
 * [REST-Create](AuditEvent-REST-Create.html) - Successful REST create operation
 * [REST-Search](AuditEvent-REST-Search.html) - REST search operation
 * [REST-Update-Denied](AuditEvent-REST-Update-Denied.html) - Failed update operation with authorization error
@@ -112,6 +110,7 @@ audit.observer.value=aaa-proxy-001    # Observer instance identifier
 
 - REST Operations → `http://terminology.hl7.org/CodeSystem/audit-event-type` "rest"
 - Notifications → `http://terminology.hl7.org/CodeSystem/iso-21089-lifecycle` "transmit"
+- Read receipts (created by the OZO platform or OZO client when a user views a message) → `http://terminology.hl7.org/CodeSystem/iso-21089-lifecycle` "access". This is the only type the OZO FHIR Api treats as a read receipt when completing Tasks; see [Individual Messaging](interaction-messaging.html#marking-the-message-as-read) and [Team-to-Team Messaging](interaction-messaging-team.html#marking-messages-as-read).
 
 #### Action Codes
 

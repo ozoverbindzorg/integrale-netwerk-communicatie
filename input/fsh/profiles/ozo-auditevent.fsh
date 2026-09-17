@@ -15,8 +15,8 @@ Description: "AuditEvent profile for OZO AAA Proxy to comply with NEN7510 standa
 // Mandatory elements
 * type 1..1 MS
 * type from OZOAuditEventTypeVS (required)
-* type ^short = "Type of event (rest, transmit)"
-* type ^definition = "Type of audit event - either REST operation or notification transmission"
+* type ^short = "Type of event (rest, transmit, access)"
+* type ^definition = "Type of audit event: a REST operation logged by the AAA proxy (rest), a notification transmission (transmit), or a read receipt created by a client when a user views a message (access). The OZO FHIR Api only treats AuditEvents with type iso-21089-lifecycle|access as read receipts when completing Tasks."
 
 * subtype 0..* MS
 * subtype from OZOAuditEventSubtypeVS (extensible)
@@ -121,6 +121,7 @@ Description: "Types of audit events for OZO"
 * ^status = #active
 * http://terminology.hl7.org/CodeSystem/audit-event-type#rest "RESTful Operation"
 * http://terminology.hl7.org/CodeSystem/iso-21089-lifecycle#transmit "Transmit Record Lifecycle Event"
+* http://terminology.hl7.org/CodeSystem/iso-21089-lifecycle#access "Access/View Record Lifecycle Event"
 
 ValueSet: OZOAuditEventSubtypeVS
 Id: ozo-auditevent-subtype-vs

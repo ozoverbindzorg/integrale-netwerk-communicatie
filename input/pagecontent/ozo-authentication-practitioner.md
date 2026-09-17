@@ -166,3 +166,22 @@ The diagram illustrates a sequence of interactions between several entities to m
 - Additional checks include cross-verifying the credentials (e.g., ensuring the organization matches) and consulting the **IdP** for assertion validation if needed.
 - Upon successful validation, the **OZO API** responds to the **Client App** with a `200 OK` and the requested data.
 
+#### Background access and subscription-driven pulls
+
+Access tokens are short-lived (about 15 minutes). Within that window the same access token can be reused for multiple requests; only a fresh DPoP header must be requested per request. When the token expires, the client's NUTS node can request a new access token at any time without user interaction — the `NutsEmployeeCredential` is self-attested by the client application. The limiting factor is the validity of the embedded `id_token` or SAML assertion, which the OZO platform validates against the organization's IdP.
+
+The NUTS node does not implement OAuth2 refresh tokens. To perform requests without an active user session — for example pulling changes after a [subscription notification](capability-statements.html#subscription-support) — the user context is kept alive at the **IdP level** instead:
+
+1. During login, the client application requests the `offline_access` scope (or the SAML equivalent) and stores the IdP refresh token per practitioner.
+2. When a background pull is needed, the client application uses the refresh grant to obtain a fresh `id_token` from the IdP.
+3. The fresh `id_token` is wrapped in a new self-issued `NutsEmployeeCredential` and a new access token is requested through the client's NUTS node, as described above.
+
+This pattern keeps access scoped to the individual practitioner (the AAA proxy search narrowing keeps working), keeps the NEN7510 audit trail attributed to the practitioner on whose behalf the platform is acting, and automatically revokes background access when the practitioner is deactivated at the IdP — the refresh grant will simply fail.
+
+The OZO platform accepts assertions obtained through a refresh grant under the following conditions:
+
+* The assertion is issued by the trusted IdP for the organization's domain.
+* The assertion is valid at the moment the access token is requested.
+* OZO may enforce a maximum authentication age (based on the `auth_time` claim); the maximum age is agreed upon per connected platform.
+* Background reads performed this way are attributed to the practitioner in the audit trail; the platform acts as the practitioner's agent, comparable to a mail client synchronizing a mailbox.
+

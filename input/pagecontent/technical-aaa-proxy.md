@@ -106,7 +106,7 @@ Successful POST, PUT, DELETE, and PATCH operations trigger Redis publication of 
 | New CommunicationRequest | Creates Tasks for all CareTeam member recipients |
 | New Communication | Sets Task status to `requested` for all thread participants except the sender |
 | CareTeam change | Creates Tasks for new members if a CommunicationRequest exists |
-| AuditEvent (message read) | Sets Task status to `completed` for the reading practitioner |
+| AuditEvent with type `iso-21089-lifecycle` / `access` (read receipt) | Sets Task status to `completed` for the reading user. AuditEvents with any other type, such as the proxy's own `rest` events, are ignored. |
 | Communication deleted | Recalculates Task statuses based on the new latest message |
 
 **Task subscription behavior:** When a new message arrives and a Task is already `requested` (unread), setting it to `requested` again is a no-op — HAPI FHIR does not create a new resource version, so Task subscriptions do not fire. To detect new messages, subscribe to `Communication`, not `Task`. See [Individual Messaging](interaction-messaging.html) for subscription guidance.

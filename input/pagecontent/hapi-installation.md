@@ -30,16 +30,16 @@ This method involves configuring the HAPI FHIR server's `application.yaml` file 
 
 Visit the OZO FHIR Implementation Guide releases page:
 - **Repository:** [https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/releases](https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/releases)
-- **Latest Release:** [v0.7.8](https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/releases/tag/v0.7.8)
+- **Latest Release:** [v0.8.0](https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/releases/tag/v0.8.0)
 
 From the release page, copy the URL of the `.tgz` package file. For production servers, use the **minimal** package (smaller, optimized for server deployment):
 ```
-fhir.ozo-0.7.8-minimal.tgz
+fhir.ozo-0.8.0-minimal.tgz
 ```
 
 The full download URL will be:
 ```
-https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/releases/download/v0.7.8/fhir.ozo-0.7.8-minimal.tgz
+https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/releases/download/v0.8.0/fhir.ozo-0.8.0-minimal.tgz
 ```
 
 ### Step 2: Configure the HAPI FHIR Server
@@ -91,8 +91,8 @@ hapi:
       # OZO FHIR Implementation Guide
       ozo:
         name: fhir.ozo
-        version: 0.7.8
-        packageUrl: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/releases/download/v0.7.8/fhir.ozo-0.7.8-minimal.tgz
+        version: 0.8.0
+        packageUrl: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/releases/download/v0.8.0/fhir.ozo-0.8.0-minimal.tgz
         installMode: STORE_AND_INSTALL
 ```
 
@@ -105,7 +105,7 @@ hapi:
 | Parameter | Description | Recommended Value |
 |-----------|-------------|-------------------|
 | **name** | The package identifier (must match the package ID) | `fhir.ozo` |
-| **version** | The version of the package to install | `0.7.8` |
+| **version** | The version of the package to install | `0.8.0` |
 | **packageUrl** | Direct URL to the `.tgz` package file | Release download URL |
 | **installMode** | How to handle the package installation | `STORE_AND_INSTALL` |
 
@@ -173,7 +173,7 @@ Once the server has restarted, verify that the OZO package was installed success
 
 Look for log entries indicating successful package installation:
 ```
-INFO: Installing package fhir.ozo version 0.7.8
+INFO: Installing package fhir.ozo version 0.8.0
 INFO: Successfully installed implementation guide: fhir.ozo
 ```
 
@@ -193,6 +193,20 @@ Verify that OZO profiles are available:
 curl http://localhost:8080/fhir/StructureDefinition?url=http://ozoverbindzorg.nl/fhir/StructureDefinition/OZOCareTeam
 ```
 
+#### Custom search parameters
+
+The OZO package contains one custom SearchParameter: `sender-careteam` on `CommunicationRequest` (see [CapabilityStatements](capability-statements.html#custom-search-parameters)). HAPI installs it together with the profiles, provided `SearchParameter` is listed in `supported_resource_types`. Verify that it is active:
+```bash
+curl http://localhost:8080/fhir/SearchParameter?url=http://ozoverbindzorg.nl/fhir/SearchParameter/ozo-communicationrequest-sender-careteam
+```
+
+HAPI only indexes a new search parameter for resources written after it was installed. If the server already contains `CommunicationRequest` resources, reindex them once:
+```bash
+curl -X POST http://localhost:8080/fhir/\$reindex \
+  -H "Content-Type: application/fhir+json" \
+  -d '{"resourceType":"Parameters","parameter":[{"name":"url","valueString":"CommunicationRequest?"}]}'
+```
+
 ### Version Discovery
 
 After installation, you may want to determine which version of the OZO IG is active on the server. There are several approaches depending on your HAPI configuration.
@@ -205,7 +219,7 @@ All OZO profiles share the same `version` field, which matches the installed IG 
 curl "http://localhost:8080/fhir/StructureDefinition?url:below=http://ozoverbindzorg.nl/fhir/StructureDefinition&_elements=url,version,name&_sort=name"
 ```
 
-The `version` field on each returned StructureDefinition reflects the IG package version (e.g., `"version": "0.7.8"`).
+The `version` field on each returned StructureDefinition reflects the IG package version (e.g., `"version": "0.8.0"`).
 
 #### Query the ImplementationGuide resource
 
@@ -389,7 +403,7 @@ hapi:
 
 Download the `.tgz` package from the releases page:
 ```bash
-wget https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/releases/download/v0.7.8/fhir.ozo-0.7.8.tgz
+wget https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/releases/download/v0.8.0/fhir.ozo-0.8.0.tgz
 ```
 
 ### Step 2: Upload via FHIR API
@@ -399,7 +413,7 @@ Use the `$install` operation to upload the package:
 ```bash
 curl -X POST \
   -H "Content-Type: application/gzip" \
-  --data-binary @fhir.ozo-0.7.8.tgz \
+  --data-binary @fhir.ozo-0.8.0.tgz \
   "http://localhost:8080/fhir/ImplementationGuide/\$install"
 ```
 
@@ -597,8 +611,8 @@ hapi:
       # OZO FHIR Implementation Guide
       ozo:
         name: fhir.ozo
-        version: 0.7.8
-        packageUrl: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/releases/download/v0.7.8/fhir.ozo-0.7.8-minimal.tgz
+        version: 0.8.0
+        packageUrl: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/releases/download/v0.8.0/fhir.ozo-0.8.0-minimal.tgz
         installMode: STORE_AND_INSTALL
 
     # Supported resource types (ensure OZO resources are included)
@@ -613,6 +627,7 @@ hapi:
       - Patient
       - Practitioner
       - RelatedPerson
+      - SearchParameter      # Enables the custom OZO search parameter (sender-careteam)
       - StructureDefinition  # Enables profile queries for version discovery
       - Task
       # ... other resource types

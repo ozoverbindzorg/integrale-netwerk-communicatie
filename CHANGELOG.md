@@ -6,6 +6,36 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [0.8.0] - 2026-09-17
+
+### Added
+
+#### Search parameters
+- **sender-careteam** (`SearchParameter/ozo-communicationrequest-sender-careteam`) - Reference search parameter on `CommunicationRequest.extension[senderCareTeam]`. `GET /CommunicationRequest?sender-careteam=CareTeam/Pharmacy-A` returns the threads a team initiated. Advertised in the OZO-Client and OZO-System CapabilityStatements. Replaces the invalid `_has:Extension:url=...` query that the team messaging page used to show.
+
+#### Documentation
+- **Authentication Practitioner** - New "Background access and subscription-driven pulls" section. Documents how connecting platforms keep the practitioner context alive for background requests (e.g., pulling after a subscription notification): the NUTS node does not implement OAuth2 refresh tokens, so the refresh happens at the IdP level — the platform requests `offline_access` at login, stores the IdP refresh token per practitioner, mints a fresh `id_token` via the refresh grant, wraps it in a new `NutsEmployeeCredential`, and requests a new access token through its NUTS node. Lists the conditions under which OZO accepts assertions obtained through a refresh grant (trusted IdP, assertion validity, maximum authentication age via `auth_time`, audit attribution to the practitioner).
+- **CapabilityStatements** - Subscription support section now cross-references the background access pattern, since notify-then-pull requires a valid access token at pull time even without an active user session.
+
+### Changed
+
+#### Profiles
+- **OZOCommunicationRequest** - **BREAKING**: for team-to-team threads the initiating CareTeam (the one in `extension[senderCareTeam]`) must now also be listed in `recipient`. The new invariant `ozo-cr-sender-careteam-in-recipient` enforces this. Rationale: the AAA proxy scopes access to threads, messages and Tasks on `recipient`, and HAPI cannot OR across search parameters (`_filter` is blocked), so without this entry the members of the initiating team could not see the thread they started and the Task engine had no way to address them.
+- **OZOAuditEvent** - Added `iso-21089-lifecycle#access` to the required `type` ValueSet. This is the type clients use for read receipts and the only type the OZO FHIR Api recognises when completing Tasks; the profile previously rejected it.
+
+#### Examples
+- **Pharmacy-to-Clinic** - Now lists both `Clinic-B` (addressed team) and `Pharmacy-A` (initiating team) as `recipient`.
+- **Manu-Read-Messages**, **Mark-Read-Messages**, **Kees-Read-Messages** - Changed from `type = rest` with `subtype = read` to `type = iso-21089-lifecycle|access` without subtype, matching what the messaging pages prescribe and what the OZO FHIR Api and the clients actually use. Titles and descriptions now identify them as read receipts.
+
+#### Documentation
+- **Team-to-Team Messaging** - Query patterns fixed: `Communication` links to its thread via `partOf`, so the searches use `part-of` (was `based-on`, a different element). Documented that `recipient` lists both teams, how the OZO FHIR Api determines the sender's team for Task handling (team-wide read), and the read-receipt AuditEvent type. Sequence diagram updated accordingly.
+- **Overview**, **CapabilityStatements**, **AuditEvent for NEN7510**, **AAA Proxy**, **HAPI installation** - Updated for the changes above: recipient rule, custom search parameter, read-receipt type, `SearchParameter` in `supported_resource_types` and the reindex step.
+
+### Fixed
+
+#### Documentation
+- **Overview** - Fixed the broken link to the OZOAuditEvent profile page. The link used the FSH profile name (`StructureDefinition-OZOAuditEvent.html`) while the IG Publisher names the page after the profile `Id` (`StructureDefinition-ozo-auditevent.html`).
+
 ## [0.7.9] - 2026-05-19
 
 ### Added
@@ -562,6 +592,8 @@ Validation requires `meta.profile` to be set on the resource (HAPI is configured
 - Added `aliases.fsh` with common system and profile aliases
 - Established FSH-first authoring workflow
 
+[0.8.0]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.7.9...v0.8.0
+[0.7.9]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.7.8...v0.7.9
 [0.7.8]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.7.7...v0.7.8
 [0.7.7]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.7.6...v0.7.7
 [0.7.6]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.7.5...v0.7.6

@@ -1,14 +1,13 @@
 Instance: Kees-Read-Messages
 InstanceOf: OZOAuditEvent
 Usage: #example
-Title: "AuditEvent - RelatedPerson Access"
-Description: "Example of an AuditEvent for RelatedPerson accessing Communication resources"
+Title: "AuditEvent - Read receipt by RelatedPerson Kees Groot"
+Description: "Example of a read receipt. The OZO client creates this AuditEvent (type iso-21089-lifecycle|access) when RelatedPerson Kees Groot views a message. The OZO FHIR Api completes the corresponding Task based on this event."
 * meta.profile = "http://ozoverbindzorg.nl/fhir/StructureDefinition/OZOAuditEvent"
 * meta.versionId = "1"
 * meta.lastUpdated = "2024-12-05T16:25:01.725+00:00"
 * meta.source = "#6SxJGqItGqiP85JR"
-* type = http://terminology.hl7.org/CodeSystem/audit-event-type#rest "RESTful Operation"
-* subtype = http://hl7.org/fhir/restful-interaction#read "read"
+* type = $iso-21089-lifecycle#access "Access/View Record Lifecycle Event"
 * action = #R
 * recorded = "2024-12-05T17:25:01.713+01:00"
 * outcome = #0

@@ -80,6 +80,16 @@ For write operations (POST/PUT), the proxy validates the resource content regard
 | AuditEvent | `agent[requestor=true].who` must be the authenticated user |
 | Subscription | `criteria` is rewritten to scope results to the user's access |
 
+### Custom search parameters
+
+The IG defines one custom SearchParameter. It is advertised in the OZO-Client and OZO-System CapabilityStatements and installed on the HAPI FHIR server together with the profiles.
+
+| Parameter | Resource | Type | Definition |
+|-----------|----------|------|------------|
+| `sender-careteam` | CommunicationRequest | reference | [ozo-communicationrequest-sender-careteam](SearchParameter-ozo-communicationrequest-sender-careteam.html): the CareTeam in `extension[senderCareTeam]`, the team that initiated the thread |
+
+Example: `GET /CommunicationRequest?sender-careteam=CareTeam/Pharmacy-A` returns the threads initiated by Pharmacy A. Existing data must be reindexed once after the parameter is installed; see [Installing OZO Package in HAPI FHIR Server](hapi-installation.html#custom-search-parameters).
+
 ### Subscription support
 
 All CapabilityStatements include Subscription support. Subscriptions use the **notify-then-pull** pattern required in Dutch healthcare:
@@ -88,6 +98,8 @@ All CapabilityStatements include Subscription support. Subscriptions use the **n
 2. The subscriber **pulls** the changed resource by performing a FHIR read or search
 
 The proxy automatically rewrites Subscription criteria to scope notifications to the user's access level, similar to search query rewriting.
+
+Because notifications are empty, the subscriber needs a valid access token to perform the pull — also when no user session is active at that moment. See [Background access and subscription-driven pulls](ozo-authentication-practitioner.html#background-access-and-subscription-driven-pulls) for how to keep the practitioner context alive using an IdP refresh token.
 
 See the [Individual Messaging](interaction-messaging.html) and [Team-to-Team Messaging](interaction-messaging-team.html) pages for detailed Subscription examples and behavior.
 

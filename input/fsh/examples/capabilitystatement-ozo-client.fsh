@@ -4,12 +4,12 @@ Usage: #definition
 Title: "OZO Client CapabilityStatement"
 Description: "CapabilityStatement for authenticated client access to the OZO FHIR API. Covers Practitioner, RelatedPerson, and Patient roles. All three roles have the same resource types and interactions available — the AAA proxy scopes access differently per role by automatically applying search filters based on the caller's credentials. See the CapabilityStatements documentation page for per-role filtering details."
 * url = "http://ozoverbindzorg.nl/fhir/CapabilityStatement/OZO-Client"
-* version = "0.7.8"
+* version = "0.8.0"
 * name = "OZOClientCapabilityStatement"
 * title = "OZO Client CapabilityStatement"
 * status = #active
 * experimental = false
-* date = "2026-03-27"
+* date = "2026-09-17"
 * publisher = "Headease"
 * contact.name = "Headease"
 * contact.telecom.system = #url
@@ -54,10 +54,14 @@ Description: "CapabilityStatement for authenticated client access to the OZO FHI
 // CommunicationRequest — read + create
 * rest.resource[+].type = #CommunicationRequest
 * rest.resource[=].profile = "http://ozoverbindzorg.nl/fhir/StructureDefinition/OZOCommunicationRequest"
-* rest.resource[=].documentation = "Threads where the caller or their CareTeam is a recipient. Create requires requester = authenticated user."
+* rest.resource[=].documentation = "Threads where the caller or their CareTeam is a recipient. For team-to-team threads the initiating team is listed as recipient as well. Create requires requester = authenticated user."
 * rest.resource[=].interaction[0].code = #read
 * rest.resource[=].interaction[+].code = #search-type
 * rest.resource[=].interaction[+].code = #create
+* rest.resource[=].searchParam[0].name = "sender-careteam"
+* rest.resource[=].searchParam[=].definition = "http://ozoverbindzorg.nl/fhir/SearchParameter/ozo-communicationrequest-sender-careteam"
+* rest.resource[=].searchParam[=].type = #reference
+* rest.resource[=].searchParam[=].documentation = "Threads initiated by the given CareTeam (custom OZO search parameter on extension[senderCareTeam])."
 
 // Communication — read + create
 * rest.resource[+].type = #Communication

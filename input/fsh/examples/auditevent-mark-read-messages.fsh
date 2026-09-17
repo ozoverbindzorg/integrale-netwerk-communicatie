@@ -1,14 +1,13 @@
 Instance: Mark-Read-Messages
 InstanceOf: OZOAuditEvent
 Usage: #example
-Title: "AuditEvent - Practitioner Mark Access"
-Description: "Example of an AuditEvent for Practitioner Mark Benson accessing Communication resources"
+Title: "AuditEvent - Read receipt by Practitioner Mark Benson"
+Description: "Example of a read receipt. The OZO platform creates this AuditEvent (type iso-21089-lifecycle|access) when Practitioner Mark Benson views a message. The OZO FHIR Api completes the corresponding Task(s) based on this event."
 * meta.profile = "http://ozoverbindzorg.nl/fhir/StructureDefinition/OZOAuditEvent"
 * meta.versionId = "1"
 * meta.lastUpdated = "2024-12-05T16:25:00.608+00:00"
 * meta.source = "#vosr9Nat7LLHv1yY"
-* type = http://terminology.hl7.org/CodeSystem/audit-event-type#rest "RESTful Operation"
-* subtype = http://hl7.org/fhir/restful-interaction#read "read"
+* type = $iso-21089-lifecycle#access "Access/View Record Lifecycle Event"
 * action = #R
 * recorded = "2024-12-05T17:25:00.605+01:00"
 * outcome = #0
