@@ -20,8 +20,10 @@ fi
 mkdir -p ./output
 
 # Run the build
+# TX_OPTS passes terminology flags to the IG publisher, e.g. TX_OPTS="-tx n/a" for a
+# fast local build without terminology validation (see README, "Terminology server options").
 echo "Running build in Docker container..."
-docker run --rm -v "${PWD}:/src" "$IMAGE_NAME"
+docker run --rm -v "${PWD}:/src" -e TX_OPTS="${TX_OPTS:-}" "$IMAGE_NAME"
 
 echo ""
 echo "Build complete!"

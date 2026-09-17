@@ -5,6 +5,8 @@ public
 /temp/
 /fsh-generated/
 input/pagecontent/history.md
+# Written to the project root by IG Publisher 2.2.x on every build
+/Requirements-fromNarrative.json
 
 # FHIR IG Publisher cache
 /input-cache/

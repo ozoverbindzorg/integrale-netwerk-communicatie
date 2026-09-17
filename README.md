@@ -76,7 +76,7 @@ You can customize the build with version arguments:
 
 ```bash
 docker build \
-  --build-arg PUBLISHER_VERSION=2.0.15 \
+  --build-arg PUBLISHER_VERSION=2.2.10 \
   --build-arg SUSHI_VERSION=3.16.5 \
   -t ozo-ig-builder .
 ```
@@ -86,6 +86,23 @@ Then run the build:
 ```bash
 docker run --rm -v "${PWD}:/src" ozo-ig-builder
 ```
+
+#### Terminology server options
+
+The IG Publisher validates every code against `tx.fhir.org`. Since mid 2026 that server drops the publisher's server-side cache sessions, so each validation call can take minutes and a build that starts with an empty terminology cache can run for an hour or more. Two things keep the build fast:
+
+- The publisher's local terminology cache in `input-cache/txcache` is reused between runs because the project directory is mounted into the container. Keep it; `make clean-all` removes it.
+- `TX_OPTS` passes extra terminology flags to the publisher:
+
+```bash
+# Skip the terminology server entirely (fast, no code validation)
+TX_OPTS="-tx n/a" sh build_with_image.sh
+
+# Retry previously failed terminology calls, keep cached successes
+TX_OPTS="-resetTxErrors" sh build_with_image.sh
+```
+
+CI restores `input-cache/txcache` from the previous run and builds `main` with `-resetTxErrors` and feature branches with `-tx n/a`.
 
 ### Build Output
 
@@ -107,7 +124,7 @@ The build process creates a complete Implementation Guide:
 - **Usage**: Can be installed on FHIR servers (e.g., HAPI FHIR) using:
   ```bash
   # Example with Firely Terminal
-  fhir install output/fhir.ozo-0.8.0.tgz
+  fhir install output/fhir.ozo-0.8.1.tgz
   ```
 - **Contents**: All FHIR profiles, examples, ValueSets, CodeSystems, and StructureDefinitions
 

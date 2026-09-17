@@ -14,6 +14,11 @@ endif
 # Export PATH with dotnet tools
 export PATH := $(PATH):$(DOTNET_TOOLS)
 
+# Extra flags for the IG publisher terminology handling. Examples:
+#   TX_OPTS="-tx n/a"          skip the terminology server entirely (fast, no code validation)
+#   TX_OPTS="-resetTxErrors"   retry previously failed terminology calls, keep cached successes
+TX_OPTS ?=
+
 # Default target
 .PHONY: all
 all: build
@@ -66,7 +71,7 @@ build-ig: copy-changelog
 		plantuml -o ../images/ -tsvg ./input/images-source/*.plantuml 2>/dev/null || true; \
 	fi
 	@echo "Running IG Publisher..."
-	@java -jar /usr/local/publisher.jar -ig ig.ini
+	@java -jar /usr/local/publisher.jar -ig ig.ini $(TX_OPTS)
 	@if [ ! -f ./output/package.tgz ]; then \
 		echo "ERROR: Build did not create ./output/package.tgz"; \
 		exit 1; \

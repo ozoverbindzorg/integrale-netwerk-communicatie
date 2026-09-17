@@ -3,7 +3,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0
 LABEL maintainer="roland@headease.nl"
 
 # Build arguments for version control
-ARG PUBLISHER_VERSION=2.0.15
+ARG PUBLISHER_VERSION=2.2.10
 ARG SUSHI_VERSION=3.16.5
 
 # Install system dependencies

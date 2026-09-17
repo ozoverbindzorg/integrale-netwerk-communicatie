@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [0.8.1] - 2026-09-17
+
+### Fixed
+
+#### Build Infrastructure
+- **Slow builds caused by tx.fhir.org** - Since mid 2026 tx.fhir.org drops the IG Publisher's server-side cache sessions, so every terminology validation call takes minutes. The 0.8.0 CI build spent 37 of its 40 minutes in "Validating Resources" because it started with an empty terminology cache (earlier builds took 3 minutes in total). Same workaround as in Koppeltaal-2.0-FHIR:
+  - CI persists the publisher's local terminology cache (`input-cache/txcache`) across runs with `actions/cache`, so repeated validations never hit the network.
+  - New `TX_OPTS` Makefile variable is passed to the IG Publisher. CI builds `main` with `-resetTxErrors` (retry previously failed terminology calls, keep cached successes) and feature branches with `-tx n/a` (no terminology validation, fast feedback). `build_with_image.sh` passes `TX_OPTS` through for local builds, e.g. `TX_OPTS="-tx n/a" sh build_with_image.sh`.
+  - IG Publisher bumped from 2.0.15 to 2.2.10, the version Koppeltaal-2.0-FHIR builds with.
+
 ## [0.8.0] - 2026-09-17
 
 ### Added
@@ -592,6 +602,7 @@ Validation requires `meta.profile` to be set on the resource (HAPI is configured
 - Added `aliases.fsh` with common system and profile aliases
 - Established FSH-first authoring workflow
 
+[0.8.1]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.8.0...v0.8.1
 [0.8.0]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.7.9...v0.8.0
 [0.7.9]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.7.8...v0.7.9
 [0.7.8]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.7.7...v0.7.8
