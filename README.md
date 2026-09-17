@@ -124,7 +124,7 @@ The build process creates a complete Implementation Guide:
 - **Usage**: Can be installed on FHIR servers (e.g., HAPI FHIR) using:
   ```bash
   # Example with Firely Terminal
-  fhir install output/fhir.ozo-0.8.1.tgz
+  fhir install output/fhir.ozo-0.8.2.tgz
   ```
 - **Contents**: All FHIR profiles, examples, ValueSets, CodeSystems, and StructureDefinitions
 

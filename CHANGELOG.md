@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [0.8.2] - 2026-09-17
+
+### Added
+
+#### Documentation
+- **Team-to-Team Messaging** - Page-level changelog at the top of the page, listing per IG version what changed on this page (0.6.0 through 0.8.0), with a link to the full project changelog.
+
 ## [0.8.1] - 2026-09-17
 
 ### Fixed
@@ -602,6 +609,7 @@ Validation requires `meta.profile` to be set on the resource (HAPI is configured
 - Added `aliases.fsh` with common system and profile aliases
 - Established FSH-first authoring workflow
 
+[0.8.2]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.8.1...v0.8.2
 [0.8.1]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.8.0...v0.8.1
 [0.8.0]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.7.9...v0.8.0
 [0.7.9]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.7.8...v0.7.9
