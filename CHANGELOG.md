@@ -6,6 +6,24 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [0.8.3] - 2026-10-01
+
+### Changed
+
+#### Documentation
+- **Team-to-Team Messaging** - The "sender's team" definition is tightened to match the OZO FHIR Api. Only recipient CareTeams that are organizational teams (`OZOOrganizationalCareTeam`, no `subject`) and list the sender as a participant count; the OZO FHIR Api distinguishes the two CareTeam types by the presence of `subject`. A patient care team (`OZOCareTeam`) is never the sender's team, so a reply or read receipt in a patient network does not mark the message read for the other members. Also documented that `extension[senderCareTeam]` must be an organizational team the requester participates in; the thread is rejected otherwise. Raised by the proxy implementation: the previous wording ("any recipient CareTeam in which the sender is a participant") left connecting platforms asking whether patient teams count.
+- **Individual Messaging** - Corrected the claim that a read by one practitioner marks the message read for all members of the patient CareTeam. Read state in a patient care team is per person; team-wide read applies to organizational teams only.
+- **AAA Proxy** - Content validation for `CommunicationRequest` now lists the `sender` check and the `extension[senderCareTeam]` check (an organizational CareTeam the authenticated user is a participant of). The event table describes team-wide read for organizational teams.
+- **AAA Proxy** - The "Task subscription behavior" paragraph and the "Task subscription not firing" troubleshooting entry still claimed that Task subscriptions do not fire when a Task is already `requested` and that clients should subscribe to `Communication` instead. The proxy patches `Task.focus` on every new message (documented on the messaging pages since 0.7.5), so `Task?status=requested` fires every time and is the only subscription a client needs. Both texts rewritten; the troubleshooting entry now lists the real causes (Task without `owner`, subscriber is the sender or in the sender's team, outdated proxy). Removed the `readlist.force-task-update` configuration row: the option was dropped from the proxy together with the `Task.focus` change.
+- **Team-to-Team Messaging**, **Overview** - `Communication.inResponseTo` is now described as optional. The reply steps on the team messaging page read as if it were always set. It is the FHIR quote-reply link to one specific earlier message; the OZO thread model links messages to the thread via `partOf` and the OZO FHIR Api does not use `inResponseTo` for Task handling. Platforms without a reply-to-message concept can leave it out. The profile was already unconstrained (FHIR R4 base, 0..*).
+- **Individual Messaging**, **Team-to-Team Messaging** - Read receipt AuditEvent: "the `entity.what` field has two values" replaced by "two `entity` entries, each with one `what`", which is what the profile allows (`entity` 0..*, `entity.what` 0..1) and what the examples show. Documented that the `CommunicationRequest` entity is required (the OZO FHIR Api finds the Task through it and ignores receipts without it) and that the `Communication` entity is optional but recommended (the OZO FHIR Api only completes the Task when it is the newest message in the thread; it also records which message was viewed).
+- **Individual Messaging**, **Team-to-Team Messaging** - Added a note that "mark as unread" is not part of the messaging model. The read state lives in the `Task` and only the OZO FHIR Api changes it; clients have read-only access to `Task` and no AuditEvent type sets a Task back to `requested`. A platform offering "mark as unread" keeps that state locally.
+
+### Fixed
+
+#### Documentation
+- **Team-to-Team Messaging** - The 0.8.0 row of the page changelog rendered with misplaced code spans (an escaped pipe inside a code span was mangled in 0.8.2). Rewritten without the pipe.
+
 ## [0.8.2] - 2026-09-17
 
 ### Added
@@ -179,6 +197,7 @@ Validation requires `meta.profile` to be set on the resource (HAPI is configured
 - **OZOCommunicationRequest** - Added `OZOPatient` to allowed `requester` and `sender` types. Production data shows Patient resources are used as requester/sender (2 out of 33 CommunicationRequests).
 
 #### Documentation
+#### Documentation
 - **Resource Lifecycle and Deletion Policy** - New page documenting the no-DELETE policy. Resources must use status transitions instead of deletion to preserve AuditEvent referential integrity (NEN7510). Only `Patient/$expunge` is supported for AVG/GDPR right-to-erasure. Includes status mapping per resource type, security labels, and proxy enforcement guidance.
 
 #### Examples
@@ -186,7 +205,6 @@ Validation requires `meta.profile` to be set on the resource (HAPI is configured
 
 ### Fixed
 
-#### Documentation
 - **AuditEvent NEN7510 page** - Added requirement that `entity.what` must use version-specific references for NEN7510 compliance. Non-versioned references become broken links when resources are deleted, undermining the legal audit trail.
 - Production data conformance analysis documented in work-documents. Key findings: 94% of Communication resources missing required `status` field, and AuditEvent entity references not version-specific.
 
@@ -215,8 +233,10 @@ Validation requires `meta.profile` to be set on the resource (HAPI is configured
 - **OZO-Client** - Shared CapabilityStatement for Practitioner, RelatedPerson, and Patient roles. All three roles have the same resource types and interactions — the AAA proxy scopes access differently per role via auto-applied search filters. Per-role filtering details are documented on the CapabilityStatements page.
 
 #### Examples
+#### Examples
 - **Subscription-Communication**, **Subscription-Task-Unread**, **Subscription-CommunicationRequest** - New Subscription examples demonstrating the notify-then-pull pattern (empty `channel.payload` as required in Dutch healthcare). Covers new message detection, unread tracking, and thread lifecycle.
 
+#### Documentation
 #### Documentation
 - **CapabilityStatements** - New documentation page explaining the CapabilityStatement structure, AAA proxy access filtering per role, write validation, and Subscription support
 
@@ -226,7 +246,6 @@ Validation requires `meta.profile` to be set on the resource (HAPI is configured
 - **Clinic-Response-to-Pharmacy** - Removed `inResponseTo` reference (was pointing to deleted `Pharmacy-Initial-Message`; this is now the first reply in the thread, responding to the CommunicationRequest payload)
 - **Notify-Manu-van-Weel**, **Notify-Mark-Benson**, **Notify-Kees-Groot** - Changed Task examples from `#completed` to `#requested` (initial state when created by the OZO FHIR Api). Added Title and Description.
 
-#### Documentation
 - **Messaging pages** - Replaced inline pseudo-code blocks with links to FSH example pages. Task state transitions and notification annotations remain inline as narrative.
 - **Subscription guidance** - Clarified subscription behavior on both messaging pages:
   - Changed recommended subscription from `Task?id` to `Task?status=requested` to avoid subscription storms and scope via AAA proxy
@@ -238,13 +257,13 @@ Validation requires `meta.profile` to be set on the resource (HAPI is configured
 
 ### Removed
 
-#### Examples
 - **Pharmacy-Initial-Message** - Deleted Communication example that duplicated the CommunicationRequest payload. The CommunicationRequest carries the initial message; no separate Communication is created at thread initiation.
 
 ## [0.6.0] - 2026-03-27
 
 ### Added
 
+#### Profiles
 #### Profiles
 - **OZOOrganizationalCareTeam** - New profile for organizational/department teams used in team-to-team messaging. Represents a department or organizational unit (e.g., pharmacy team, clinic team) for shared inbox functionality. Key constraints:
   - `subject 0..0` — organizational teams have no patient
@@ -259,7 +278,6 @@ Validation requires `meta.profile` to be set on the resource (HAPI is configured
 
 ### Changed
 
-#### Profiles
 - **OZOCareTeam** - **BREAKING**: Clarified as patient care team profile only. Updated description to distinguish from `OZOOrganizationalCareTeam`. `participant.member` now also allows `OZOOrganizationalCareTeam` for nested team references (fixes existing conformance bug where `Netwerk-Jan-de-Hoop` referenced `Department-Thuiszorg` as CareTeam participant but the profile did not allow it)
 - **OZOCommunication** - `recipient` now also allows `OZOOrganizationalCareTeam` in addition to existing types
 - **OZOCommunicationRequest** - `recipient` now also allows `OZOOrganizationalCareTeam`. `OZOSenderCareTeam` extension tightened from `Reference(CareTeam)` to `Reference(OZOOrganizationalCareTeam)` (formalizes existing practice)
@@ -540,7 +558,7 @@ Validation requires `meta.profile` to be set on the resource (HAPI is configured
 
 #### Profiles
 - **Enhanced identifier system flexibility** for `OZOPatient`, `OZOPractitioner`, and `OZORelatedPerson` profiles:
-  - Updated invariant expressions to use regex pattern matching (`^OZO[^/]*/ResourceType$`) instead of explicit system enumeration
+  - Updated invariant expressions to use regex pattern matching (`^OZO[^/]*/ResourceType) instead of explicit system enumeration
   - Now supports any OZO-prefixed identifier system (e.g., `OZO/Person`, `OZO-CONNECT/Person`, `OZO-MOBILE/Person`, `OZO-WEB/Person`)
   - Enhanced slicing descriptions to clarify that additional OZO-* systems are supported through open slicing
   - Maintains validation requirement for at least one OZO identifier while allowing future system extensions
@@ -609,6 +627,7 @@ Validation requires `meta.profile` to be set on the resource (HAPI is configured
 - Added `aliases.fsh` with common system and profile aliases
 - Established FSH-first authoring workflow
 
+[0.8.3]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.8.2...v0.8.3
 [0.8.2]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.8.1...v0.8.2
 [0.8.1]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.8.0...v0.8.1
 [0.8.0]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.7.9...v0.8.0

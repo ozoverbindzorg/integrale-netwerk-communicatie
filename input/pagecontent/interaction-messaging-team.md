@@ -4,7 +4,8 @@ Changes to this page per IG version. The full project history is on the [Changel
 
 | Version | Date | Change |
 | --- | --- | --- |
-| 0.8.0 | 2026-09-17 | `CommunicationRequest.recipient` lists both teams, including the initiating team from `extension[senderCareTeam]` (invariant `ozo-cr-sender-careteam-in-recipient`). Task handling described per sender's team (team-wide read). Read receipts use AuditEvent type `iso-21089-lifecycle\ | access`. Query patterns use` part-of `instead of` based-on`; new` sender-careteam` search parameter. Sequence diagram updated. |
+| 0.8.3 | 2026-10-01 | Sender's team tightened to the organizational recipient teams (no `subject`) that list the sender as participant; a patient care team never counts, so team-wide read never applies to a patient network. `extension[senderCareTeam]` must be an organizational team the requester participates in. `inResponseTo` marked as optional in the reply steps. It is a quote-reply link between messages; the thread link is `partOf` and the OZO FHIR Api does not use `inResponseTo`. Read receipt: two `entity` entries instead of "entity.what has two values"; the `CommunicationRequest` entity is required, the `Communication` entity optional. Note added that "mark as unread" is not part of the model. |
+| 0.8.0 | 2026-09-17 | `CommunicationRequest.recipient` lists both teams, including the initiating team from `extension[senderCareTeam]` (invariant `ozo-cr-sender-careteam-in-recipient`). Task handling described per sender's team (team-wide read). Read receipts use AuditEvent type `access` (system iso-21089-lifecycle). Query patterns use `part-of` instead of `based-on`; new `sender-careteam` search parameter. Sequence diagram updated. |
 | 0.7.6 | 2026-04-02 | `Task?status=requested` is the only required subscription; `Communication?id` and `CommunicationRequest?id` are optional. Explains how `Task.focus` (introduced in 0.7.5) makes the Task subscription fire on every new message. |
 | 0.7.1 | 2026-03-30 | Added the `Task?id` note for platforms that also want to detect read receipts (REQUESTED → COMPLETED). |
 | 0.6.2 | 2026-03-27 | `Communication.recipient` is no longer set on replies; thread participants live on `CommunicationRequest.recipient`. Team query pattern changed to `part-of:CommunicationRequest.recipient`. |
@@ -32,7 +33,7 @@ For individual messaging (RelatedPerson ↔ Practitioner), see [Individual Messa
   - `Communication.sender` is always an individual (who sent each message)
   - Every action is traceable to a specific person
 
-4. **Sender's team**: For Task handling, the OZO FHIR Api resolves all recipient CareTeams of the thread and determines the **sender's team**: the recipient CareTeam(s) in which the sender is a participant. At thread creation this is the team in `extension[senderCareTeam]`. Members of the sender's team are treated as having read the message (team-wide read); members of the other recipient team(s) get an unread Task.
+4. **Sender's team**: For Task handling, the OZO FHIR Api resolves all recipient CareTeams of the thread and determines the **sender's team**: every recipient CareTeam that is an **organizational team** ([OZOOrganizationalCareTeam](StructureDefinition-ozo-organizational-careteam.html)) and lists the sender as a participant. The OZO FHIR Api tells the two CareTeam types apart by `subject`: an organizational team has none, a patient care team ([OZOCareTeam](StructureDefinition-ozo-careteam.html)) always has one. A patient care team is never the sender's team, even when the sender is a participant: team-wide read applies to organizational teams only, so threads in a patient network keep a read state per person (see [Individual Messaging](interaction-messaging.html)). A recipient team that does not list the sender is not the sender's team either. At thread creation the sender's team is the team in `extension[senderCareTeam]`, which must be an organizational team the requester is a participant of (the OZO FHIR Api rejects the thread otherwise). Members of the sender's team are treated as having read the message (team-wide read); members of the other recipient team(s) get an unread Task.
 
 ### Roles
 
@@ -91,7 +92,7 @@ A practitioner from Team A creates a new thread addressed to Team B. The process
 - The **OZO platform** (on behalf of Team A practitioner) creates a new `CommunicationRequest` object, the following fields are set:
   - The `requester` is the `Practitioner` who initiates the conversation (for auditability)
   - The `sender` is the same `Practitioner` (individual sender)
-  - The `extension[senderCareTeam]` is set to the `CareTeam` of Team A (initiating team, reply-to address)
+  - The `extension[senderCareTeam]` is set to the `CareTeam` of Team A (initiating team, reply-to address). This must be an organizational `CareTeam` (no `subject`) the requester is a participant of; the OZO FHIR Api rejects the `CommunicationRequest` otherwise
   - The `subject` is the `Patient` reference
   - The `recipient` lists the `CareTeam` of Team B **and** the `CareTeam` of Team A (the same reference as in `extension[senderCareTeam]`)
   - The `status` is set to ACTIVE
@@ -114,12 +115,12 @@ A practitioner from Team B responds to the thread. Replies are not addressed ind
 
 - The **OZO platform** (on behalf of Team B practitioner) creates a new `Communication` with the following fields:
   - The `partOf` is set to the reference of the `CommunicationRequest`
-  - The `inResponseTo` is set to the reference of the previous `Communication` being replied to
+  - Optionally, `inResponseTo` references the specific earlier `Communication` this message replies to (a quote-reply). The OZO thread model does not need it: the message belongs to the thread via `partOf`, and the OZO FHIR Api does not use `inResponseTo` for Task handling. Platforms without a reply-to-message concept leave it out.
   - The `sender` is set to the `Practitioner` from Team B (individual auditability)
   - The `payload` consists of text and optionally attachments
   - The `status` is set to COMPLETED
   - Note: `recipient` is not set; thread participants are defined on the `CommunicationRequest`.
-- The **OZO FHIR Api** resolves the recipient `CareTeam`s of the `CommunicationRequest` and determines the sender's team: the recipient team in which `Communication.sender` is a participant (here Team B). Then:
+- The **OZO FHIR Api** resolves the recipient `CareTeam`s of the `CommunicationRequest` and determines the sender's team: the organizational recipient team(s) (no `subject`) in which `Communication.sender` is a participant (here Team B). Then:
   - For each member of the other recipient team(s) (here Team A):
     - An existing task is queried; depending on the result the following action is taken:
       - if a task exists:
@@ -146,7 +147,7 @@ A *different* practitioner from Team A follows up on the thread. This demonstrat
 
 - The **OZO platform** (on behalf of a different Team A practitioner) creates a new `Communication` with the following fields:
   - The `partOf` is set to the reference of the `CommunicationRequest`
-  - The `inResponseTo` is set to the reference of the previous `Communication`
+  - `inResponseTo` is optional, as above
   - The `sender` is set to the different `Practitioner` from Team A (individual auditability; note this is a different person than the original requester)
   - The `payload` consists of text and optionally attachments
   - The `status` is set to COMPLETED
@@ -162,13 +163,16 @@ When a practitioner reads a message in a team thread:
   - The `action` is set to 'R'
   - The `recorded` field is set to the current timestamp
   - The `agent.who` field is set to the `Practitioner` who read the message
-  - The `entity.what` field has two values:
-    - A reference to the `Communication`
-    - A reference to the `CommunicationRequest`
+  - Two `entity` entries, each with one `what` (the profile allows `entity` 0..* and `entity.what` 0..1):
+    - A reference to the `CommunicationRequest`. Required: the OZO FHIR Api looks up the Task with `Task?based-on=<CommunicationRequest>&owner=<agent>`; without this entry the read receipt is ignored.
+    - A reference to the `Communication` that was read. Optional but recommended: the OZO FHIR Api only completes the Task when this is the newest message in the thread, so reading an older message does not clear a newer unread one; without this entry the thread is marked read unconditionally. It also records for the NEN7510 audit trail which message was viewed.
 - The **OZO FHIR Api** does the following:
   - The `Task` is queried for the `Practitioner` in `agent.who` of the `AuditEvent` and its status is set to COMPLETED
-  - The reader's team is resolved from the recipient `CareTeam`s of the `CommunicationRequest`, and the Tasks of all other members of that team are set to COMPLETED as well (team-wide read)
-- When one practitioner of the `CareTeam` reads the message, the message is marked as read for all the members in the `CareTeam`.
+  - The reader's team is resolved the same way as the sender's team: the organizational recipient `CareTeam`(s) of the `CommunicationRequest` in which the reader is a participant. The Tasks of all other members of that team are set to COMPLETED as well (team-wide read). A patient care team among the recipients is left alone: its members keep their own Task.
+- When one practitioner of an organizational `CareTeam` reads the message, the message is marked as read for all the members of that `CareTeam`.
+
+> **Note:** "Mark as unread" is not part of the OZO messaging model. The read state lives in the `Task` (`requested` = unread, `completed` = read) and only the OZO FHIR Api changes it: on a read receipt, on a new message, and at thread creation. Clients have read-only access to `Task`, and there is no AuditEvent type that sets a Task back to `requested`. A platform that offers "mark as unread" keeps that state locally; it is not visible to other systems or, in team threads, to other team members.
+{:.stu-note}
 
 ### Interaction diagram
 

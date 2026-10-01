@@ -218,6 +218,7 @@ The `CommunicationRequest` supports team-level messaging through the `senderCare
   * Provides the **reply-to address** for the conversation thread
   * Grants **team-level authorization** for message management (archive, delete)
   * Enables the **shared inbox pattern** where all team members can see and respond to messages
+  * Must be an **organizational** `CareTeam` ([OZOOrganizationalCareTeam](StructureDefinition-ozo-organizational-careteam.html), no `subject`) the requester is a participant of. The OZO FHIR Api rejects the thread otherwise. Patient care teams never act as a sender's team: team-wide read applies to organizational teams only
 * **`recipient`**: Lists every team participating in the thread, including the initiating team. The initiating team is the same `CareTeam` as in `extension[senderCareTeam]` (enforced by the invariant `ozo-cr-sender-careteam-in-recipient`). The AAA proxy scopes access to threads, messages and Tasks on `recipient`, so this entry is what gives the members of the initiating team access to their own thread.
 
 Replies are `Communication` resources with `partOf` set to the thread; they carry no recipient of their own. `extension[senderCareTeam]` identifies the initiating team, for display and for the Task handling at thread creation. Threads initiated by a team can be found with the custom search parameter [`sender-careteam`](SearchParameter-ozo-communicationrequest-sender-careteam.html). See [Team-to-Team Messaging](interaction-messaging-team.html) for the full flow.
@@ -240,7 +241,7 @@ The `Communication` resource is used to:
 |--------------|-------------|-----------------------------------------------------------------------------------------------------------|
 | status       | 1..1        | preparation \| in-progress  \| not-done \| on-hold \| stopped \| completed \| entered-in-error \| unknown |
 | partOf       | 1..1        | Reference to a `CommunicationRequest`                                                                     |
-| inResponseTo | 0..1        | Reference to a previous `Communication` in the thread                                                     |
+| inResponseTo | 0..1        | Optional quote-reply link to one specific earlier `Communication`. Not used by the OZO FHIR Api; the thread link is `partOf` |
 | sender       | 1..1        | a reference to a `RelatedPerson`, `Practitioner` or `Patient` (must be individual for auditability)       |
 | recipient    | 0..*        | Unused — thread participants are defined on `CommunicationRequest.recipient`                               |
 | payload      | 1..*        | Message or attachment, one of `contentString` or `contentAttachment`                                      |

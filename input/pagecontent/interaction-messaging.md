@@ -102,14 +102,17 @@ A practitioner in the **OZO platform** responds to a message from a caregiver by
   * The `action` is set to 'R'
   * The `recorded` field is set to 'now()'
   * The `agent.who` field is set to the `RelatedPerson`
-  * The `entity.what` field has two values:
-    * A reference to the `Communication`
-    * A reference to the `CommunicationRequest`
+  * Two `entity` entries, each with one `what` (the profile allows `entity` 0..* and `entity.what` 0..1):
+    * A reference to the `CommunicationRequest`. Required: the OZO FHIR Api looks up the Task with `Task?based-on=<CommunicationRequest>&owner=<agent>`; without this entry the read receipt is ignored.
+    * A reference to the `Communication` that was read. Optional but recommended: the OZO FHIR Api only completes the Task when this is the newest message in the thread, so reading an older message does not clear a newer unread one; without this entry the thread is marked read unconditionally. It also records for the NEN7510 audit trail which message was viewed.
 * The **OZO FHIR Api** does the following:
   * The `Task` is queried for the `RelatedPerson` as part of the agent.who of the `AuditEvent`
   * The `Task` status is set to COMPLETED
 * The **OZO platform** receives the `Task` status change (REQUESTED → COMPLETED) by Subscription:
   * The message is marked as read by the `RelatedPerson` in the OZO platform.
+
+> **Note:** "Mark as unread" is not part of the OZO messaging model. The read state lives in the `Task` (`requested` = unread, `completed` = read) and only the OZO FHIR Api changes it: on a read receipt, on a new message, and at thread creation. Clients have read-only access to `Task`, and there is no AuditEvent type that sets a Task back to `requested`. A platform that offers "mark as unread" keeps that state locally; it is not visible to other systems or, in team threads, to other team members.
+{:.stu-note}
 
 ### Respond to a thread from the OZO client
 A caregiver in the **OZO client** responds to a message from a practitioner by the following actions:
@@ -133,7 +136,7 @@ A caregiver in the **OZO client** responds to a message from a practitioner by t
         * The focus is set to the new `Communication` reference.
 * The **OZO platform** receives a notification about the new `Communication` by Subscription:
   * The message appears for practitioners in the `CareTeam`.
-  * When one practitioner of the `CareTeam` reads the message, the message is marked as read for all the members in the `CareTeam` (the `Task` status is set to COMPLETED).
+  * Each practitioner has their own `Task`, and a read receipt by one practitioner completes only that practitioner's `Task`. A patient care team (`OZOCareTeam`, with a `subject`) is never treated as a team for read purposes. Team-wide read applies to organizational teams only; see [Team-to-Team Messaging](interaction-messaging-team.html).
   * The **OZO platform** does not create an `AuditEvent`.
 
 * The **OZO client** remains uninformed about the status of the message.

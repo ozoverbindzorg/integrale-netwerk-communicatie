@@ -85,7 +85,7 @@ This is controlled by `ozo.profile-injection.inject-communication-status` (defau
 After profile and default injection, the proxy validates the request body:
 
 - **Communication**: sender must match the authenticated user; recipients must be in a shared CareTeam
-- **CommunicationRequest**: requester must match the authenticated user
+- **CommunicationRequest**: requester (and sender, when set) must match the authenticated user; `extension[senderCareTeam]`, when set, must be an organizational CareTeam (no `subject`) the user is a participant of
 - **AuditEvent**: requestor agent must match the authenticated user
 - **Subscription**: endpoint must use HTTPS, must not point to internal networks, payload must be empty (non-empty payloads bypass the proxy), criteria must reference an allowed resource type
 
@@ -103,13 +103,13 @@ Successful POST, PUT, DELETE, and PATCH operations trigger Redis publication of 
 
 | Event | Action |
 |---|---|
-| New CommunicationRequest | Creates Tasks for all CareTeam member recipients |
-| New Communication | Sets Task status to `requested` for all thread participants except the sender |
+| New CommunicationRequest | Creates Tasks for all CareTeam member recipients. The sender's Task starts `completed`, as do the Tasks of the sender's fellow members in every organizational (subject-less) recipient CareTeam that lists the sender; all other Tasks start `requested`. |
+| New Communication | Sets Task status to `requested` for all thread participants except the sender and the sender's fellow members in organizational (subject-less) recipient CareTeams that list the sender. Members of a patient CareTeam (with `subject`) are never treated as the sender's team. |
 | CareTeam change | Creates Tasks for new members if a CommunicationRequest exists |
-| AuditEvent with type `iso-21089-lifecycle` / `access` (read receipt) | Sets Task status to `completed` for the reading user. AuditEvents with any other type, such as the proxy's own `rest` events, are ignored. |
+| AuditEvent with type `iso-21089-lifecycle` / `access` (read receipt) | Sets Task status to `completed` for the reading user and, for organizational (subject-less) recipient CareTeams that list the reader, for the reader's fellow members (team-wide read). AuditEvents with any other type, such as the proxy's own `rest` events, are ignored. |
 | Communication deleted | Recalculates Task statuses based on the new latest message |
 
-**Task subscription behavior:** When a new message arrives and a Task is already `requested` (unread), setting it to `requested` again is a no-op — HAPI FHIR does not create a new resource version, so Task subscriptions do not fire. To detect new messages, subscribe to `Communication`, not `Task`. See [Individual Messaging](interaction-messaging.html) for subscription guidance.
+**Task subscription behavior:** On every new message the `ReadListService` patches each Task in the thread: `status` becomes `requested` or `completed` as described above, and `focus` is set to the new `Communication`. The `focus` change creates a new Task version even when the status was already `requested`, so a `Task?status=requested` subscription fires on every new message and is the only subscription a client needs. See [Individual Messaging](interaction-messaging.html) and [Team-to-Team Messaging](interaction-messaging-team.html) for subscription guidance.
 
 ### Troubleshooting
 
@@ -139,7 +139,11 @@ Authentication failed — the access token is missing, expired, or invalid. See 
 
 #### Task subscription not firing
 
-If Task subscriptions do not fire on new messages, the Task was likely already in `requested` status. HAPI does not create a new version when nothing changes. Subscribe to `Communication?id` for reliable new-message detection.
+The proxy patches `Task.focus` on every new message, so `Task?status=requested` fires even when the Task was already unread. If it does not fire, check the following:
+
+- The Task has an `owner`. The `ReadListService` skips Tasks without one.
+- The subscriber is not the sender or a fellow member of the sender's organizational team. Their Tasks are set to `completed` and do not match `status=requested`; subscribe to `Task?id` to see those transitions as well.
+- The proxy in use patches `focus` (required since fhir.ozo 0.7.5). Older proxy versions only patched `status`, which is a no-op when the Task is already `requested`.
 
 #### `meta.profile` is different from what the client sent
 
@@ -154,7 +158,6 @@ The proxy overwrites `meta.profile` on POST/PUT. This is intentional — the pro
 | `ozo.profile-injection.careteam.with-subject` | `...OZOCareTeam` | Profile for patient CareTeams |
 | `ozo.profile-injection.careteam.without-subject` | `...OZOOrganizationalCareTeam` | Profile for organizational CareTeams |
 | `ozo.profile-injection.inject-communication-status` | `true` | Inject `Communication.status = preparation` when absent |
-| `readlist.force-task-update` | `false` | Patch `Task.lastModified` to force subscription triggers (workaround) |
 | `fhir.search.max-count` | `100` | Maximum allowed `_count` parameter value |
 | `fhir.pagination.ttl-minutes` | `30` | Redis TTL for pagination tokens |
 | `audit.enabled` | `true` | Enable/disable NEN7510 audit logging |
