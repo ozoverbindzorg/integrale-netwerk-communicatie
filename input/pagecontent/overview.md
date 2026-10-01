@@ -204,8 +204,8 @@ The `CommunicationRequest` Resource is used to:
 | subject   | 1..1        | Reference to a `Patient`                                             |
 | requester | 1..1        | a reference to a `RelatedPerson`, `Practitioner` or `Patient` (individual who initiated - for auditability) |
 | sender    | 0..1        | a reference to a `RelatedPerson`, `Practitioner` or `Patient` (individual sender)                                |
-| extension[senderCareTeam] | 0..1 | a reference to a `CareTeam` (reply-to address for team-level messaging)                        |
-| recipient | 1..*        | the thread participants: references to `RelatedPerson`, `Practitioner` or `CareTeam`. For team-to-team threads this lists every participating team, including the initiating team from `extension[senderCareTeam]` |
+| extension[senderCareTeam] | 0..1 | a reference to an organizational `CareTeam`: the initiating team of a team thread (reply-to address). Not repeated in `recipient` |
+| recipient | 1..*        | the addressed parties: references to `RelatedPerson`, `Practitioner` or `CareTeam`. For team-to-team threads this is the addressed team only; the initiating team is in `extension[senderCareTeam]` |
 | payload   | 1..*        | Message or attachment, one of `contentString` or `contentAttachment` |
 
 ##### Team-Level Messaging
@@ -218,10 +218,10 @@ The `CommunicationRequest` supports team-level messaging through the `senderCare
   * Provides the **reply-to address** for the conversation thread
   * Grants **team-level authorization** for message management (archive, delete)
   * Enables the **shared inbox pattern** where all team members can see and respond to messages
-  * Must be an **organizational** `CareTeam` ([OZOOrganizationalCareTeam](StructureDefinition-ozo-organizational-careteam.html), no `subject`) the requester is a participant of. The OZO FHIR Api rejects the thread otherwise. Patient care teams never act as a sender's team: team-wide read applies to organizational teams only
-* **`recipient`**: Lists every team participating in the thread, including the initiating team. The initiating team is the same `CareTeam` as in `extension[senderCareTeam]` (enforced by the invariant `ozo-cr-sender-careteam-in-recipient`). The AAA proxy scopes access to threads, messages and Tasks on `recipient`, so this entry is what gives the members of the initiating team access to their own thread.
+  * Must be an **organizational** `CareTeam` ([OZOOrganizationalCareTeam](StructureDefinition-ozo-organizational-careteam.html), no `subject`) the requester is a participant of. The AAA proxy rejects the thread otherwise. Patient care teams never act as a team: one Task per team applies to organizational teams only
+* **`recipient`**: Lists the addressed parties only. The initiating team is **not** repeated here (invariant `ozo-cr-sender-careteam-not-in-recipient`). The thread parties are `recipient` plus `extension[senderCareTeam]`; the custom search parameter [`participant`](SearchParameter-ozo-communicationrequest-participant.html) covers both with a union expression, and the AAA proxy scopes access to threads and messages on it. That is what gives the members of the initiating team access to their own thread.
 
-Replies are `Communication` resources with `partOf` set to the thread; they carry no recipient of their own. `extension[senderCareTeam]` identifies the initiating team, for display and for the Task handling at thread creation. Threads initiated by a team can be found with the custom search parameter [`sender-careteam`](SearchParameter-ozo-communicationrequest-sender-careteam.html). See [Team-to-Team Messaging](interaction-messaging-team.html) for the full flow.
+Replies are `Communication` resources with `partOf` set to the thread; they carry no recipient of their own, but they do carry `extension[senderCareTeam]` with the team on whose behalf the message is sent. Threads initiated by a team can be found with the custom search parameter [`sender-careteam`](SearchParameter-ozo-communicationrequest-sender-careteam.html). See [Team-to-Team Messaging](interaction-messaging-team.html) for the full flow.
 
 ##### Examples
 * [Thread-Example](CommunicationRequest-Thread-Example.html) - Individual-to-CareTeam messaging
@@ -243,12 +243,13 @@ The `Communication` resource is used to:
 | partOf       | 1..1        | Reference to a `CommunicationRequest`                                                                     |
 | inResponseTo | 0..1        | Optional quote-reply link to one specific earlier `Communication`. Not used by the OZO FHIR Api; the thread link is `partOf` |
 | sender       | 1..1        | a reference to a `RelatedPerson`, `Practitioner` or `Patient` (must be individual for auditability)       |
-| recipient    | 0..*        | Unused — thread participants are defined on `CommunicationRequest.recipient`                               |
+| extension[senderCareTeam] | 0..1 | the organizational `CareTeam` on whose behalf the message is sent. Required when the sender is a participant of an organizational team of the thread; see [Team-to-Team Messaging](interaction-messaging-team.html) |
+| recipient    | 0..*        | Unused — thread parties are defined on `CommunicationRequest`                                              |
 | payload      | 1..*        | Message or attachment, one of `contentString` or `contentAttachment`                                      |
 
 ##### Auditability
 
-The `Communication.sender` must always be an individual (`Practitioner` or `RelatedPerson`) to ensure auditability. Every message in the system must have an identifiable person as the sender. This applies even in team-level messaging scenarios - while the thread may be owned by a CareTeam, each individual message is sent by a specific person.
+The `Communication.sender` must always be an individual (`Practitioner` or `RelatedPerson`) to ensure auditability. Every message in the system must have an identifiable person as the sender. This applies even in team-level messaging scenarios - while the thread may be owned by a CareTeam, each individual message is sent by a specific person. The team the person acts for is named separately in `extension[senderCareTeam]`.
 
 ##### Examples
 
@@ -275,16 +276,21 @@ The `Task` resource is used to:
 
 | field   | Cardinality | description                                        |
 |---------|-------------|----------------------------------------------------|
-| status  | 1..1        | requested                                          |
+| status  | 1..1        | `requested` (unread) or `completed` (read)         |
 | basedOn | 1..1        | Reference to a `CommunicationRequest`              |
 | intent  | 1..1        | `order`                                            |
 | for     | 1..1        | a reference to a `Patient`                         |
-| owner   | 1..1        | a reference to a `RelatedPerson` or `Practitioner` |
+| focus   | 0..1        | the latest `Communication` in the thread           |
+| owner   | 1..1        | a reference to a `RelatedPerson`, `Practitioner` or `Patient` (per-person Task) or to an organizational `CareTeam` (one Task per team in team threads) |
+
+The OZO FHIR Api creates one Task per thread party: per member of a patient care team or individually addressed person, and one per organizational team with `owner` set to the `CareTeam`. See [Team-to-Team Messaging](interaction-messaging-team.html).
 
 ##### Examples
 * [Notify-Kees-Groot](Task-Notify-Kees-Groot.html)
 * [Notify-Manu-van-Weel](Task-Notify-Manu-van-Weel.html)
 * [Notify-Mark-Benson](Task-Notify-Mark-Benson.html)
+* [Notify-Clinic-B](Task-Notify-Clinic-B.html) - team Task, `owner` = CareTeam
+* [Notify-Pharmacy-A](Task-Notify-Pharmacy-A.html) - team Task of the initiating team
 
 #### AuditEvent
 
@@ -300,6 +306,8 @@ For detailed information about NEN7510 compliance and audit logging, see [AuditE
 * [Manu-Read-Messages](AuditEvent-Manu-Read-Messages.html)
 * [Mark-Read-Messages](AuditEvent-Mark-Read-Messages.html)
 * [Kees-Read-Messages](AuditEvent-Kees-Read-Messages.html)
+* [Manu-Read-Team-Thread](AuditEvent-Manu-Read-Team-Thread.html) - read receipt on behalf of a team (`agent.extension[careTeam]`)
+* [Pieter-Read-Team-Thread](AuditEvent-Pieter-Read-Team-Thread.html)
 * [REST-Create](AuditEvent-REST-Create.html)
 * [REST-Search](AuditEvent-REST-Search.html)
 * [REST-Update-Denied](AuditEvent-REST-Update-Denied.html)

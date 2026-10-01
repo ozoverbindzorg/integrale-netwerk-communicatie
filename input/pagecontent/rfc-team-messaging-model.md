@@ -1,8 +1,22 @@
 ### Status
 
-Draft, 2026-10-01. Proposed for IG version 0.9.0. Not normative: the [Team-to-Team Messaging](interaction-messaging-team.html) and [Individual Messaging](interaction-messaging.html) pages describe the current contract until this RFC is adopted.
+Adopted in IG version 0.9.0, 2026-10-01. The normative text is on the [Team-to-Team Messaging](interaction-messaging-team.html) and [Individual Messaging](interaction-messaging.html) pages and in the profiles; this page records the proposal, the reasoning and the decisions on the open questions. The implementation steps for the proxy, the HAPI server and connecting platforms are on [AAA Proxy - Changes for 0.9.0](technical-aaa-proxy-0-9-0.html).
 
-This RFC answers the review of the 0.8.x team messaging design by the AAA proxy team. It proposes three related changes that together form one breaking release, and records the facts about the proxy and HAPI FHIR that the proposal rests on.
+#### Decisions on the open questions
+
+| # | Question | Decision in 0.9.0 |
+| --- | --- | --- |
+| 1 | Name of the union SearchParameter | `participant` (code), id `ozo-communicationrequest-participant`. The `CareTeam.participant` confusion is accepted; `party` is not a term used elsewhere in this IG. |
+| 2 | One or two extensions for the acting team | Reuse `OZOSenderCareTeam` (`ozo-sender-careteam`) on `Communication`, with its context widened to `CommunicationRequest` and `Communication`. New `OZOAgentCareTeam` (`ozo-agent-careteam`) on `AuditEvent.agent`. One extension for the two "sender" positions keeps the client code the same; the AuditEvent position is a different role (reader, not sender) and gets its own definition. |
+| 3 | Inference transition | Kept for one release. In 0.9.0 the OZO FHIR Api infers the team when the extension is absent and exactly one candidate exists; two or more candidates without the extension are rejected with 422. The inference is removed in the release after 0.9.0. |
+| 4 | Self-reliant patients as Task owner | `OZOTask.owner` also allows `OZOPatient`. A patient in their own patient care team (allowed since 0.7.8) gets a per-person Task like any other member, which is what the OZO FHIR Api already creates; excluding patients would need a special case in the Task engine. |
+| 5 | Order of installation and data migration | Install the 0.9.0 package first, then run the two one-off migrations with the system user, in the same maintenance window. Both migrations write resources that the 0.8.x profiles reject (a thread without the duplicate recipient violates `ozo-cr-sender-careteam-in-recipient`; a CareTeam-owned Task violates the 0.8.x `OZOTask.owner`), so cleaning first is not possible. Between installation and clean-up, existing team threads are non-updatable; that window is kept short by running the migration right after the reindex. |
+
+One correction to the proposal below: "On the response side the proxy already accepts a thread when the user is recipient, sender or requester" is true, but it does not cover the other members of the initiating team once that team leaves `recipient`. The proxy's response validation (and its `partOf` thread-membership check on `Communication` writes) must include `extension[senderCareTeam]` among the thread parties. This is in the implementation steps.
+
+---
+
+This RFC answered the review of the 0.8.x team messaging design by the AAA proxy team. It proposed three related changes that together form one breaking release, and records the facts about the proxy and HAPI FHIR that the proposal rests on. The text below is the proposal as reviewed; "current state" refers to 0.8.x.
 
 ### The review
 

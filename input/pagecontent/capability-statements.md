@@ -31,9 +31,9 @@ Authenticated via NutsOrganizationCredential + NutsEmployeeCredential. Access is
 | Practitioner | `_has:CareTeam:participant:participant={self}` |
 | RelatedPerson | `_has:CareTeam:participant:participant={self}` |
 | CareTeam | `participant={self}` |
-| CommunicationRequest | `recipient={self OR careTeams}` |
-| Communication | `part-of:CommunicationRequest.recipient={self OR careTeams}` |
-| Task | `owner={self OR careTeams}` |
+| CommunicationRequest | `participant={self OR careTeams}` (addressed in `recipient` or initiating team in `extension[senderCareTeam]`) |
+| Communication | `part-of:CommunicationRequest.participant={self OR careTeams}` |
+| Task | `owner={self OR careTeams}` (own Tasks and the team Tasks of the practitioner's organizational teams) |
 | AuditEvent | `agent={careTeamPractitioners}` (all practitioners in shared CareTeams) |
 | Subscription | criteria rewritten with above filters |
 
@@ -47,8 +47,8 @@ Authenticated via OzoUserCredential. Access is scoped to the related person's ow
 | Practitioner | `_has:CareTeam:participant:participant={self}` |
 | RelatedPerson | `identifier={self}` (own profile only) |
 | CareTeam | `participant={self}` |
-| CommunicationRequest | `recipient={self OR careTeams}` |
-| Communication | `part-of:CommunicationRequest.recipient={self OR careTeams}` |
+| CommunicationRequest | `participant={self OR careTeams}` |
+| Communication | `part-of:CommunicationRequest.participant={self OR careTeams}` |
 | Task | `owner={self}` |
 | AuditEvent | `agent={self OR careTeams}` |
 | Subscription | criteria rewritten with above filters |
@@ -63,8 +63,8 @@ Access is scoped to the patient's own record and CareTeams where the patient is 
 | Practitioner | `_has:CareTeam:participant:patient={self}` |
 | RelatedPerson | `patient={self}` |
 | CareTeam | `patient={self}` |
-| CommunicationRequest | `recipient={self OR careTeams}` |
-| Communication | `part-of:CommunicationRequest.recipient={self OR careTeams}` |
+| CommunicationRequest | `participant={self OR careTeams}` |
+| Communication | `part-of:CommunicationRequest.participant={self OR careTeams}` |
 | Task | `patient={self}` |
 | AuditEvent | `agent={self OR careTeams}` |
 | Subscription | criteria rewritten with above filters |
@@ -75,20 +75,21 @@ For write operations (POST/PUT), the proxy validates the resource content regard
 
 | Resource | Validation rule |
 |----------|----------------|
-| Communication | `sender` must be the authenticated user |
-| CommunicationRequest | `requester` must be the authenticated user |
-| AuditEvent | `agent[requestor=true].who` must be the authenticated user |
+| Communication | `sender` must be the authenticated user; `partOf` must reference a thread the user is a party of; `extension[senderCareTeam]` is required when the user participates in an organizational CareTeam of the thread and must name one of those teams |
+| CommunicationRequest | `requester` must be the authenticated user; `extension[senderCareTeam]` must be an organizational CareTeam the user participates in and must not be repeated in `recipient` |
+| AuditEvent | `agent[requestor=true].who` must be the authenticated user; on a read receipt in a team thread, `agent.extension[careTeam]` is required under the same rule as for `Communication` |
 | Subscription | `criteria` is rewritten to scope results to the user's access |
 
 ### Custom search parameters
 
-The IG defines one custom SearchParameter. It is advertised in the OZO-Client and OZO-System CapabilityStatements and installed on the HAPI FHIR server together with the profiles.
+The IG defines two custom SearchParameters. They are advertised in the OZO-Client and OZO-System CapabilityStatements and installed on the HAPI FHIR server together with the profiles.
 
 | Parameter | Resource | Type | Definition |
 |-----------|----------|------|------------|
+| `participant` | CommunicationRequest | reference | [ozo-communicationrequest-participant](SearchParameter-ozo-communicationrequest-participant.html): union of `recipient` and the CareTeam in `extension[senderCareTeam]`, every party of the thread. The proxy scopes thread and message access on it |
 | `sender-careteam` | CommunicationRequest | reference | [ozo-communicationrequest-sender-careteam](SearchParameter-ozo-communicationrequest-sender-careteam.html): the CareTeam in `extension[senderCareTeam]`, the team that initiated the thread |
 
-Example: `GET /CommunicationRequest?sender-careteam=CareTeam/Pharmacy-A` returns the threads initiated by Pharmacy A. Existing data must be reindexed once after the parameter is installed; see [Installing OZO Package in HAPI FHIR Server](hapi-installation.html#custom-search-parameters).
+Examples: `GET /CommunicationRequest?participant=CareTeam/Pharmacy-A` returns every thread Pharmacy A takes part in; `GET /CommunicationRequest?sender-careteam=CareTeam/Pharmacy-A` returns the threads it initiated. The `participant` parameter also works chained: `GET /Communication?part-of:CommunicationRequest.participant=CareTeam/Pharmacy-A`. Existing data must be reindexed once after a parameter is installed; see [Installing OZO Package in HAPI FHIR Server](hapi-installation.html#custom-search-parameters).
 
 ### Subscription support
 

@@ -1,5 +1,7 @@
 This page covers individual messaging between RelatedPersons and Practitioners. For team-to-team messaging (e.g. pharmacy ↔ clinic), see [Team-to-Team Messaging](interaction-messaging-team.html).
 
+The read state described on this page is kept per person: every member of a patient care team ([OZOCareTeam](StructureDefinition-ozo-careteam.html), with a `subject`) and every individually addressed person has their own `Task`. Organizational teams ([OZOOrganizationalCareTeam](StructureDefinition-ozo-organizational-careteam.html), no `subject`) have one `Task` per team since 0.9.0, with `Task.owner` set to the `CareTeam`; when such a team is a party of a thread, the rules on the team messaging page apply to it, including the `senderCareTeam` and `agent.extension[careTeam]` extensions on messages and read receipts sent on its behalf.
+
 The messaging interaction consists of the following parts:
 * Creating a thread
 * Sending messages

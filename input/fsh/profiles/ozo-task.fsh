@@ -49,11 +49,11 @@ Description: "Task profile for the OZO platform. Represents work assignments, re
 * focus ^short = "Latest Communication in the thread"
 * focus ^definition = "Reference to the latest Communication in the thread. Updated by the OZO FHIR Api when a new message arrives in the thread. This field provides a pointer to the most recent unread message for clients using the Task as a read/unread indicator, and ensures Task subscriptions fire even when the status value doesn't change (because the resource content genuinely changes when focus is updated)."
 
-// Owner - who is responsible for the task
+// Owner - whose inbox state this task is
 * owner 1..1 MS
-* owner only Reference(OZOPractitioner or OZORelatedPerson)
-* owner ^short = "Task owner"
-* owner ^definition = "The entity (practitioner or related person) who owns and is responsible for completing this task"
+* owner only Reference(OZOPractitioner or OZORelatedPerson or OZOPatient or OZOOrganizationalCareTeam)
+* owner ^short = "Task owner: a person or an organizational team"
+* owner ^definition = "The party whose read state this Task holds. An individual (practitioner, related person or self-reliant patient) for parties addressed individually or through a patient care team; an organizational CareTeam (OZOOrganizationalCareTeam) for a team that takes part in a team thread. The OZO FHIR Api creates one Task per organizational team (the team's shared inbox state) and one Task per member of a patient care team."
 * owner.reference 1..1
 
 // Constraints

@@ -46,10 +46,15 @@ Description: "Communication profile for the OZO platform. Represents messages ex
 * sender 1..1 MS
 * sender only Reference(OZOPractitioner or OZORelatedPerson or OZOPatient)
 * sender ^short = "Message sender"
-* sender ^definition = "The entity (practitioner or related person) who sent the message"
+* sender ^definition = "The individual (practitioner, related person or patient) who sent the message"
 * sender.reference 1..1
 * sender.type 1..1
 * sender.display 0..1 MS
+
+// Acting team - the organizational CareTeam on whose behalf the message is sent
+* extension contains OZOSenderCareTeam named senderCareTeam 0..1 MS
+* extension[senderCareTeam] ^short = "Team on whose behalf the message is sent"
+* extension[senderCareTeam] ^definition = "The organizational CareTeam (OZOOrganizationalCareTeam) on whose behalf the sender writes. Required when the sender is a participant of at least one organizational team that is a party of the thread (recipient or extension[senderCareTeam] of the CommunicationRequest); it must then reference one of those teams. The AAA proxy rejects the message with 422 otherwise. The OZO FHIR Api completes the Task of this team only; the sender's other teams are treated like any other party. Absent for messages in a patient care team or by a related person or patient."
 
 // Payload - the message content
 * payload 1..* MS

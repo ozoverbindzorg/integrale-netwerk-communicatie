@@ -52,6 +52,9 @@ Description: "AuditEvent profile for OZO AAA Proxy to comply with NEN7510 standa
 * agent.requestor 1..1 MS
 * agent.requestor ^short = "Whether user is initiator"
 * agent.requestor ^definition = "Indicator that the user is or is not the requestor, or initiator, for the event being audited"
+* agent.extension contains OZOAgentCareTeam named careTeam 0..1 MS
+* agent.extension[careTeam] ^short = "Team on whose behalf the agent acted"
+* agent.extension[careTeam] ^definition = "The organizational CareTeam (OZOOrganizationalCareTeam) on whose behalf the agent acted. On a read receipt (type iso-21089-lifecycle|access) it names the team whose Task the OZO FHIR Api completes. Required when agent.who is a participant of at least one organizational team that is a party of the thread; it must then reference one of those teams. FHIR R4 AuditEvent.agent.who does not allow CareTeam, hence the extension."
 
 // Source - the OZO AAA Proxy
 * source 1..1 MS
@@ -112,6 +115,19 @@ Description: "Device that originally created the resource"
 * valueString 1..1
 * valueString ^short = "Device origin identifier"
 * valueString ^definition = "Identifier of the device that originally created the resource"
+
+Extension: OZOAgentCareTeam
+Id: ozo-agent-careteam
+Title: "OZO Agent CareTeam"
+Description: "The organizational CareTeam on whose behalf an AuditEvent agent acted. Used on read receipts in team threads: it names the team whose Task the OZO FHIR Api completes, instead of inferring the team from the agent's memberships. FHIR R4 AuditEvent.agent.who does not allow CareTeam references (R5 does), and entity describes what was accessed rather than who acted, so the team is carried as an extension on agent."
+* ^url = "http://ozoverbindzorg.nl/fhir/StructureDefinition/ozo-agent-careteam"
+* ^status = #active
+* ^context[0].type = #element
+* ^context[=].expression = "AuditEvent.agent"
+* value[x] only Reference(OZOOrganizationalCareTeam)
+* valueReference 1..1
+* valueReference ^short = "Team the agent acted for"
+* valueReference ^definition = "Reference to the organizational CareTeam on whose behalf the agent performed the audited action"
 
 // ValueSets
 ValueSet: OZOAuditEventTypeVS

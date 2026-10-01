@@ -4,12 +4,12 @@ Usage: #definition
 Title: "OZO System CapabilityStatement"
 Description: "CapabilityStatement for OZO system-level access (server-to-server). Full CRUD access to all resources without access filters. Requires OzoSystemCredential via the Nuts protocol."
 * url = "http://ozoverbindzorg.nl/fhir/CapabilityStatement/OZO-System"
-* version = "0.8.4"
+* version = "0.9.0"
 * name = "OZOSystemCapabilityStatement"
 * title = "OZO System CapabilityStatement"
 * status = #active
 * experimental = false
-* date = "2026-09-17"
+* date = "2026-10-01"
 * publisher = "Headease"
 * contact.name = "Headease"
 * contact.telecom.system = #url
@@ -70,7 +70,11 @@ Description: "CapabilityStatement for OZO system-level access (server-to-server)
 * rest.resource[=].interaction[+].code = #search-type
 * rest.resource[=].interaction[+].code = #create
 * rest.resource[=].interaction[+].code = #update
-* rest.resource[=].searchParam[0].name = "sender-careteam"
+* rest.resource[=].searchParam[0].name = "participant"
+* rest.resource[=].searchParam[=].definition = "http://ozoverbindzorg.nl/fhir/SearchParameter/ozo-communicationrequest-participant"
+* rest.resource[=].searchParam[=].type = #reference
+* rest.resource[=].searchParam[=].documentation = "Threads in which the given party takes part: recipient or extension[senderCareTeam] (custom OZO union search parameter)."
+* rest.resource[=].searchParam[+].name = "sender-careteam"
 * rest.resource[=].searchParam[=].definition = "http://ozoverbindzorg.nl/fhir/SearchParameter/ozo-communicationrequest-sender-careteam"
 * rest.resource[=].searchParam[=].type = #reference
 * rest.resource[=].searchParam[=].documentation = "Threads initiated by the given CareTeam (custom OZO search parameter on extension[senderCareTeam])."
