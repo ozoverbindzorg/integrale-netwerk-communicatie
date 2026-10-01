@@ -142,7 +142,7 @@ Authentication failed — the access token is missing, expired, or invalid. See 
 The proxy patches `Task.focus` on every new message, so `Task?status=requested` fires even when the Task was already unread. If it does not fire, check the following:
 
 - The Task has an `owner`. The `ReadListService` skips Tasks without one.
-- The subscriber is not the sender or a fellow member of the sender's organizational team. Their Tasks are set to `completed` and do not match `status=requested`; subscribe to `Task?id` to see those transitions as well.
+- The subscriber is not the sender or a fellow member of the sender's organizational team. Their Tasks are set to `completed` and do not match `status=requested`; subscribe to `Task?` (every Task change) to see those transitions as well.
 - The proxy in use patches `focus` (required since fhir.ozo 0.7.5). Older proxy versions only patched `status`, which is a no-op when the Task is already `requested`.
 
 #### `meta.profile` is different from what the client sent

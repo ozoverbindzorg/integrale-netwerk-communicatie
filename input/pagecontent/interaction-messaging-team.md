@@ -4,6 +4,7 @@ Changes to this page per IG version. The full project history is on the [Changel
 
 | Version | Date | Change |
 | --- | --- | --- |
+| 0.8.4 | 2026-10-01 | Subscription criteria `Task?id`, `Communication?id` and `CommunicationRequest?id` replaced by `Task?`, `Communication?` and `CommunicationRequest?`. `id` is not a search parameter (the resource id parameter is `_id`); HAPI only accepted the old form because it drops parameters without a value. Note on the criteria form added. The team messaging model itself is under review; see [RFC - Team Messaging Model](rfc-team-messaging-model.html). |
 | 0.8.3 | 2026-10-01 | Sender's team tightened to the organizational recipient teams (no `subject`) that list the sender as participant; a patient care team never counts, so team-wide read never applies to a patient network. `extension[senderCareTeam]` must be an organizational team the requester participates in. `inResponseTo` marked as optional in the reply steps. It is a quote-reply link between messages; the thread link is `partOf` and the OZO FHIR Api does not use `inResponseTo`. Read receipt: two `entity` entries instead of "entity.what has two values"; the `CommunicationRequest` entity is required, the `Communication` entity optional. Note added that "mark as unread" is not part of the model. |
 | 0.8.0 | 2026-09-17 | `CommunicationRequest.recipient` lists both teams, including the initiating team from `extension[senderCareTeam]` (invariant `ozo-cr-sender-careteam-in-recipient`). Task handling described per sender's team (team-wide read). Read receipts use AuditEvent type `access` (system iso-21089-lifecycle). Query patterns use `part-of` instead of `based-on`; new `sender-careteam` search parameter. Sequence diagram updated. |
 | 0.7.6 | 2026-04-02 | `Task?status=requested` is the only required subscription; `Communication?id` and `CommunicationRequest?id` are optional. Explains how `Task.focus` (introduced in 0.7.5) makes the Task subscription fire on every new message. |
@@ -48,12 +49,15 @@ Both teams use the **OZO platform**. Unlike individual messaging, there is no OZ
 
 In practice, a single Subscription is enough for most teams:
 
-- **`Task?status=requested`**, **required**. Covers unread tracking and new-message notification for the team (the AAA proxy automatically scopes this to the team's ownership). Use `Task?id` instead if the platform also needs to detect **read receipts** (REQUESTED → COMPLETED transitions).
+- **`Task?status=requested`**, **required**. Covers unread tracking and new-message notification for the team (the AAA proxy automatically scopes this to the team's ownership). Use `Task?` (every Task change) instead if the platform also needs to detect **read receipts** (REQUESTED → COMPLETED transitions).
 
 Optional additional subscriptions:
 
-- `Communication?id`, *optional*. Only needed to see messages sent by **your own team members**. Their own Task is set to COMPLETED on send and won't match `status=requested`.
-- `CommunicationRequest?id`, *optional*. Only needed if you care about thread lifecycle events (creation, revoked, completed) separately from messages.
+- `Communication?`, *optional*. Only needed to see messages sent by **your own team members**. Their own Task is set to COMPLETED on send and won't match `status=requested`.
+- `CommunicationRequest?`, *optional*. Only needed if you care about thread lifecycle events (creation, revoked, completed) separately from messages.
+
+> **Criteria form:** `Subscription.criteria` is a FHIR search string. A criteria without parameters is written as `Task?`, the resource type followed by an empty parameter list. HAPI FHIR requires the `?`; a bare `Task` is rejected with "must be in the form {Resource Type}?[params]". Earlier versions of this page used `Task?id`, `Communication?id` and `CommunicationRequest?id`. `id` is not a search parameter (the resource id parameter is `_id`); HAPI only accepted that form because it drops parameters without a value. Replace it with the empty form.
+{:.stu-note}
 
 #### Notify-then-pull pattern
 
@@ -77,8 +81,8 @@ Each subscription serves a different purpose. Understanding when notifications f
 | Subscription | Purpose | Required? | Fires when |
 | --- | --- | --- | --- |
 | `Task?status=requested` | **Unread tracking and new-message notification for the team.** Primary mechanism. | Required | Any change to a Task that matches `status=requested`. This includes status transitions to REQUESTED AND content changes (like `focus`) on Tasks already REQUESTED. |
-| `Communication?id` | Visibility of messages sent by your own team members (sender's Task goes to COMPLETED). | Optional | A new `Communication` is created (POST). |
-| `CommunicationRequest?id` | Thread lifecycle changes (creation, revoked, completed). | Optional | A `CommunicationRequest` is created or its status changes. |
+| `Communication?` | Visibility of messages sent by your own team members (sender's Task goes to COMPLETED). | Optional | A new `Communication` is created (POST). |
+| `CommunicationRequest?` | Thread lifecycle changes (creation, revoked, completed). | Optional | A `CommunicationRequest` is created or its status changes. |
 
 > **Important:** When a new message arrives, the OZO FHIR Api updates the Task's `focus` field to reference the new `Communication`. This ensures `Task?status=requested` fires even when the task was already in REQUESTED status: the `focus` change creates a new resource version. The `focus` field also gives clients a direct pointer to the most recent unread message.
 >

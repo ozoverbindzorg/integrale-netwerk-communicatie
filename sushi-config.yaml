@@ -10,7 +10,7 @@ name: ozo-implementation-guide
 title: OZO FHIR implementation guide
 # description: Example Implementation Guide for getting started with SUSHI
 status: draft # draft | active | retired | unknown
-version: 0.8.3
+version: 0.8.4
 fhirVersion: 4.0.1 # https://www.hl7.org/fhir/valueset-FHIR-version.html
 copyrightYear: 2024+
 releaseLabel: ci-build # ci-build | draft | qa-preview | ballot | trial-use | release | update | normative+trial-use
@@ -148,6 +148,9 @@ pages:
   fhir-addressing-analysis.md:
     title: FHIR Addressing Analysis for Organization-Level Messaging
 
+  rfc-team-messaging-model.md:
+    title: RFC - Team Messaging Model
+
   hapi-installation.md:
     title: Installing OZO Package in HAPI FHIR Server
 
@@ -263,6 +266,7 @@ menu:
     CapabilityStatements: capability-statements.html
   RFCs:
     Organization Addressing: fhir-addressing-analysis.html
+    Team Messaging Model (0.9.0): rfc-team-messaging-model.html
   Artifacts: artifacts.html
   Changelog: history.html
 #  matrix.org:

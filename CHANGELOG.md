@@ -6,6 +6,24 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [0.8.4] - 2026-10-01
+
+### Added
+
+#### Documentation
+- **RFC - Team Messaging Model** - New page under RFCs with the proposed 0.9.0 changes that answer the AAA proxy team's review of the team messaging design: the initiating team leaves `CommunicationRequest.recipient` (access scoping moves to a union SearchParameter over `recipient` and `extension[senderCareTeam]`), one `Task` per organizational team with `Task.owner` set to the CareTeam, and an explicit team on every team-side action (`extension[senderCareTeam]` on `Communication`, an agent extension on the read receipt `AuditEvent`). Not normative until adopted; the current messaging pages stay authoritative.
+
+### Fixed
+
+#### Examples
+- **Subscription-Communication**, **Subscription-CommunicationRequest** - `criteria` changed from `Communication?id` and `CommunicationRequest?id` to `Communication?` and `CommunicationRequest?`. `id` is not a FHIR search parameter (the resource id parameter is `_id`). HAPI accepted the old form only because `MatchUrlService.translateMatchUrl` drops parameters without a value, so `Task?id` behaved as `Task?`; with a value it would have been rejected as an unknown parameter. HAPI does require the `?`: a bare `Task` fails Subscription validation with "must be in the form {Resource Type}?[params]", so the empty form is the minimal valid criteria. Raised in the proxy team's review.
+
+#### Documentation
+- **Individual Messaging**, **Team-to-Team Messaging**, **AAA Proxy** - Same replacement in the subscription guidance (`Task?` for read receipt detection) and in the "Task subscription not firing" entry, plus a note explaining the criteria form.
+
+#### Build Infrastructure
+- **`make build` failed on the dead `fhir.nl.gf` download** - `install-dependencies` still depended on `install-nl-gf`, which fetched the NL Generic Functions package from build.fhir.org. That dependency was dropped in 0.7.0 and the CI build URL now returns 404, so every `make build` and `make build-minimal` (local and GitHub Actions) stopped at `tar: Error is not recoverable`. The target is removed.
+
 ## [0.8.3] - 2026-10-01
 
 ### Changed
@@ -627,6 +645,7 @@ Validation requires `meta.profile` to be set on the resource (HAPI is configured
 - Added `aliases.fsh` with common system and profile aliases
 - Established FSH-first authoring workflow
 
+[0.8.4]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.8.3...v0.8.4
 [0.8.3]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.8.2...v0.8.3
 [0.8.2]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.8.1...v0.8.2
 [0.8.1]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.8.0...v0.8.1

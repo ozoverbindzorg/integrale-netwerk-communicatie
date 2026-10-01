@@ -16,12 +16,15 @@ This IG distinguishes the following roles when processing messages:
 
 In practice, a single Subscription is enough for most clients and platforms:
 
-* **`Task?status=requested`** — **required**. Covers unread tracking and new-message notification for the recipient (the AAA proxy automatically scopes this to the current user's ownership). Use `Task?id` instead if you also need to detect **read receipts** (REQUESTED → COMPLETED transitions).
+* **`Task?status=requested`**, **required**. Covers unread tracking and new-message notification for the recipient (the AAA proxy automatically scopes this to the current user's ownership). Use `Task?` (every Task change) instead if you also need to detect **read receipts** (REQUESTED → COMPLETED transitions).
 
 Optional additional subscriptions:
 
-* `Communication?id` — *optional*. Only needed to see messages **you** sent yourself. Your own Task is set to COMPLETED on send and won't match `status=requested`, but the HTTP POST response usually gives you the same data.
-* `CommunicationRequest?id` — *optional*. Only needed if you care about thread lifecycle events (DRAFT → ACTIVE approval, thread revoked/completed) separately from messages.
+* `Communication?`, *optional*. Only needed to see messages **you** sent yourself. Your own Task is set to COMPLETED on send and won't match `status=requested`, but the HTTP POST response usually gives you the same data.
+* `CommunicationRequest?`, *optional*. Only needed if you care about thread lifecycle events (DRAFT → ACTIVE approval, thread revoked/completed) separately from messages.
+
+> **Criteria form:** `Subscription.criteria` is a FHIR search string. A criteria without parameters is written as `Task?`, the resource type followed by an empty parameter list. HAPI FHIR requires the `?`; a bare `Task` is rejected with "must be in the form {Resource Type}?[params]". Earlier versions of this page used `Task?id`, `Communication?id` and `CommunicationRequest?id`. `id` is not a search parameter (the resource id parameter is `_id`); HAPI only accepted that form because it drops parameters without a value. Replace it with the empty form.
+{:.stu-note}
 
 #### Notify-then-pull pattern
 
@@ -45,8 +48,8 @@ Each subscription serves a different purpose. Understanding when notifications f
 | Subscription              | Purpose                                                                                                             | Required? | Fires when                                                                                                                                                         |
 |---------------------------|---------------------------------------------------------------------------------------------------------------------|-----------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `Task?status=requested`   | **Unread tracking and new-message notification for the recipient.** Primary mechanism.                              | Required  | Any change to a Task that matches `status=requested`. This includes status transitions to REQUESTED AND content changes (like `focus`) on Tasks already REQUESTED. |
-| `Communication?id`        | Visibility of your own sent messages (sender's Task goes to COMPLETED and won't match `status=requested`).          | Optional  | A new `Communication` is created (POST).                                                                                                                           |
-| `CommunicationRequest?id` | Thread lifecycle changes (DRAFT → ACTIVE, revoked, completed).                                                      | Optional  | A `CommunicationRequest` is created or its status changes.                                                                                                         |
+| `Communication?`          | Visibility of your own sent messages (sender's Task goes to COMPLETED and won't match `status=requested`).          | Optional  | A new `Communication` is created (POST).                                                                                                                           |
+| `CommunicationRequest?`   | Thread lifecycle changes (DRAFT → ACTIVE, revoked, completed).                                                      | Optional  | A `CommunicationRequest` is created or its status changes.                                                                                                         |
 
 > **Important:** When a new message arrives, the OZO FHIR Api updates the Task's `focus` field to reference the new `Communication`. This ensures `Task?status=requested` fires even when the task was already in REQUESTED status — the `focus` change creates a new resource version. The `focus` field also gives clients a direct pointer to the most recent unread message.
 >
