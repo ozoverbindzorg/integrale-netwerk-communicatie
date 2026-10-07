@@ -4,34 +4,32 @@ participant "FHIR API" as FHIR
 participant "OZO Platform\n(Team B)" as TeamB
 
 == Thread Creation (Team A initiates) ==
-TeamA -> FHIR : Create CommunicationRequest\n(status: 'active')\nrequester/sender = Practitioner A1\nextension[senderCareTeam] = CareTeam A\nrecipient = CareTeam B, CareTeam A
-FHIR -> FHIR : Create Tasks\nCareTeam B members: 'requested'\nCareTeam A members: 'completed'\n(sender's team)
+TeamA -> FHIR : Create CommunicationRequest\n(status: 'active')\nrequester/sender = Practitioner A1\nextension[senderCareTeam] = CareTeam A\nrecipient = CareTeam B
+FHIR -> FHIR : Create one Task per team\nTask(owner CareTeam B): 'requested'\nTask(owner CareTeam A): 'completed'\n(initiating team)
 FHIR -> TeamB : Notify\n[Via Subscription, empty payload]
 TeamB -> FHIR : Fetch CommunicationRequest
 note over TeamB : Thread appears in\nTeam B's shared inbox
 
+== Read Receipt by Team B ==
+TeamB -> FHIR : Create AuditEvent\n(type: iso-21089-lifecycle 'access', action: 'R')\nagent.who = Practitioner B1\nagent.extension[careTeam] = CareTeam B
+FHIR -> FHIR : Complete Task(owner CareTeam B)
+note over FHIR : Read for the whole team,\nAuditEvent records who read
+
 == Reply from Team B ==
-TeamB -> FHIR : Create Communication\nsender = Practitioner B1\npartOf = CommunicationRequest\n(no recipient on Communication)
-FHIR -> FHIR : Resolve recipient CareTeams\nsender's team = CareTeam B
-FHIR -> FHIR : Update Tasks\nCareTeam A members: 'requested'\nfocus = new Communication
-FHIR -> FHIR : Complete Tasks\nfor other CareTeam B members\n(team-wide read)
+TeamB -> FHIR : Create Communication\nsender = Practitioner B1\nextension[senderCareTeam] = CareTeam B\npartOf = CommunicationRequest\n(no recipient on Communication)
+FHIR -> FHIR : Thread parties = recipient\n+ extension[senderCareTeam]\nacting team = CareTeam B
+FHIR -> FHIR : Task(owner CareTeam A): 'requested'\nTask(owner CareTeam B): 'completed'\nfocus = new Communication
 FHIR -> TeamA : Notify\n[Via Subscription, empty payload]
 TeamA -> FHIR : Fetch Communication
 note over TeamA : New message in\nTeam A's shared inbox
 
 == Follow-up from Different Team A Member ==
-TeamA -> FHIR : Create Communication\nsender = Practitioner A2\n(different team member)\npartOf = CommunicationRequest
-FHIR -> FHIR : Resolve recipient CareTeams\nsender's team = CareTeam A
-FHIR -> FHIR : Update Tasks\nCareTeam B members: 'requested'\nfocus = new Communication
-FHIR -> FHIR : Complete Tasks\nfor other CareTeam A members\n(team-wide read)
+TeamA -> FHIR : Create AuditEvent (read receipt)\nagent.who = Practitioner A2\nagent.extension[careTeam] = CareTeam A
+FHIR -> FHIR : Complete Task(owner CareTeam A)
+TeamA -> FHIR : Create Communication\nsender = Practitioner A2\n(different team member)\nextension[senderCareTeam] = CareTeam A\npartOf = CommunicationRequest
+FHIR -> FHIR : acting team = CareTeam A
+FHIR -> FHIR : Task(owner CareTeam B): 'requested'\nTask(owner CareTeam A): 'completed'\nfocus = new Communication
 FHIR -> TeamB : Notify\n[Via Subscription, empty payload]
 TeamB -> FHIR : Fetch Communication
-
-== Read Receipt ==
-TeamB -> FHIR : Create AuditEvent\n(type: iso-21089-lifecycle 'access', action: 'R')\nagent = Practitioner B1
-FHIR -> FHIR : Complete Tasks\nfor all CareTeam B members\n(team-wide read)
-note over FHIR : Message marked as read\nfor all CareTeam B members
-FHIR -> TeamA : Notify Task update\n[Via Subscription, empty payload]
-TeamA -> FHIR : Fetch Task
-note over TeamA : Message shown as\nread by Team B
+note over TeamB : Two Tasks per thread,\nno inference of the team
 @enduml

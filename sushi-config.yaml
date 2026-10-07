@@ -10,7 +10,7 @@ name: ozo-implementation-guide
 title: OZO FHIR implementation guide
 # description: Example Implementation Guide for getting started with SUSHI
 status: draft # draft | active | retired | unknown
-version: 0.8.4
+version: 0.9.0
 fhirVersion: 4.0.1 # https://www.hl7.org/fhir/valueset-FHIR-version.html
 copyrightYear: 2024+
 releaseLabel: ci-build # ci-build | draft | qa-preview | ballot | trial-use | release | update | normative+trial-use
@@ -111,6 +111,9 @@ pages:
 
   technical-aaa-proxy.md:
     title: AAA Proxy
+
+  technical-aaa-proxy-0-9-0.md:
+    title: AAA Proxy - Changes for 0.9.0
 
   technical-namingsystems.md:
     title: Naming Systems Guide
@@ -243,6 +246,7 @@ menu:
     Related Person: ozo-authorization-related-person.html
   Technical Walkthrough:
     AAA Proxy: technical-aaa-proxy.html
+    AAA Proxy - Changes for 0.9.0: technical-aaa-proxy-0-9-0.html
     Installing OZO Package in HAPI FHIR: hapi-installation.html
     Setup Mutual TLS for OZO: technical-walkthrough-mtls.html
     Validate Access Tokens and DPoP headers: technical-walkthrough-validate-access-token.html

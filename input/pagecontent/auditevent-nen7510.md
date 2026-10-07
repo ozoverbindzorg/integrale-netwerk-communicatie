@@ -38,6 +38,7 @@ The OZO AuditEvent profile extends the base FHIR AuditEvent with specific constr
   - **type**: Agent type (Source Role ID, Application, etc.)
   - **who**: Reference to Practitioner, RelatedPerson, or Device
   - **requestor**: Whether the agent initiated the action
+  - **extension[careTeam]**: The organizational CareTeam on whose behalf the agent acted (`ozo-agent-careteam`). Used on read receipts in team threads; FHIR R4 `agent.who` does not allow CareTeam references. See [Team-to-Team Messaging](interaction-messaging-team.html#marking-messages-as-read)
 
 ##### Source Information
 
@@ -64,6 +65,7 @@ The OZO AuditEvent profile extends the base FHIR AuditEvent with specific constr
 - **trace-id**: 32-character hex trace ID from W3C Trace Context
 - **span-id**: 16-character hex span ID from W3C Trace Context
 - **resource-origin**: Device that originally created the resource
+- **agent-careteam** (on `agent`): the organizational CareTeam the agent acted for; names the team whose Task a read receipt completes
 
 ### Examples
 
@@ -73,6 +75,8 @@ The following examples demonstrate various AuditEvent scenarios in the OZO AAA P
 * [Manu-Read-Messages](AuditEvent-Manu-Read-Messages.html) - Practitioner Manu van Weel viewed a message (OZO platform)
 * [Mark-Read-Messages](AuditEvent-Mark-Read-Messages.html) - Practitioner Mark Benson viewed a message (OZO platform)
 * [Kees-Read-Messages](AuditEvent-Kees-Read-Messages.html) - RelatedPerson Kees Groot viewed a message (OZO client)
+* [Manu-Read-Team-Thread](AuditEvent-Manu-Read-Team-Thread.html) - Read receipt on behalf of a team, `agent.extension[careTeam]` = Clinic B
+* [Pieter-Read-Team-Thread](AuditEvent-Pieter-Read-Team-Thread.html) - Read receipt on behalf of a team, with the viewed `Communication` as second entity
 
 #### REST Operation Events (type `rest`, created by the proxy)
 * [REST-Create](AuditEvent-REST-Create.html) - Successful REST create operation

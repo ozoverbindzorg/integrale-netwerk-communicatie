@@ -30,9 +30,9 @@ RECTANGLE CommunicationRequest {
 }
 
 RECTANGLE Communication {
-  +basedOn: Reference(CommunicationRequest)
-  +sender: Reference(Practitioner | RelatedPerson)
-  +recipient: Reference(CareTeam | OrgCareTeam | Practitioner | RelatedPerson)
+  +partOf: Reference(CommunicationRequest)
+  +sender: Reference(Practitioner | RelatedPerson | Patient)
+  +extension[senderCareTeam]: Reference(OrgCareTeam)
   +payload.contentString: string : "The message"
   +payload.contentAttachment: Attachment
   ...
@@ -46,14 +46,16 @@ RECTANGLE Attachment {
 
 RECTANGLE Task {
   +status: code
+  +owner: Reference(OrgCareTeam | Practitioner | RelatedPerson | Patient)
   +focus: Reference(Communication)
   +basedOn: Reference(CommunicationRequest)
   ...
 }
 
 RECTANGLE AuditEvent {
-  +entity: Reference(Task)
-  +agent: Reference(Patient)
+  +entity.what: Reference(CommunicationRequest | Communication)
+  +agent.who: Reference(Practitioner | RelatedPerson)
+  +agent.extension[careTeam]: Reference(OrgCareTeam)
   +action: code
   ...
 }
@@ -61,12 +63,13 @@ RECTANGLE AuditEvent {
 
 Patient "1" <-- "1..*" CareTeam : has >
 CareTeam "1..*" -right-> CommunicationRequest : requests communication >
-OrgCareTeam "0..*" -right-> CommunicationRequest : sender/recipient >
-CommunicationRequest <-- "0..*" Communication : based on
+OrgCareTeam "0..*" -right-> CommunicationRequest : senderCareTeam/recipient >
+OrgCareTeam "1" <-- "0..*" Task : owner (one Task per team) >
+CommunicationRequest <-- "0..*" Communication : part of
 Communication <-- "0..*" Task : is focus of >
 CommunicationRequest "0..*" -- Attachment : includes >
 Communication "0..*" -- Attachment : includes >
 Task "0..*" -left-> "1" CommunicationRequest : based on >
-AuditEvent  - "1" Task: entity
+AuditEvent  - "1" CommunicationRequest: entity (read receipt)
 Patient  ---- AuditEvent: who
 @enduml

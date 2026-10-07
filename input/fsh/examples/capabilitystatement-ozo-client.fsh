@@ -4,12 +4,12 @@ Usage: #definition
 Title: "OZO Client CapabilityStatement"
 Description: "CapabilityStatement for authenticated client access to the OZO FHIR API. Covers Practitioner, RelatedPerson, and Patient roles. All three roles have the same resource types and interactions available — the AAA proxy scopes access differently per role by automatically applying search filters based on the caller's credentials. See the CapabilityStatements documentation page for per-role filtering details."
 * url = "http://ozoverbindzorg.nl/fhir/CapabilityStatement/OZO-Client"
-* version = "0.8.4"
+* version = "0.9.0"
 * name = "OZOClientCapabilityStatement"
 * title = "OZO Client CapabilityStatement"
 * status = #active
 * experimental = false
-* date = "2026-09-17"
+* date = "2026-10-01"
 * publisher = "Headease"
 * contact.name = "Headease"
 * contact.telecom.system = #url
@@ -54,11 +54,15 @@ Description: "CapabilityStatement for authenticated client access to the OZO FHI
 // CommunicationRequest — read + create
 * rest.resource[+].type = #CommunicationRequest
 * rest.resource[=].profile = "http://ozoverbindzorg.nl/fhir/StructureDefinition/OZOCommunicationRequest"
-* rest.resource[=].documentation = "Threads where the caller or their CareTeam is a recipient. For team-to-team threads the initiating team is listed as recipient as well. Create requires requester = authenticated user."
+* rest.resource[=].documentation = "Threads in which the caller or one of their CareTeams is a party: addressed in recipient or initiating team in extension[senderCareTeam] (proxy scopes on the participant search parameter). Create requires requester = authenticated user; extension[senderCareTeam] must be an organizational CareTeam the caller participates in and should not be repeated in recipient (the 0.8.x duplicate is accepted in 0.9.0 with a validation warning)."
 * rest.resource[=].interaction[0].code = #read
 * rest.resource[=].interaction[+].code = #search-type
 * rest.resource[=].interaction[+].code = #create
-* rest.resource[=].searchParam[0].name = "sender-careteam"
+* rest.resource[=].searchParam[0].name = "participant"
+* rest.resource[=].searchParam[=].definition = "http://ozoverbindzorg.nl/fhir/SearchParameter/ozo-communicationrequest-participant"
+* rest.resource[=].searchParam[=].type = #reference
+* rest.resource[=].searchParam[=].documentation = "Threads in which the given party takes part: recipient or extension[senderCareTeam] (custom OZO union search parameter). The proxy adds this parameter to every client search."
+* rest.resource[=].searchParam[+].name = "sender-careteam"
 * rest.resource[=].searchParam[=].definition = "http://ozoverbindzorg.nl/fhir/SearchParameter/ozo-communicationrequest-sender-careteam"
 * rest.resource[=].searchParam[=].type = #reference
 * rest.resource[=].searchParam[=].documentation = "Threads initiated by the given CareTeam (custom OZO search parameter on extension[senderCareTeam])."
@@ -66,7 +70,7 @@ Description: "CapabilityStatement for authenticated client access to the OZO FHI
 // Communication — read + create
 * rest.resource[+].type = #Communication
 * rest.resource[=].profile = "http://ozoverbindzorg.nl/fhir/StructureDefinition/OZOCommunication"
-* rest.resource[=].documentation = "Messages in threads accessible to the caller. Create requires sender = authenticated user."
+* rest.resource[=].documentation = "Messages in threads accessible to the caller (proxy scopes on part-of:CommunicationRequest.participant). Create requires sender = authenticated user; when the sender participates in an organizational team of the thread, extension[senderCareTeam] should name that team (inferred in 0.9.0 when absent, required from the next release)."
 * rest.resource[=].interaction[0].code = #read
 * rest.resource[=].interaction[+].code = #search-type
 * rest.resource[=].interaction[+].code = #create
@@ -74,14 +78,14 @@ Description: "CapabilityStatement for authenticated client access to the OZO FHI
 // Task — read only
 * rest.resource[+].type = #Task
 * rest.resource[=].profile = "http://ozoverbindzorg.nl/fhir/StructureDefinition/OZOTask"
-* rest.resource[=].documentation = "Tasks owned by or assigned to the caller. Used as read/unread indicator."
+* rest.resource[=].documentation = "Tasks owned by the caller or by one of the caller's organizational CareTeams (team inbox state). Used as read/unread indicator."
 * rest.resource[=].interaction[0].code = #read
 * rest.resource[=].interaction[+].code = #search-type
 
 // AuditEvent — read + create
 * rest.resource[+].type = #AuditEvent
 * rest.resource[=].profile = "http://ozoverbindzorg.nl/fhir/StructureDefinition/OZOAuditEvent"
-* rest.resource[=].documentation = "Audit events within the caller's access scope. Create requires agent[requestor=true].who = authenticated user."
+* rest.resource[=].documentation = "Audit events within the caller's access scope. Create requires agent[requestor=true].who = authenticated user; on a read receipt in a team thread agent.extension[careTeam] should name one of the caller's organizational teams in that thread (inferred in 0.9.0 when absent, required from the next release)."
 * rest.resource[=].interaction[0].code = #read
 * rest.resource[=].interaction[+].code = #search-type
 * rest.resource[=].interaction[+].code = #create

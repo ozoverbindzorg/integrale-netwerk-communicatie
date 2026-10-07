@@ -6,6 +6,61 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [0.9.0] - 2026-10-07
+
+Adopts [RFC - Team Messaging Model](https://ozo-implementation-guide.headease.nl/rfc-team-messaging-model.html) (0.8.4) as a **compatibility release**. The three changes alter the `CommunicationRequest`, `Task`, `Communication` and `AuditEvent` contracts, but 0.9.0 accepts the 0.8.x shape of each resource next to the new one: the duplicate recipient is a validation warning, the acting-team extensions are inferred when absent, and per-member Tasks remain a supported server mode. The 0.9.0 package can therefore be installed under the 0.8.x AAA proxy without behaviour change, and 0.8.x clients keep working while the proxy switches behaviours per environment behind configuration flags. The strict cut-over is the release after 0.9.0. Implementation steps are on the new page **AAA Proxy - Changes for 0.9.0**.
+
+### Added
+
+#### Search parameters
+- **participant** (`SearchParameter/ozo-communicationrequest-participant`) - Reference search parameter on `CommunicationRequest` with a union expression over `recipient` and `extension[senderCareTeam]`, so one parameter matches every thread party. The AAA proxy scopes threads with `participant=` and messages with `part-of:CommunicationRequest.participant=`. Same construction as the base R4 `Observation.combo-code`. Advertised in the OZO-Client and OZO-System CapabilityStatements. HAPI needs a one-off reindex of `CommunicationRequest` after installation.
+
+#### Extensions
+- **OZOAgentCareTeam** (`ozo-agent-careteam`) - Extension on `AuditEvent.agent` with `Reference(OZOOrganizationalCareTeam)`: the team on whose behalf the agent acted. A read receipt names the team whose Task the OZO FHIR Api completes. FHIR R4 `agent.who` does not allow CareTeam.
+
+#### Examples
+- **Notify-Clinic-B**, **Notify-Pharmacy-A** - Team Tasks with `owner` set to the CareTeam, replacing the per-member Tasks in the team messaging walkthrough. The initiating team's Task starts `completed`.
+- **Manu-Read-Team-Thread**, **Pieter-Read-Team-Thread** - Read receipts in the team thread with `agent.extension[careTeam]`; one with the `CommunicationRequest` entity only (no message yet), one with the viewed `Communication` as second entity.
+
+#### Documentation
+- **AAA Proxy - Changes for 0.9.0** - New page under Technical Walkthrough: contract changes, order of operations (HAPI first, reindex, proxy, migrations, clients), changes per proxy component with class and method references (query rewrite, `ProfileInjector`, content validation, response validation, `ReadListService`), proposed configuration properties, the three data migrations (duplicate recipients, team Tasks, stored Subscription criteria), the client checklist and a verification checklist.
+
+### Changed
+
+#### Profiles
+- **OZOCommunicationRequest** - The initiating team should no longer be listed in `recipient`. The invariant `ozo-cr-sender-careteam-in-recipient` (0.8.0, error) is replaced by `ozo-cr-sender-careteam-not-in-recipient` with severity **warning**: the 0.8.x shape (team in both places) is deprecated but still accepted, and the duplicate has no effect because the thread parties are the set union of `recipient` and the extension. The severity becomes error in the release after 0.9.0. The 0.8.0 duplicate existed because the proxy could not OR across `recipient` and `sender-careteam`; the union `participant` parameter removes that need. Element descriptions updated.
+- **OZOSenderCareTeam** - Context set to `CommunicationRequest` and `Communication` (was unspecified, defaulting to `Element`). Description covers both uses.
+- **OZOCommunication** - New `extension[senderCareTeam]` (0..1, `OZOSenderCareTeam`), the organizational team on whose behalf the message is sent. When present it must reference an organizational team of the thread the sender participates in (the proxy rejects it with 422 otherwise). It becomes required in the release after 0.9.0 for senders who participate in an organizational team of the thread; in 0.9.0 a missing extension is accepted and the team is inferred (one candidate) or handled as in 0.8.x (all candidates, with a proxy warning).
+- **OZOAuditEvent** - New `agent.extension[careTeam]` (0..1, `OZOAgentCareTeam`), same rule and same transition for read receipts.
+- **OZOTask** - `owner` allows `Reference(OZOPractitioner or OZORelatedPerson or OZOPatient or OZOOrganizationalCareTeam)` (additive). The OZO FHIR Api gains a team-Task mode, one Task per organizational team with `owner` = the CareTeam, next to the per-member mode of 0.8.x; an environment switches when its clients accept a CareTeam as `Task.owner`. Per-member Tasks for organizational teams are removed in the release after 0.9.0. One Task per member of a patient care team or individually addressed person stays in both modes. `OZOPatient` resolves the gap left by 0.7.8 (self-reliant patients in their own care team already received Tasks the profile did not allow).
+
+#### Examples
+- **Pharmacy-to-Clinic** - `recipient` lists `Clinic-B` only; `Pharmacy-A` is in `extension[senderCareTeam]`.
+- **Clinic-Response-to-Pharmacy**, **Pharmacy-Followup-by-Pieter** - Carry `extension[senderCareTeam]` (Clinic-B and Pharmacy-A).
+- **OZO-Client**, **OZO-System**, **OZO-Server** - Version 0.9.0; `participant` search parameter added; resource documentation describes the new scoping and the extension rules.
+
+#### Documentation
+- **Team-to-Team Messaging** - Rewritten for the new model: thread parties, one Task per team, acting team on every action, transition rule, walkthrough with two Tasks per thread, new query patterns (`participant`, shared inbox by `Task.owner`), updated sequence diagram and example list. Page changelog row added.
+- **Individual Messaging** - Note that per-person read state applies to patient care teams and individuals; organizational teams follow the team page.
+- **Overview** - `CommunicationRequest`, `Communication`, `Task` field tables and the team-level messaging section updated; new examples listed. Messaging data model diagram updated (`Communication.partOf`, `Task.owner`, `AuditEvent.agent.extension[careTeam]`).
+- **AAA Proxy** - Query rewriting (`participant`), content validation (extension rules, 422), response validation (thread parties, team Tasks), event table (Task per party, acting team, transition), new "Request rejected with 422" troubleshooting section, "Task subscription not firing" updated. The 0.8.x recipient injection is documented as removed.
+- **CapabilityStatements** - Per-role filters, write validation and the custom search parameter table (two parameters).
+- **HAPI installation** - Two custom search parameters, reindex and chained-search verification; version references to 0.9.0.
+- **AuditEvent for NEN7510** - `agent.extension[careTeam]` documented; team read receipt examples listed.
+- **RFC - Team Messaging Model** - Status "Adopted in 0.9.0" with the decisions on the five open questions (`participant` as name; reuse `OZOSenderCareTeam` on `Communication` plus new `ozo-agent-careteam`; one-release transition without rejections; `OZOPatient` added to `Task.owner`; decoupled rollout behind proxy flags), a sixth decision on compatibility with 0.8.x implementations, and one correction: the proxy's response validation must include `extension[senderCareTeam]` among the thread parties, which the RFC had understated.
+
+### Deprecated
+
+Accepted in 0.9.0, removed in the release after 0.9.0:
+- Listing the initiating team in `CommunicationRequest.recipient` next to `extension[senderCareTeam]` (the 0.8.0 shape). Validation warning `ozo-cr-sender-careteam-not-in-recipient`.
+- `Communication` and read receipt `AuditEvent` resources in team threads without the acting-team extension. The OZO FHIR Api infers the team meanwhile.
+- One `Task` per member of an organizational team. The per-member engine mode stays available for one release.
+
+### Migration notes
+
+- The 0.9.0 package can be installed at any time; reindex `CommunicationRequest` afterwards. The AAA proxy ships with three flags (participant scoping, team Tasks, acting-team inference) and is deployed with 0.8.x-compatible defaults. Switch scoping after the reindex and rewrite stored `CommunicationRequest`/`Communication` subscription criteria from `recipient` to `participant`; remove duplicate recipients from existing team threads only after that switch. Switch to team Tasks per environment together with the Task recomputation (member Tasks become `cancelled`). Details on the AAA Proxy 0.9.0 page.
+- Transition for one release: a missing `extension[senderCareTeam]` or `agent.extension[careTeam]` is accepted; the proxy infers the team when the person is in exactly one organizational team of the thread and falls back to the 0.8.x behaviour (all of the person's teams in the thread) otherwise. An extension that names a wrong team is rejected with 422. The extensions become required in the release after 0.9.0.
+
 ## [0.8.4] - 2026-10-01
 
 ### Added
@@ -645,6 +700,7 @@ Validation requires `meta.profile` to be set on the resource (HAPI is configured
 - Added `aliases.fsh` with common system and profile aliases
 - Established FSH-first authoring workflow
 
+[0.9.0]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.8.4...v0.9.0
 [0.8.4]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.8.3...v0.8.4
 [0.8.3]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.8.2...v0.8.3
 [0.8.2]: https://github.com/ozoverbindzorg/integrale-netwerk-communicatie/compare/v0.8.1...v0.8.2
