@@ -75,9 +75,9 @@ For write operations (POST/PUT), the proxy validates the resource content regard
 
 | Resource | Validation rule |
 |----------|----------------|
-| Communication | `sender` must be the authenticated user; `partOf` must reference a thread the user is a party of; `extension[senderCareTeam]` is required when the user participates in an organizational CareTeam of the thread and must name one of those teams |
-| CommunicationRequest | `requester` must be the authenticated user; `extension[senderCareTeam]` must be an organizational CareTeam the user participates in and must not be repeated in `recipient` |
-| AuditEvent | `agent[requestor=true].who` must be the authenticated user; on a read receipt in a team thread, `agent.extension[careTeam]` is required under the same rule as for `Communication` |
+| Communication | `sender` must be the authenticated user; `partOf` must reference a thread the user is a party of; `extension[senderCareTeam]`, when present, must name an organizational CareTeam of the thread the user participates in. Required from the release after 0.9.0 when the user participates in such a team; 0.9.0 infers it when absent |
+| CommunicationRequest | `requester` must be the authenticated user; `extension[senderCareTeam]` must be an organizational CareTeam the user participates in and should not be repeated in `recipient` (validation warning in 0.9.0, error from the next release) |
+| AuditEvent | `agent[requestor=true].who` must be the authenticated user; on a read receipt in a team thread, `agent.extension[careTeam]` follows the same rule as `Communication.extension[senderCareTeam]` |
 | Subscription | `criteria` is rewritten to scope results to the user's access |
 
 ### Custom search parameters

@@ -208,7 +208,7 @@ curl -X POST http://localhost:8080/fhir/\$reindex \
   -d '{"resourceType":"Parameters","parameter":[{"name":"url","valueString":"CommunicationRequest?"}]}'
 ```
 
-Until the reindex job has finished, the AAA proxy's `participant=` scoping returns no existing threads. Check the job status in the `Batch2JobInstance` table or with `GET /fhir/$reindex` on the returned job id before releasing the proxy. The `participant` parameter is also used chained (`Communication?part-of:CommunicationRequest.participant=`); verify once on the deployed HAPI version that the chained form returns the same threads as the direct form.
+Until the reindex job has finished, `participant=` returns no existing threads. Check the job status in the `Batch2JobInstance` table or with `GET /fhir/$reindex` on the returned job id before switching the AAA proxy to `participant=` scoping (see [AAA Proxy - Changes for 0.9.0](technical-aaa-proxy-0-9-0.html)). The `participant` parameter is also used chained (`Communication?part-of:CommunicationRequest.participant=`); verify once on the deployed HAPI version that the chained form returns the same threads as the direct form. The 0.9.0 package itself can be installed before the proxy is upgraded: the invariant on the deprecated duplicate recipient is a warning, so threads written by the 0.8.x proxy keep validating. Confirm on the deployed HAPI version that repository validation does not reject warning-severity invariants (HAPI's `RequireValidationRule` rejects on error and fatal by default).
 
 ### Version Discovery
 

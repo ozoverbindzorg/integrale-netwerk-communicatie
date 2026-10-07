@@ -54,7 +54,7 @@ Description: "AuditEvent profile for OZO AAA Proxy to comply with NEN7510 standa
 * agent.requestor ^definition = "Indicator that the user is or is not the requestor, or initiator, for the event being audited"
 * agent.extension contains OZOAgentCareTeam named careTeam 0..1 MS
 * agent.extension[careTeam] ^short = "Team on whose behalf the agent acted"
-* agent.extension[careTeam] ^definition = "The organizational CareTeam (OZOOrganizationalCareTeam) on whose behalf the agent acted. On a read receipt (type iso-21089-lifecycle|access) it names the team whose Task the OZO FHIR Api completes. Required when agent.who is a participant of at least one organizational team that is a party of the thread; it must then reference one of those teams. FHIR R4 AuditEvent.agent.who does not allow CareTeam, hence the extension."
+* agent.extension[careTeam] ^definition = "The organizational CareTeam (OZOOrganizationalCareTeam) on whose behalf the agent acted. On a read receipt (type iso-21089-lifecycle|access) it names the team whose Task the OZO FHIR Api completes. Required when agent.who is a participant of at least one organizational team that is a party of the thread; it must then reference one of those teams. Transition in 0.9.0: a receipt without the extension is accepted and the team is inferred as for Communication.extension[senderCareTeam] (one candidate team, otherwise the 0.8.x behaviour); from the release after 0.9.0 a missing extension is rejected. FHIR R4 AuditEvent.agent.who does not allow CareTeam, hence the extension."
 
 // Source - the OZO AAA Proxy
 * source 1..1 MS

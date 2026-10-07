@@ -54,7 +54,7 @@ Description: "CapabilityStatement for authenticated client access to the OZO FHI
 // CommunicationRequest — read + create
 * rest.resource[+].type = #CommunicationRequest
 * rest.resource[=].profile = "http://ozoverbindzorg.nl/fhir/StructureDefinition/OZOCommunicationRequest"
-* rest.resource[=].documentation = "Threads in which the caller or one of their CareTeams is a party: addressed in recipient or initiating team in extension[senderCareTeam] (proxy scopes on the participant search parameter). Create requires requester = authenticated user; extension[senderCareTeam] must be an organizational CareTeam the caller participates in and must not be repeated in recipient."
+* rest.resource[=].documentation = "Threads in which the caller or one of their CareTeams is a party: addressed in recipient or initiating team in extension[senderCareTeam] (proxy scopes on the participant search parameter). Create requires requester = authenticated user; extension[senderCareTeam] must be an organizational CareTeam the caller participates in and should not be repeated in recipient (the 0.8.x duplicate is accepted in 0.9.0 with a validation warning)."
 * rest.resource[=].interaction[0].code = #read
 * rest.resource[=].interaction[+].code = #search-type
 * rest.resource[=].interaction[+].code = #create
@@ -70,7 +70,7 @@ Description: "CapabilityStatement for authenticated client access to the OZO FHI
 // Communication — read + create
 * rest.resource[+].type = #Communication
 * rest.resource[=].profile = "http://ozoverbindzorg.nl/fhir/StructureDefinition/OZOCommunication"
-* rest.resource[=].documentation = "Messages in threads accessible to the caller (proxy scopes on part-of:CommunicationRequest.participant). Create requires sender = authenticated user; when the sender participates in an organizational team of the thread, extension[senderCareTeam] must name that team."
+* rest.resource[=].documentation = "Messages in threads accessible to the caller (proxy scopes on part-of:CommunicationRequest.participant). Create requires sender = authenticated user; when the sender participates in an organizational team of the thread, extension[senderCareTeam] should name that team (inferred in 0.9.0 when absent, required from the next release)."
 * rest.resource[=].interaction[0].code = #read
 * rest.resource[=].interaction[+].code = #search-type
 * rest.resource[=].interaction[+].code = #create
@@ -85,7 +85,7 @@ Description: "CapabilityStatement for authenticated client access to the OZO FHI
 // AuditEvent — read + create
 * rest.resource[+].type = #AuditEvent
 * rest.resource[=].profile = "http://ozoverbindzorg.nl/fhir/StructureDefinition/OZOAuditEvent"
-* rest.resource[=].documentation = "Audit events within the caller's access scope. Create requires agent[requestor=true].who = authenticated user; on a read receipt in a team thread agent.extension[careTeam] must name one of the caller's organizational teams in that thread."
+* rest.resource[=].documentation = "Audit events within the caller's access scope. Create requires agent[requestor=true].who = authenticated user; on a read receipt in a team thread agent.extension[careTeam] should name one of the caller's organizational teams in that thread (inferred in 0.9.0 when absent, required from the next release)."
 * rest.resource[=].interaction[0].code = #read
 * rest.resource[=].interaction[+].code = #search-type
 * rest.resource[=].interaction[+].code = #create

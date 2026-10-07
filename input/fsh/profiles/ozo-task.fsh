@@ -53,7 +53,7 @@ Description: "Task profile for the OZO platform. Represents work assignments, re
 * owner 1..1 MS
 * owner only Reference(OZOPractitioner or OZORelatedPerson or OZOPatient or OZOOrganizationalCareTeam)
 * owner ^short = "Task owner: a person or an organizational team"
-* owner ^definition = "The party whose read state this Task holds. An individual (practitioner, related person or self-reliant patient) for parties addressed individually or through a patient care team; an organizational CareTeam (OZOOrganizationalCareTeam) for a team that takes part in a team thread. The OZO FHIR Api creates one Task per organizational team (the team's shared inbox state) and one Task per member of a patient care team."
+* owner ^definition = "The party whose read state this Task holds. An individual (practitioner, related person or self-reliant patient) for parties addressed individually or through a patient care team; an organizational CareTeam (OZOOrganizationalCareTeam) for a team that takes part in a team thread. The OZO FHIR Api creates one Task per organizational team (the team's shared inbox state) and one Task per member of a patient care team. During the 0.9.0 transition an OZO FHIR Api may still run the 0.8.x mode, one Task per member of an organizational team as well; clients must accept both a person and a CareTeam as owner."
 * owner.reference 1..1
 
 // Constraints

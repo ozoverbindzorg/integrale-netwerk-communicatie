@@ -204,7 +204,7 @@ The `CommunicationRequest` Resource is used to:
 | subject   | 1..1        | Reference to a `Patient`                                             |
 | requester | 1..1        | a reference to a `RelatedPerson`, `Practitioner` or `Patient` (individual who initiated - for auditability) |
 | sender    | 0..1        | a reference to a `RelatedPerson`, `Practitioner` or `Patient` (individual sender)                                |
-| extension[senderCareTeam] | 0..1 | a reference to an organizational `CareTeam`: the initiating team of a team thread (reply-to address). Not repeated in `recipient` |
+| extension[senderCareTeam] | 0..1 | a reference to an organizational `CareTeam`: the initiating team of a team thread (reply-to address). Should not be repeated in `recipient` (the 0.8.x shape with the duplicate is accepted in 0.9.0 with a warning) |
 | recipient | 1..*        | the addressed parties: references to `RelatedPerson`, `Practitioner` or `CareTeam`. For team-to-team threads this is the addressed team only; the initiating team is in `extension[senderCareTeam]` |
 | payload   | 1..*        | Message or attachment, one of `contentString` or `contentAttachment` |
 
@@ -219,7 +219,7 @@ The `CommunicationRequest` supports team-level messaging through the `senderCare
   * Grants **team-level authorization** for message management (archive, delete)
   * Enables the **shared inbox pattern** where all team members can see and respond to messages
   * Must be an **organizational** `CareTeam` ([OZOOrganizationalCareTeam](StructureDefinition-ozo-organizational-careteam.html), no `subject`) the requester is a participant of. The AAA proxy rejects the thread otherwise. Patient care teams never act as a team: one Task per team applies to organizational teams only
-* **`recipient`**: Lists the addressed parties only. The initiating team is **not** repeated here (invariant `ozo-cr-sender-careteam-not-in-recipient`). The thread parties are `recipient` plus `extension[senderCareTeam]`; the custom search parameter [`participant`](SearchParameter-ozo-communicationrequest-participant.html) covers both with a union expression, and the AAA proxy scopes access to threads and messages on it. That is what gives the members of the initiating team access to their own thread.
+* **`recipient`**: Lists the addressed parties. The initiating team should not be repeated here (invariant `ozo-cr-sender-careteam-not-in-recipient`, a warning in 0.9.0 and an error from the next release; the 0.8.x shape with the duplicate is accepted meanwhile and has no effect). The thread parties are the set union of `recipient` and `extension[senderCareTeam]`; the custom search parameter [`participant`](SearchParameter-ozo-communicationrequest-participant.html) covers both with a union expression, and the AAA proxy scopes access to threads and messages on it. That is what gives the members of the initiating team access to their own thread.
 
 Replies are `Communication` resources with `partOf` set to the thread; they carry no recipient of their own, but they do carry `extension[senderCareTeam]` with the team on whose behalf the message is sent. Threads initiated by a team can be found with the custom search parameter [`sender-careteam`](SearchParameter-ozo-communicationrequest-sender-careteam.html). See [Team-to-Team Messaging](interaction-messaging-team.html) for the full flow.
 
@@ -283,7 +283,7 @@ The `Task` resource is used to:
 | focus   | 0..1        | the latest `Communication` in the thread           |
 | owner   | 1..1        | a reference to a `RelatedPerson`, `Practitioner` or `Patient` (per-person Task) or to an organizational `CareTeam` (one Task per team in team threads) |
 
-The OZO FHIR Api creates one Task per thread party: per member of a patient care team or individually addressed person, and one per organizational team with `owner` set to the `CareTeam`. See [Team-to-Team Messaging](interaction-messaging-team.html).
+The OZO FHIR Api creates one Task per thread party: per member of a patient care team or individually addressed person, and one per organizational team with `owner` set to the `CareTeam`. A server still in the 0.8.x mode (allowed during the 0.9.0 transition) creates one Task per member of an organizational team as well; clients must accept both owner kinds. See [Team-to-Team Messaging](interaction-messaging-team.html).
 
 ##### Examples
 * [Notify-Kees-Groot](Task-Notify-Kees-Groot.html)

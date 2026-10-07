@@ -82,15 +82,15 @@ The proxy injects required field values when clients omit them:
 
 This is controlled by `ozo.profile-injection.inject-communication-status` (default: `true`). Existing values are never overwritten.
 
-Up to fhir.ozo 0.8.4 the proxy also added the team in `extension[senderCareTeam]` to `CommunicationRequest.recipient` when a client left it out. Since 0.9.0 the initiating team must not be in `recipient`, and this injection is removed. See [AAA Proxy - Changes for 0.9.0](technical-aaa-proxy-0-9-0.html).
+Up to fhir.ozo 0.8.4 the proxy also added the team in `extension[senderCareTeam]` to `CommunicationRequest.recipient` when a client left it out (`ozo.profile-injection.inject-sender-careteam-recipient`). With 0.9.0 that duplicate is deprecated. The injection stays on as long as the proxy scopes threads on `recipient=` and is switched off together with the move to `participant=` scoping; the two are controlled by one flag. A duplicate sent by a 0.8.x client is neither stripped nor rejected; HAPI accepts it with a validation warning. See [AAA Proxy - Changes for 0.9.0](technical-aaa-proxy-0-9-0.html).
 
 ### Content validation (POST/PUT)
 
 After profile and default injection, the proxy validates the request body:
 
-- **Communication**: `sender` must match the authenticated user; `partOf` must reference a thread the user is a party of. When the user is a participant of at least one organizational CareTeam that is a party of the thread, `extension[senderCareTeam]` is required and must reference one of those teams (422 otherwise)
-- **CommunicationRequest**: `requester` (and `sender`, when set) must match the authenticated user; `extension[senderCareTeam]`, when set, must be an organizational CareTeam (no `subject`) the user is a participant of, and must not be repeated in `recipient`
-- **AuditEvent**: requestor agent must match the authenticated user. For a read receipt (type `iso-21089-lifecycle|access`) in a thread with organizational teams the user participates in, `agent.extension[careTeam]` is required and must reference one of those teams (422 otherwise)
+- **Communication**: `sender` must match the authenticated user; `partOf` must reference a thread the user is a party of. When `extension[senderCareTeam]` is present it must reference an organizational CareTeam that is a party of the thread and lists the user as a participant (422 otherwise). When it is absent and the user participates in an organizational team of the thread, 0.9.0 infers the team (see the transition below); from the release after 0.9.0 the extension is required
+- **CommunicationRequest**: `requester` (and `sender`, when set) must match the authenticated user; `extension[senderCareTeam]`, when set, must be an organizational CareTeam (no `subject`) the user is a participant of. It should not be repeated in `recipient`; the duplicate is accepted in 0.9.0 (HAPI reports a validation warning) and ignored
+- **AuditEvent**: requestor agent must match the authenticated user. For a read receipt (type `iso-21089-lifecycle|access`), `agent.extension[careTeam]`, when present, must reference one of the user's organizational teams in that thread (422 otherwise); when absent, 0.9.0 infers the team as for `Communication`
 - **Subscription**: endpoint must use HTTPS, must not point to internal networks, payload must be empty (non-empty payloads bypass the proxy), criteria must reference an allowed resource type
 
 Subscription criteria are also rewritten to scope them to the authenticated user (e.g., `Task?status=requested` becomes `Task?status=requested&owner=Practitioner/x,CareTeam/y`).
@@ -107,7 +107,7 @@ Resources that fail validation cause the proxy to return `403 Forbidden` with a 
 
 Successful POST, PUT, DELETE, and PATCH operations trigger Redis publication of the response body. The `ReadListService` subscribes to these events and processes:
 
-The thread parties are `CommunicationRequest.recipient` plus `extension[senderCareTeam]`. Each party gets Tasks by its type: one Task per member of a patient CareTeam (with `subject`) or individually addressed person, with `owner` the person; one Task per organizational CareTeam (no `subject`), with `owner` the CareTeam.
+The thread parties are the set union of `CommunicationRequest.recipient` and `extension[senderCareTeam]`. Each party gets Tasks by its type: one Task per member of a patient CareTeam (with `subject`) or individually addressed person, with `owner` the person; one Task per organizational CareTeam (no `subject`), with `owner` the CareTeam. The table describes this 0.9.0 team-Task mode. In the 0.8.x mode, which an environment may keep during the 0.9.0 transition, an organizational CareTeam gets one Task per member and reads are fanned out to the team's members (team-wide read), as documented up to 0.8.4.
 
 | Event | Action |
 |---|---|
@@ -117,7 +117,7 @@ The thread parties are `CommunicationRequest.recipient` plus `extension[senderCa
 | AuditEvent with type `iso-21089-lifecycle` / `access` (read receipt) | Sets the Task of the acting party to `completed`: the Task owned by the team in `agent.extension[careTeam]` when present, the Task owned by the reader in `agent.who` otherwise. Only when the `Communication` entity (if present) is the newest message in the thread. AuditEvents with any other type, such as the proxy's own `rest` events, are ignored. |
 | Communication deleted | Recalculates Task statuses based on the new latest message |
 
-**Transition in 0.9.0:** when `extension[senderCareTeam]` on a `Communication` or `agent.extension[careTeam]` on a read receipt is absent and the person is a participant of exactly one organizational team of the thread, the `ReadListService` uses that team. When more than one candidate team exists, the write is rejected with 422. The inference is removed in the release after 0.9.0.
+**Transition in 0.9.0:** when `extension[senderCareTeam]` on a `Communication` or `agent.extension[careTeam]` on a read receipt is absent, the `ReadListService` uses the person's organizational team in the thread when there is exactly one, and falls back to the 0.8.x behaviour (all of the person's organizational teams in the thread) when there are more, with a warning in the proxy log. The inference and the fallback are removed in the release after 0.9.0. Which Task mode (per member or per team) and which scoping (`recipient` or `participant`) an environment runs is set by configuration; see [AAA Proxy - Changes for 0.9.0](technical-aaa-proxy-0-9-0.html).
 
 **Task subscription behavior:** On every new message the `ReadListService` patches each Task in the thread: `status` becomes `requested` or `completed` as described above, and `focus` is set to the new `Communication`. The `focus` change creates a new Task version even when the status was already `requested`, so a `Task?status=requested` subscription fires on every new message and is the only subscription a client needs. See [Individual Messaging](interaction-messaging.html) and [Team-to-Team Messaging](interaction-messaging-team.html) for subscription guidance.
 
@@ -151,10 +151,12 @@ Authentication failed — the access token is missing, expired, or invalid. See 
 
 | Error | Cause |
 |---|---|
-| `senderCareTeam is required` (Communication) | The sender is a participant of an organizational CareTeam that is a party of the thread, but `extension[senderCareTeam]` is missing. In 0.9.0 the proxy still infers the team when there is exactly one candidate; with two or more candidates the extension is mandatory. |
-| `senderCareTeam is not a party of this thread` | `extension[senderCareTeam]` names a team that is neither in `recipient` nor in `extension[senderCareTeam]` of the `CommunicationRequest`, or the sender is not a participant of it. |
-| `senderCareTeam must not be a recipient` (CommunicationRequest) | The initiating team is repeated in `recipient`. Since 0.9.0 `recipient` holds the addressed parties only (invariant `ozo-cr-sender-careteam-not-in-recipient`). |
-| `agent careTeam is required` (AuditEvent) | Same rule as for `Communication`, applied to `agent.extension[careTeam]` on a read receipt. |
+| `senderCareTeam is not a party of this thread` (Communication) | `extension[senderCareTeam]` names a team that is neither in `recipient` nor in `extension[senderCareTeam]` of the `CommunicationRequest`, or the sender is not a participant of it. |
+| `agent careTeam is not a party of this thread` (AuditEvent) | Same rule, applied to `agent.extension[careTeam]` on a read receipt. |
+| `senderCareTeam is required` (Communication), `agent careTeam is required` (AuditEvent) | Only from the release after 0.9.0, or in 0.9.0 when the inference is switched off: the person participates in an organizational CareTeam of the thread but the extension is missing. In 0.9.0 with inference on, the request is accepted and the team is inferred. |
+| `senderCareTeam` extension on a RelatedPerson or Patient write | Related persons and patients are never participants of an organizational team, so the extension must be absent. |
+
+Not a rejection: a `CommunicationRequest` that repeats the initiating team in `recipient` (the 0.8.x shape) is accepted in 0.9.0; HAPI reports the warning `ozo-cr-sender-careteam-not-in-recipient` in validation output. Remove the duplicate before the release after 0.9.0, where the invariant becomes an error.
 
 The message texts are indicative; the proxy returns a FHIR `OperationOutcome` for HAPI validation failures and a JSON error for its own checks.
 
@@ -164,9 +166,9 @@ The proxy patches `Task.focus` on every new message, so `Task?status=requested` 
 
 - The Task has an `owner`. The `ReadListService` skips Tasks without one.
 - The subscriber is not the acting party. The Task of the sender, or of the team named in `extension[senderCareTeam]`, is set to `completed` and does not match `status=requested`; subscribe to `Task?` (every Task change) to see those transitions as well.
-- For a team thread, the subscriber is a participant of the organizational CareTeam that owns the Task. The proxy adds the user's CareTeams to `owner=` when it rewrites the criteria; a practitioner who left the team no longer matches.
+- For a team thread in the team-Task mode, the subscriber is a participant of the organizational CareTeam that owns the Task. The proxy adds the user's CareTeams to `owner=` when it rewrites the criteria; a practitioner who left the team no longer matches.
 - The proxy in use patches `focus` (required since fhir.ozo 0.7.5). Older proxy versions only patched `status`, which is a no-op when the Task is already `requested`.
-- The proxy in use is at least the version that implements fhir.ozo 0.9.0. Older versions create per-member Tasks and reject team Tasks in response validation (403).
+- In the team-Task mode, the proxy in use is at least the version that implements fhir.ozo 0.9.0. Older versions reject team Tasks in response validation (403).
 
 #### `meta.profile` is different from what the client sent
 

@@ -4,13 +4,15 @@ Description: "Each recipient can appear at most once in a CommunicationRequest. 
 Expression: "recipient.reference.distinct().count() = recipient.reference.count()"
 Severity: #error
 
-// The initiating CareTeam is referenced in extension[senderCareTeam] only. recipient lists the
+// The initiating CareTeam is referenced in extension[senderCareTeam]. recipient lists the
 // addressed parties. Access scoping uses the participant SearchParameter, a union over both
-// elements, so the initiating team no longer needs a recipient entry (0.9.0; the 0.8.x
-// invariant ozo-cr-sender-careteam-in-recipient required the duplicate).
+// elements, so the initiating team no longer needs a recipient entry. 0.8.x required the
+// duplicate (invariant ozo-cr-sender-careteam-in-recipient). 0.9.0 accepts both shapes and
+// only warns on the duplicate, so that 0.8.x clients keep working; the release after 0.9.0
+// raises the severity to error.
 Invariant: ozo-cr-sender-careteam-not-in-recipient
-Description: "When extension[senderCareTeam] is present, the referenced CareTeam must not be listed in recipient. recipient contains the addressed parties only; the initiating team is identified by the extension. The participant search parameter covers both elements for access scoping."
-Severity: #error
+Description: "When extension[senderCareTeam] is present, the referenced CareTeam should not be listed in recipient. recipient contains the addressed parties; the initiating team is identified by the extension, and the participant search parameter covers both elements for access scoping. The 0.8.x shape with the team in both places is deprecated: it is accepted in 0.9.0 (this invariant is a warning) and has no effect, because the thread parties are the set union of recipient and the extension. The severity becomes error in the release after 0.9.0."
+Severity: #warning
 Expression: "extension('http://ozoverbindzorg.nl/fhir/StructureDefinition/ozo-sender-careteam').empty() or (extension('http://ozoverbindzorg.nl/fhir/StructureDefinition/ozo-sender-careteam').value.reference in recipient.reference).not()"
 
 Profile: OZOCommunicationRequest
@@ -73,13 +75,13 @@ Description: "CommunicationRequest profile for the OZO platform. Represents a me
 // Extension for CareTeam as sender (for team-level messaging)
 * extension contains OZOSenderCareTeam named senderCareTeam 0..1 MS
 * extension[senderCareTeam] ^short = "Initiating CareTeam (reply-to address for team-level messaging)"
-* extension[senderCareTeam] ^definition = "The organizational CareTeam on whose behalf the thread was started. It is a thread party like the recipients: the participant search parameter matches it, the AAA proxy grants its members access to the thread, and the OZO FHIR Api keeps one Task for it. It must not be repeated in recipient (invariant ozo-cr-sender-careteam-not-in-recipient)."
+* extension[senderCareTeam] ^definition = "The organizational CareTeam on whose behalf the thread was started. It is a thread party like the recipients: the participant search parameter matches it, the AAA proxy grants its members access to the thread, and the OZO FHIR Api keeps one Task for it. It should not be repeated in recipient (invariant ozo-cr-sender-careteam-not-in-recipient, a warning in 0.9.0 and an error from the next release); a duplicate entry has no effect."
 
 // Recipients - the addressed parties of the thread
 * recipient 1..* MS
 * recipient only Reference(OZOPractitioner or OZORelatedPerson or OZOCareTeam or OZOOrganizationalCareTeam)
 * recipient ^short = "Addressed parties"
-* recipient ^definition = "The parties the thread is addressed to: practitioners, related persons, a patient care team or organizational team(s). For team-to-team threads this is the addressed team only; the initiating team is referenced in extension[senderCareTeam] and must not appear here. The thread parties are recipient plus extension[senderCareTeam]; the participant search parameter covers both."
+* recipient ^definition = "The parties the thread is addressed to: practitioners, related persons, a patient care team or organizational team(s). For team-to-team threads this is the addressed team; the initiating team is referenced in extension[senderCareTeam] and should not be repeated here (0.8.x clients that still list it are accepted in 0.9.0 with a validation warning). The thread parties are the set union of recipient and extension[senderCareTeam]; the participant search parameter covers both."
 * recipient.reference 1..1
 * recipient.type 1..1
 
